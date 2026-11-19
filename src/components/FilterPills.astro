@@ -1,0 +1,29 @@
+---
+interface Props { target: string }
+const { target } = Astro.props;
+const opts = [
+  { f: 'all', label: 'Todos' },
+  { f: 'web', label: 'Websites' },
+  { f: 'app', label: 'Apps web' },
+];
+---
+
+<div
+  data-filter-group={target}
+  role="group"
+  aria-label="Filtrar proyectos"
+  class="flex gap-1.5 whitespace-nowrap rounded-full border border-salvia/20 p-1.25 text-[14px] font-medium"
+>
+  {
+    opts.map((o, i) => (
+      <button
+        type="button"
+        data-filter={o.f}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        class="cursor-pointer rounded-full px-4.5 py-2.5 leading-none text-salvia transition-colors hover:text-niebla aria-pressed:bg-niebla aria-pressed:text-noche"
+      >
+        {o.label}
+      </button>
+    ))
+  }
+</div>

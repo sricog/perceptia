@@ -1,0 +1,49 @@
+---
+import BinocularMark from './BinocularMark.astro';
+import { site, whatsappUrl } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="hairline wrap overflow-hidden border-t pt-16">
+  <div class="grid grid-cols-2 gap-10 text-[15px] leading-[1.9] text-salvia md:grid-cols-[2fr_1fr_1fr_1fr]">
+    <div class="col-span-2 flex flex-col gap-4 md:col-span-1">
+      <a href="/" class="flex items-center gap-2.5 text-[18px] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla">
+        <BinocularMark id="foot" size={34} metal sw={4} glow={false} />
+      </a>
+      <span>{site.tagline}</span>
+    </div>
+    <div class="flex flex-col">
+      <span class="mono-tag leading-[2.6] text-niebla">Sitio</span>
+      <a class="text-salvia hover:text-niebla" href="/servicios">Servicios</a>
+      <a class="text-salvia hover:text-niebla" href="/proyectos">Proyectos</a>
+      <a class="text-salvia hover:text-niebla" href="/contacto">Contacto</a>
+    </div>
+    <div class="flex flex-col">
+      <span class="mono-tag leading-[2.6] text-niebla">Contacto</span>
+      <a class="text-salvia hover:text-niebla" href={whatsappUrl()} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
+      <a class="text-salvia hover:text-niebla" href={site.instagram} target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="flex flex-col">
+      <span class="mono-tag leading-[2.6] text-niebla">Legal</span>
+      <span>© {year} Perceptia</span>
+      <span>perceptiastudio.com</span>
+    </div>
+  </div>
+  <div
+    class="wordmark -mb-[0.22em] mt-10 select-none text-center font-bold leading-none tracking-[-0.065em]"
+    aria-hidden="true"
+    data-reveal
+  >
+    Perceptia
+  </div>
+</footer>
+
+<style>
+  .wordmark {
+    font-size: clamp(84px, 20.1vw, 290px);
+    background: linear-gradient(180deg, #ffffff 0%, #a9b5b1 45%, #56645f 70%, #03130f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+</style>

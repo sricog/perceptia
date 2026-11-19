@@ -1,0 +1,22 @@
+---
+import Shader from '../Shader.astro';
+import { whatsappUrl } from '../../data/site';
+---
+
+<section class="relative h-[640px] overflow-hidden md:h-[760px]">
+  <div class="absolute inset-0"><Shader mode="dither" variant="3.1" px="3" /></div>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_46%_42%_at_50%_50%,rgba(3,19,15,.94)_0%,rgba(3,19,15,.7)_55%,rgba(3,19,15,0)_100%),linear-gradient(180deg,#03130F_0%,rgba(3,19,15,0)_18%,rgba(3,19,15,0)_82%,#03130F_100%)] max-md:bg-[radial-gradient(ellipse_90%_50%_at_50%_50%,rgba(3,19,15,.94)_0%,rgba(3,19,15,.75)_60%,rgba(3,19,15,0)_100%),linear-gradient(180deg,#03130F_0%,rgba(3,19,15,0)_18%,rgba(3,19,15,0)_82%,#03130F_100%)]"
+  >
+  </div>
+  <div class="wrap relative flex h-full flex-col items-center justify-center text-center" data-reveal>
+    <h2 class="text-[clamp(48px,7vw,100px)] font-bold leading-[.95] tracking-[-0.055em]">
+      ¿Qué quieres que<br />la gente <em class="accent">perciba</em>?
+    </h2>
+    <p class="mt-6.5 text-[19px] leading-normal text-bruma">Cuéntanos tu proyecto y te enviamos una propuesta.</p>
+    <div class="mt-9.5 flex flex-wrap justify-center gap-3">
+      <a href="/contacto" class="btn btn-primary h-14 px-7">Cotizar proyecto →</a>
+      <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-ghost h-14 bg-noche/70 px-7">WhatsApp</a>
+    </div>
+  </div>
+</section>
