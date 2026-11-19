@@ -1,0 +1,20 @@
+---
+import Shader from '../Shader.astro';
+---
+
+<section class="wrap grid items-center gap-12 pb-24 pt-10 md:pb-30 lg:grid-cols-[minmax(0,620px)_1fr] lg:gap-18">
+  <div class="relative mx-auto aspect-square w-full max-w-[620px]" data-reveal>
+    <Shader mode="globe" />
+  </div>
+  <div class="flex flex-col gap-6" data-reveal style="--d:.1s">
+    <div class="eyebrow">06 · Alcance</div>
+    <h2 class="h-section">Remoto, <em class="accent">sin fronteras</em></h2>
+    <p class="max-w-[460px] text-[19px] leading-[1.55] text-salvia">
+      Clientes en Colombia y Puerto Rico. Llamadas, entregas y soporte en tu zona horaria.
+    </p>
+    <div class="mt-2 flex flex-col font-mono text-[13px] font-medium tracking-[0.06em]">
+      <div class="flex justify-between border-t border-salvia/18 py-4.5"><span>Colombia</span><span class="text-salvia">UTC−5</span></div>
+      <div class="flex justify-between border-y border-salvia/18 py-4.5"><span>Puerto Rico</span><span class="text-salvia">UTC−4</span></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,122 @@
+---
+import BinocularMark from './BinocularMark.astro';
+import { nav } from '../data/site';
+---
+
+<header
+  id="site-nav"
+  transition:persist
+  class="fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color] duration-500"
+>
+  <div class="grid grid-cols-[1fr_auto] items-center px-5 py-4 md:grid-cols-[1fr_auto_1fr] md:px-12 md:py-7">
+    <a href="/" class="flex items-center gap-2.5 text-[18px] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla" aria-label="Perceptia, inicio">
+      <BinocularMark id="nav" size={22} sw={5.5} glow={false} anim />
+      <span>Perceptia</span>
+    </a>
+
+    <nav
+      aria-label="Principal"
+      class="hidden gap-1.5 rounded-full border border-niebla/10 bg-noche/45 p-1.5 text-[14px] font-[450] text-bruma backdrop-blur-xl md:flex"
+    >
+      {
+        nav.map((l) => (
+          <a href={l.href} data-nav-link class="rounded-full px-4 py-2.5 text-bruma transition-colors hover:bg-niebla/8 hover:text-niebla">
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center justify-end gap-2">
+      <a
+        href="/contacto"
+        class="hidden h-11 items-center rounded-full bg-niebla px-5 text-[14px] font-semibold text-noche transition hover:bg-aqua hover:text-noche sm:flex"
+      >
+        Cotizar proyecto
+      </a>
+      <button
+        id="nav-toggle"
+        type="button"
+        class="relative flex size-11 items-center justify-center rounded-full border border-niebla/15 bg-noche/50 backdrop-blur-xl md:hidden"
+        aria-expanded="false"
+        aria-controls="nav-panel"
+        aria-label="Abrir menú"
+      >
+        <span class="nav-bar absolute h-px w-5 -translate-y-1 bg-niebla transition-transform duration-300"></span>
+        <span class="nav-bar absolute h-px w-5 translate-y-1 bg-niebla transition-transform duration-300"></span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="nav-panel"
+    class="pointer-events-none fixed inset-0 -z-10 flex flex-col justify-end bg-noche/95 px-5 pb-10 opacity-0 backdrop-blur-2xl transition-opacity duration-500 md:hidden"
+  >
+    <nav aria-label="Móvil" class="flex flex-col">
+      {
+        nav.map((l, i) => (
+          <a
+            href={l.href}
+            class="hairline flex items-baseline justify-between border-t py-5 text-[40px] font-semibold tracking-[-0.04em] text-niebla"
+          >
+            {l.label}
+            <span class="mono-tag">0{i + 1}</span>
+          </a>
+        ))
+      }
+    </nav>
+    <a href="/contacto" class="btn btn-primary mt-8 w-full">Cotizar proyecto →</a>
+  </div>
+</header>
+
+<style>
+  #site-nav.is-scrolled {
+    background: rgb(3 19 15 / 0.72);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgb(143 176 165 / 0.12);
+  }
+  #site-nav.is-open #nav-panel {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #site-nav.is-open .nav-bar:first-child {
+    translate: 0 0;
+    transform: rotate(45deg);
+  }
+  #site-nav.is-open .nav-bar:last-child {
+    translate: 0 0;
+    transform: rotate(-45deg);
+  }
+  [data-nav-link][aria-current='page'] {
+    background: rgb(238 245 242 / 0.1);
+    color: var(--color-niebla);
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-nav')!;
+  const toggle = document.getElementById('nav-toggle')!;
+  const setOpen = (open: boolean) => {
+    header.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  };
+  toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+  header.querySelectorAll('#nav-panel a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+
+  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const markCurrent = () => {
+    onScroll();
+    setOpen(false);
+    header.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((a) => {
+      const path = new URL(a.href).pathname;
+      a.toggleAttribute('aria-current', path !== '/' && location.pathname.startsWith(path));
+      if (a.hasAttribute('aria-current')) a.setAttribute('aria-current', 'page');
+    });
+  };
+  document.addEventListener('astro:page-load', markCurrent);
+</script>

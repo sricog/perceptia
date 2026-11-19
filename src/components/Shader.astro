@@ -1,0 +1,25 @@
+---
+/** Fondo WebGL en vivo (pc-shader del diseño). Se pausa fuera de pantalla. */
+interface Props {
+  mode: 'lens' | 'chrome' | 'dither' | 'globe';
+  lens?: string;
+  lensPortrait?: string;
+  lenses?: boolean;
+  variant?: string;
+  scale?: string;
+  px?: string;
+  class?: string;
+}
+const { mode, lens, lensPortrait, lenses, variant, scale, px, class: cls } = Astro.props;
+---
+
+<pc-shader
+  mode={mode}
+  lens={lens}
+  lens-portrait={lensPortrait}
+  lenses={lenses ? '1' : undefined}
+  variant={variant}
+  scale={scale}
+  px={px}
+  class:list={['block size-full', cls]}
+  aria-hidden="true"></pc-shader>

@@ -1,0 +1,20 @@
+---
+const bright = 'Somos un estudio de software. Diseñamos y programamos websites, MVPs y sistemas a la medida';
+const dim = 'que se entienden al primer vistazo y siguen funcionando igual de bien el día mil.';
+const all = [...bright.split(' ').map((w) => ({ w, b: true })), ...dim.split(' ').map((w) => ({ w, b: false }))];
+---
+
+<section class="wrap grid gap-8 pb-28 pt-28 md:grid-cols-[220px_1fr] md:gap-12 md:pb-40 md:pt-44">
+  <div class="eyebrow" data-reveal>01 · Estudio</div>
+  <p class="studio text-[clamp(30px,4vw,58px)] font-medium leading-[1.12] tracking-[-0.04em] [text-wrap:pretty]" data-scrub-words>
+    {all.map(({ w, b }) => <><span data-w class:list={[b && 'b']}>{w}</span>{' '}</>)}
+  </p>
+</section>
+
+<style>
+  /* Sin JS se ve como en el diseño (primera frase clara, el resto apagado). Con JS se ilumina palabra por palabra al hacer scroll. */
+  .studio span { color: #3e5e55; transition: color 0.4s ease; }
+  .studio span.b { color: var(--color-niebla); }
+  .studio[data-armed] span { color: #3e5e55; }
+  .studio[data-armed] span.lit { color: var(--color-niebla); }
+</style>

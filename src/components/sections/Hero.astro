@@ -1,0 +1,66 @@
+---
+import Shader from '../Shader.astro';
+import { words } from '../../data/site';
+---
+
+<section class="grain relative h-[100svh] min-h-[640px] overflow-hidden md:max-h-[1000px] md:min-h-[760px]">
+  <div class="absolute inset-0">
+    <Shader mode="lens" lens="0,0.16,0.24,0.14" lensPortrait="0,0.2,0.12,0.07" />
+  </div>
+  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,rgba(3,19,15,.92)_0%,rgba(3,19,15,.55)_24%,rgba(3,19,15,0)_46%)]"></div>
+
+  <div class="lens-label left-6 items-start lg:left-24" style="--d:1.4s">
+    <span>Lente A</span><span class="text-niebla">Diseño</span>
+  </div>
+  <div class="lens-label right-6 items-end lg:right-24" style="--d:1.5s">
+    <span>Lente B</span><span class="text-niebla">Ingeniería</span>
+  </div>
+
+  <div class="wrap absolute inset-x-0 bottom-12 z-[2] flex flex-col items-center text-center md:bottom-18">
+    <h1 class="pc-rise text-[clamp(46px,6.55vw,94px)] font-bold leading-none tracking-[-0.055em] [text-wrap:balance]" style="--d:.5s">
+      Ingeniería que se <em class="accent">percibe.</em>
+    </h1>
+    <div
+      class="pc-rise mt-5.5 grid h-[34px] text-[clamp(19px,1.8vw,26px)] leading-[1.3] tracking-[-0.02em] text-bruma"
+      style="--d:.75s"
+    >
+      <span>
+        Hacemos{' '}<span data-rotator data-interval="2600" class="inline-grid text-left [&>*]:[grid-area:1/1]">
+          {
+            words.map(([s, i], k) => (
+              <span data-word hidden={k > 0} class="whitespace-nowrap">
+                {s} <em class="accent">{i}</em>
+              </span>
+            ))
+          }
+        </span>
+      </span>
+    </div>
+    <div class="pc-rise mt-9 flex flex-wrap justify-center gap-3" style="--d:.95s">
+      <a href="/contacto" class="btn btn-primary">Cotizar proyecto →</a>
+      <a href="/proyectos" class="btn btn-ghost">Ver proyectos</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lens-label {
+    position: absolute;
+    z-index: 2;
+    top: 33%;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    font: 500 11px/1.4 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-salvia);
+    animation: pcRise 1.1s var(--ease-out-expo) both;
+    animation-delay: var(--d);
+  }
+  @media (min-width: 900px) {
+    .lens-label {
+      display: flex;
+    }
+  }
+</style>
