@@ -1,26 +1,42 @@
 ---
 import BinocularMark from './BinocularMark.astro';
-import { nav } from '../data/site';
+import { useI18n, langs, routes, dict, fill, type RouteKey } from '../i18n';
+
+interface Props { route?: RouteKey }
+const { route } = Astro.props;
+const { t, lang, href } = useI18n(Astro.url);
+
+const links = [
+  { label: t.nav.services, href: href('services'), match: routes.services[lang] },
+  { label: t.nav.projects, href: href('projects'), match: routes.projects[lang] },
+  { label: t.nav.process, href: href('home', t.ids.process) },
+  { label: t.nav.contact, href: href('contact'), match: routes.contact[lang] },
+];
+// Página equivalente en cada idioma. El script la actualiza en cada navegación,
+// porque este header se conserva entre páginas del mismo idioma.
+const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name, href: routes[route ?? 'home'][l] }));
 ---
 
 <header
   id="site-nav"
-  transition:persist
+  transition:persist={`nav-${lang}`}
   class="fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color] duration-500"
+  data-open-label={t.a11y.openMenu}
+  data-close-label={t.a11y.closeMenu}
 >
   <div class="grid grid-cols-[1fr_auto] items-center px-5 py-4 md:grid-cols-[1fr_auto_1fr] md:px-12 md:py-7">
-    <a href="/" class="flex items-center gap-3 text-[20px] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla" aria-label="Perceptia, inicio">
+    <a href={href('home')} class="flex items-center gap-3 text-[20px] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla" aria-label={t.a11y.home}>
       <BinocularMark id="nav" size={24} anim />
       <span>Perceptia</span>
     </a>
 
     <nav
-      aria-label="Principal"
+      aria-label={t.a11y.mainNav}
       class="hidden gap-1.5 rounded-full border border-niebla/10 bg-noche/45 p-1.5 text-[14px] font-[450] text-bruma backdrop-blur-xl md:flex"
     >
       {
-        nav.map((l) => (
-          <a href={l.href} data-nav-link class="rounded-full px-4 py-2.5 text-bruma transition-colors hover:bg-niebla/8 hover:text-niebla">
+        links.map((l) => (
+          <a href={l.href} data-nav-link data-match={l.match} class="rounded-full px-4 py-2.5 text-bruma transition-colors hover:bg-niebla/8 hover:text-niebla">
             {l.label}
           </a>
         ))
@@ -28,11 +44,38 @@ import { nav } from '../data/site';
     </nav>
 
     <div class="flex items-center justify-end gap-2">
+      <div
+        role="group"
+        aria-label={t.a11y.language}
+        class="flex h-11 items-center gap-0.5 rounded-full border border-niebla/15 bg-noche/50 p-1 font-mono text-[12px] font-medium tracking-[0.08em] backdrop-blur-xl"
+      >
+        {
+          switcher.map((s) =>
+            s.l === lang ? (
+              <span aria-current="true" class="flex h-full items-center rounded-full bg-niebla/12 px-2.5 text-niebla">
+                {s.short}
+              </span>
+            ) : (
+              <a
+                href={s.href}
+                hreflang={dict(s.l).htmlLang}
+                lang={dict(s.l).htmlLang}
+                data-lang-switch={s.l}
+                data-home={routes.home[s.l]}
+                aria-label={fill(dict(s.l).a11y.switchTo, { lang: s.name })}
+                class="flex h-full items-center rounded-full px-2.5 text-salvia transition-colors hover:text-niebla"
+              >
+                {s.short}
+              </a>
+            ),
+          )
+        }
+      </div>
       <a
-        href="/contacto"
+        href={href('contact')}
         class="hidden h-11 items-center rounded-full bg-niebla px-5 text-[14px] font-semibold text-noche transition hover:bg-aqua hover:text-noche sm:flex"
       >
-        Cotizar proyecto
+        {t.nav.cta}
       </a>
       <button
         id="nav-toggle"
@@ -40,7 +83,7 @@ import { nav } from '../data/site';
         class="relative flex size-11 items-center justify-center rounded-full border border-niebla/15 bg-noche/50 backdrop-blur-xl md:hidden"
         aria-expanded="false"
         aria-controls="nav-panel"
-        aria-label="Abrir menú"
+        aria-label={t.a11y.openMenu}
       >
         <span class="nav-bar absolute h-px w-5 -translate-y-1 bg-niebla transition-transform duration-300"></span>
         <span class="nav-bar absolute h-px w-5 translate-y-1 bg-niebla transition-transform duration-300"></span>
@@ -52,9 +95,9 @@ import { nav } from '../data/site';
     id="nav-panel"
     class="pointer-events-none fixed inset-0 -z-10 flex flex-col justify-end bg-noche/95 px-5 pb-10 opacity-0 backdrop-blur-2xl transition-opacity duration-500 md:hidden"
   >
-    <nav aria-label="Móvil" class="flex flex-col">
+    <nav aria-label={t.a11y.mobileNav} class="flex flex-col">
       {
-        nav.map((l, i) => (
+        links.map((l, i) => (
           <a
             href={l.href}
             class="hairline flex items-baseline justify-between border-t py-5 text-[40px] font-semibold tracking-[-0.04em] text-niebla"
@@ -65,7 +108,7 @@ import { nav } from '../data/site';
         ))
       }
     </nav>
-    <a href="/contacto" class="btn btn-primary mt-8 w-full">Cotizar proyecto →</a>
+    <a href={href('contact')} class="btn btn-primary mt-8 w-full">{t.hero.primary}</a>
   </div>
 </header>
 
@@ -94,29 +137,47 @@ import { nav } from '../data/site';
 </style>
 
 <script>
-  const header = document.getElementById('site-nav')!;
-  const toggle = document.getElementById('nav-toggle')!;
-  const setOpen = (open: boolean) => {
+  // El header se conserva entre páginas del mismo idioma y se reemplaza al cambiar de idioma,
+  // así que se busca de nuevo en cada navegación y se enlaza una sola vez por elemento.
+  const getHeader = () => document.getElementById('site-nav');
+
+  const setOpen = (header: HTMLElement, open: boolean) => {
+    const toggle = header.querySelector<HTMLButtonElement>('#nav-toggle')!;
     header.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    toggle.setAttribute('aria-label', (open ? header.dataset.closeLabel : header.dataset.openLabel) ?? '');
     document.documentElement.style.overflow = open ? 'hidden' : '';
   };
-  toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
-  header.querySelectorAll('#nav-panel a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
 
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  const markCurrent = () => {
-    onScroll();
-    setOpen(false);
-    header.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((a) => {
-      const path = new URL(a.href).pathname;
-      a.toggleAttribute('aria-current', path !== '/' && location.pathname.startsWith(path));
-      if (a.hasAttribute('aria-current')) a.setAttribute('aria-current', 'page');
-    });
+  const bind = (header: HTMLElement) => {
+    if (header.dataset.bound) return;
+    header.dataset.bound = '';
+    header.querySelector('#nav-toggle')!.addEventListener('click', () => setOpen(header, !header.classList.contains('is-open')));
+    header.querySelectorAll('#nav-panel a').forEach((a) => a.addEventListener('click', () => setOpen(header, false)));
   };
-  document.addEventListener('astro:page-load', markCurrent);
+
+  const onScroll = () => getHeader()?.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('keydown', (e) => {
+    const header = getHeader();
+    if (e.key === 'Escape' && header) setOpen(header, false);
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    const header = getHeader();
+    if (!header) return;
+    bind(header);
+    onScroll();
+    setOpen(header, false);
+    header.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((a) => {
+      const match = a.dataset.match;
+      if (match && location.pathname.replace(/\/$/, '') === match.replace(/\/$/, '')) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    // Enlace del otro idioma → página equivalente (la publica Base.astro en <link rel="alternate">).
+    header.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((a) => {
+      const alt = document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${a.getAttribute('hreflang')}"]`);
+      a.href = alt ? new URL(alt.href).pathname : a.dataset.home!;
+    });
+  });
 </script>

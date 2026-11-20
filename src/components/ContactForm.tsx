@@ -1,22 +1,22 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import type { Dict } from '../i18n';
 
-type Props = { whatsappNumber: string };
+type Props = {
+  whatsappNumber: string;
+  /** Textos del formulario en el idioma de la página. */
+  t: Dict['form'];
+  /** Un chip por tipo de proyecto; `id` coincide con el slug del servicio (?servicio= / ?service=). */
+  types: { id: string; label: string }[];
+};
 
-const TYPES = [
-  { id: 'websites', label: 'Website / landing' },
-  { id: 'mvps', label: 'MVP' },
-  { id: 'a-la-medida', label: 'Software a la medida' },
-  { id: 'automatizaciones', label: 'Automatización' },
-  { id: 'otro', label: 'Otro' },
-];
-const BUDGETS = ['< $2M COP', '$2M – $8M', '$8M – $20M', '+ $20M', 'Aún no sé'];
+const fill = (tpl: string, vars: Record<string, string>) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 
 const field =
   'w-full rounded-2xl border border-salvia/20 bg-noche/60 px-5 py-4 text-[16px] text-niebla placeholder:text-salvia/60 outline-none transition focus:border-aqua focus:shadow-[0_0_0_4px_rgba(20,224,165,.15)]';
 const chip =
   'cursor-pointer rounded-full border px-4 py-2.5 text-[14px] font-medium leading-none transition select-none';
 
-export default function ContactForm({ whatsappNumber }: Props) {
+export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [budget, setBudget] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -24,7 +24,7 @@ export default function ContactForm({ whatsappNumber }: Props) {
   const [summary, setSummary] = useState('');
 
   useEffect(() => {
-    const s = new URLSearchParams(location.search).get('servicio');
+    const s = new URLSearchParams(location.search).get(t.serviceParam);
     if (s && TYPES.some((t) => t.id === s)) setTypes([s]);
   }, []);
 
@@ -37,17 +37,20 @@ export default function ContactForm({ whatsappNumber }: Props) {
     const email = String(data.get('email') || '').trim();
     const message = String(data.get('message') || '').trim();
     const errs: Record<string, string> = {};
-    if (!name) errs.name = 'Cuéntanos tu nombre.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Revisa el correo.';
-    if (!types.length) errs.types = 'Elige al menos un tipo de proyecto.';
-    if (message.length < 10) errs.message = 'Danos un poco más de contexto.';
+    if (!name) errs.name = t.errors.name;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = t.errors.email;
+    if (!types.length) errs.types = t.errors.types;
+    if (message.length < 10) errs.message = t.errors.message;
     setErrors(errs);
     if (Object.keys(errs).length) return;
 
     const labels = TYPES.filter((t) => types.includes(t.id)).map((t) => t.label).join(', ');
+    const company = String(data.get('company') || '').trim();
     setSummary(
-      `Hola Perceptia, soy ${name}${data.get('company') ? ` de ${data.get('company')}` : ''}. Quiero cotizar: ${labels}.` +
-        (budget ? ` Presupuesto: ${budget}.` : '') +
+      fill(t.wa.hello, { name }) +
+        (company ? fill(t.wa.company, { company }) : '') +
+        fill(t.wa.want, { labels }) +
+        (budget ? fill(t.wa.budget, { budget }) : '') +
         ` ${message}`,
     );
     // TODO: conectar a un backend (webhook, Formspree, etc.). Por ahora solo UI.
@@ -60,10 +63,10 @@ export default function ContactForm({ whatsappNumber }: Props) {
       <div className="flex min-h-[520px] flex-col items-start justify-center gap-6 rounded-[26px] border border-aqua/30 bg-card p-8 md:p-12">
         <div className="flex size-14 items-center justify-center rounded-full bg-aqua/15 text-2xl text-aqua">✓</div>
         <h2 className="text-[40px] font-semibold leading-none tracking-[-0.04em]">
-          ¡Gracias! Ya lo <em className="accent">percibimos</em>.
+          {t.sent.title[0]}<em className="accent">{t.sent.title[1]}</em>{t.sent.title[2]}
         </h2>
         <p className="max-w-[460px] text-[17px] leading-[1.6] text-salvia">
-          Te responderemos en menos de 24 horas hábiles con los siguientes pasos. Si prefieres hablar ya, escríbenos por WhatsApp.
+          {t.sent.body}
         </p>
         <a
           className="btn btn-primary"
@@ -71,7 +74,7 @@ export default function ContactForm({ whatsappNumber }: Props) {
           target="_blank"
           rel="noopener"
         >
-          Continuar por WhatsApp →
+          {t.sent.cta}
         </a>
       </div>
     );
@@ -81,23 +84,23 @@ export default function ContactForm({ whatsappNumber }: Props) {
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-7 rounded-[26px] border border-salvia/14 bg-card p-6 md:p-10">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
-          <span className="mono-tag">Nombre *</span>
-          <input name="name" autoComplete="name" className={field} placeholder="Tu nombre" aria-invalid={!!errors.name} />
+          <span className="mono-tag">{t.name}</span>
+          <input name="name" autoComplete="name" className={field} placeholder={t.namePh} aria-invalid={!!errors.name} />
           {errors.name && <span className="text-[13px] text-[#ff8a80]">{errors.name}</span>}
         </label>
         <label className="flex flex-col gap-2">
-          <span className="mono-tag">Correo *</span>
-          <input name="email" type="email" autoComplete="email" className={field} placeholder="tu@empresa.com" aria-invalid={!!errors.email} />
+          <span className="mono-tag">{t.email}</span>
+          <input name="email" type="email" autoComplete="email" className={field} placeholder={t.emailPh} aria-invalid={!!errors.email} />
           {errors.email && <span className="text-[13px] text-[#ff8a80]">{errors.email}</span>}
         </label>
       </div>
       <label className="flex flex-col gap-2">
-        <span className="mono-tag">Empresa</span>
-        <input name="company" autoComplete="organization" className={field} placeholder="Opcional" />
+        <span className="mono-tag">{t.company}</span>
+        <input name="company" autoComplete="organization" className={field} placeholder={t.companyPh} />
       </label>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mono-tag mb-3">¿Qué necesitas? *</legend>
+        <legend className="mono-tag mb-3">{t.need}</legend>
         <div className="flex flex-wrap gap-2">
           {TYPES.map((t) => {
             const on = types.includes(t.id);
@@ -118,9 +121,9 @@ export default function ContactForm({ whatsappNumber }: Props) {
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="mono-tag mb-3">Presupuesto estimado</legend>
+        <legend className="mono-tag mb-3">{t.budget}</legend>
         <div className="flex flex-wrap gap-2">
-          {BUDGETS.map((b) => (
+          {t.budgets.map((b) => (
             <button
               key={b}
               type="button"
@@ -135,15 +138,15 @@ export default function ContactForm({ whatsappNumber }: Props) {
       </fieldset>
 
       <label className="flex flex-col gap-2">
-        <span className="mono-tag">Cuéntanos del proyecto *</span>
-        <textarea name="message" rows={5} className={`${field} resize-y`} placeholder="Objetivo, fechas, referencias…" aria-invalid={!!errors.message} />
+        <span className="mono-tag">{t.message}</span>
+        <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} aria-invalid={!!errors.message} />
         {errors.message && <span className="text-[13px] text-[#ff8a80]">{errors.message}</span>}
       </label>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <span className="text-[13px] text-salvia">Respondemos en menos de 24 h hábiles.</span>
+        <span className="text-[13px] text-salvia">{t.note}</span>
         <button type="submit" disabled={status === 'sending'} className="btn btn-primary cursor-pointer disabled:opacity-70">
-          {status === 'sending' ? 'Enviando…' : 'Enviar solicitud →'}
+          {status === 'sending' ? t.sending : t.submit}
         </button>
       </div>
     </form>

@@ -1,17 +1,19 @@
 ---
+import { useI18n } from '../i18n';
 interface Props { target: string }
 const { target } = Astro.props;
+const { t } = useI18n(Astro.url);
 const opts = [
-  { f: 'all', label: 'Todos' },
-  { f: 'web', label: 'Websites' },
-  { f: 'app', label: 'Apps web' },
+  { f: 'all', label: t.projects.all },
+  { f: 'web', label: t.projects.filters.web },
+  { f: 'app', label: t.projects.filters.app },
 ];
 ---
 
 <div
   data-filter-group={target}
   role="group"
-  aria-label="Filtrar proyectos"
+  aria-label={t.projects.filterLabel}
   class="flex gap-1.5 whitespace-nowrap rounded-full border border-salvia/20 p-1.25 text-[14px] font-medium"
 >
   {

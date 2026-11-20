@@ -1,6 +1,9 @@
 ---
 import Shader from '../Shader.astro';
+import Accent from '../Accent.astro';
 import { whatsappUrl } from '../../data/site';
+import { useI18n } from '../../i18n';
+const { t, href } = useI18n(Astro.url);
 ---
 
 <section class="relative h-[640px] overflow-hidden md:h-[760px]">
@@ -11,12 +14,12 @@ import { whatsappUrl } from '../../data/site';
   </div>
   <div class="wrap relative flex h-full flex-col items-center justify-center text-center" data-reveal>
     <h2 class="text-[clamp(48px,7vw,100px)] font-bold leading-[.95] tracking-[-0.055em]">
-      ¿Qué quieres que<br />la gente <em class="accent">perciba</em>?
+      {t.cta.line1}<br /><Accent parts={t.cta.title} />
     </h2>
-    <p class="mt-6.5 text-[19px] leading-normal text-bruma">Cuéntanos tu proyecto y te enviamos una propuesta.</p>
+    <p class="mt-6.5 text-[19px] leading-normal text-bruma">{t.cta.body}</p>
     <div class="mt-9.5 flex flex-wrap justify-center gap-3">
-      <a href="/contacto" class="btn btn-primary h-14 px-7">Cotizar proyecto →</a>
-      <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-ghost h-14 bg-noche/70 px-7">WhatsApp</a>
+      <a href={href('contact')} class="btn btn-primary h-14 px-7">{t.cta.primary}</a>
+      <a href={whatsappUrl(t.whatsapp)} target="_blank" rel="noopener" class="btn btn-ghost h-14 bg-noche/70 px-7">WhatsApp</a>
     </div>
   </div>
 </section>

@@ -127,6 +127,20 @@ vec3 pin(vec2 p,vec3 w,float ph){
  float d=length(p-w.xy);float pr=fract(T*.45+ph);
  return C2*exp(-d*d*2500.)*1.1+C4*exp(-d*d*14000.)+C2*exp(-abs(d-pr*.16)*260.)*(1.-pr)*.9;
 }
+// Arco entre dos puntos del globo: devuelve (distancia mínima a la curva, avance 0–1 en ese punto).
+vec2 arc(vec2 p,vec3 A,vec3 B){
+ float ad=1e3,at=0.;vec2 pv=tv(A).xy;
+ for(int i=1;i<=32;i++){
+  float t=float(i)/32.;vec3 w=tv(normalize(mix(A,B,t))*(1.+.12*sin(3.1416*t)));
+  vec2 pa=p-pv,ba=w.xy-pv;float hh=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);
+  float dd=length(pa-ba*hh);if(dd<ad){ad=dd;at=t;}pv=w.xy;
+ }
+ return vec2(ad,at);
+}
+vec3 arcCol(vec2 a){
+ float dash=.35+.65*step(.45,fract(a.y*7.-T*.8));
+ return C2*(exp(-a.x*a.x*30000.)*dash*.9+exp(-a.x*70.)*.12);
+}
 void main(){
  YW=radians(70.)+sin(T*.2)*.2+(M.x-.5)*.5;PT=radians(10.)-(M.y-.5)*.3;
  vec2 p=(gl_FragCoord.xy-.5*R)/(min(R.x,R.y)*.44);
@@ -146,16 +160,10 @@ void main(){
   col+=mix(C3*.35,C3,land)*dt*(.12+.88*dif)*.6*lim;
   col+=C2*pow(1.-n.z,3.)*.4;
  }
- vec3 A=sph(4.6,-74.1),B=sph(18.2,-66.5);
- float ad=1e3,at=0.;vec2 pv=tv(A).xy;
- for(int i=1;i<=32;i++){
-  float t=float(i)/32.;vec3 w=tv(normalize(mix(A,B,t))*(1.+.12*sin(3.1416*t)));
-  vec2 pa=p-pv,ba=w.xy-pv;float hh=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);
-  float dd=length(pa-ba*hh);if(dd<ad){ad=dd;at=t;}pv=w.xy;
- }
- float dash=.35+.65*step(.45,fract(at*7.-T*.8));
- col+=C2*(exp(-ad*ad*30000.)*dash*.9+exp(-ad*70.)*.12);
- col+=pin(p,tv(A),0.)+pin(p,tv(B),.5);
+ // A: Colombia (Bogotá) · B: Puerto Rico · U: Estados Unidos (Miami)
+ vec3 A=sph(4.6,-74.1),B=sph(18.2,-66.5),U=sph(25.8,-80.2);
+ col+=arcCol(arc(p,A,B))+arcCol(arc(p,A,U));
+ col+=pin(p,tv(A),0.)+pin(p,tv(B),.5)+pin(p,tv(U),.25);
  col+=grain()*.035;
  gl_FragColor=vec4(col,1.);
 }`

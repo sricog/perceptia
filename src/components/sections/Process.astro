@@ -1,10 +1,13 @@
 ---
 import SectionHead from '../SectionHead.astro';
-import { steps } from '../../data/site';
+import Accent from '../Accent.astro';
+import { useI18n } from '../../i18n';
+const { t } = useI18n(Astro.url);
+const steps = t.process.steps.map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0') }));
 ---
 
-<section id="proceso" class="wrap scroll-mt-24 pb-28 pt-16 md:pb-36">
-  <SectionHead eyebrow="05 · Proceso" class="mb-16 md:mb-18">Cómo <em class="accent">trabajamos</em></SectionHead>
+<section id={t.ids.process} class="wrap scroll-mt-24 pb-28 pt-16 md:pb-36">
+  <SectionHead eyebrow={t.process.eyebrow} class="mb-16 md:mb-18"><Accent parts={t.process.title} /></SectionHead>
   <div class="relative grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4" data-progress>
     <div class="absolute bottom-0 left-[7px] top-0 w-px bg-salvia/20 lg:bottom-auto lg:left-0 lg:right-0 lg:top-[7px] lg:h-px lg:w-auto"></div>
     <div class="beam absolute left-[6px] top-0 w-[3px] rounded-[3px] lg:left-0 lg:top-[6px] lg:h-[3px]"></div>
