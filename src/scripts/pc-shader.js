@@ -1,11 +1,12 @@
 // Portado de Claude Design (Perceptia Home · pc-shader.js).
-// Cambios: lens-portrait para pantallas verticales y un solo frame con prefers-reduced-motion.
+// Cambios: lens-portrait para pantallas verticales, un solo frame con prefers-reduced-motion
+// y `state`/K para animar las lentes desde fuera y convertirlas en el isotipo.
 (() => {
 if (typeof window === 'undefined' || customElements.get('pc-shader')) return;
 const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)');
 const VS = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
 const HEAD = `precision highp float;
-uniform vec2 R;uniform float T;uniform vec2 M;uniform float V;uniform float S;uniform float P;uniform vec4 LN;uniform float LF;
+uniform vec2 R;uniform float T;uniform vec2 M;uniform float V;uniform float S;uniform float P;uniform vec4 LN;uniform float LF;uniform float K;
 const vec3 C0=vec3(.012,.075,.059),C1=vec3(.055,.231,.188),C2=vec3(.078,.878,.647),C3=vec3(.561,.69,.647),C4=vec3(.933,.961,.949);
 float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 float ns(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1.,0.)),u.x),mix(h21(i+vec2(0.,1.)),h21(i+vec2(1.,1.)),u.x),u.y);}
@@ -47,6 +48,14 @@ void main(){
  vec3 L=normalize(vec3(-.5,.65,.9));
  col+=C4*(e1*pow(max(0.,dot(vec3(l1,z1),L)),50.)+e2*pow(max(0.,dot(vec3(l2,z2),L)),50.))*.35;
  col+=C2*exp(-md*md*16.)*.07;
+ // K: transición al isotipo (medialunas claras, vesica calada con filo aqua).
+ if(K>0.){
+  vec3 wc=C4*(.93+.07*smoothstep(.2,.9,f));
+  vec3 lg=mix(col,wc,ins*(1.-ves));
+  lg=mix(lg,C0+C1*.3*smoothstep(.3,.9,f),ves);
+  col=mix(col,lg,K);
+  col+=C2*exp(-abs(dv)*380.)*.55*K;
+ }
  col*=1.-.65*pow(length((uv-.5)*vec2(1.,.9)),2.2);
  col+=grain()*.05;
  gl_FragColor=vec4(col,1.);
@@ -190,12 +199,12 @@ class PcShader extends HTMLElement {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     const al = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(al); gl.vertexAttribPointer(al, 2, gl.FLOAT, false, 0, 0);
-    const U = {}; ['R', 'T', 'M', 'V', 'S', 'P', 'LN', 'LF'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
+    const U = {}; ['R', 'T', 'M', 'V', 'S', 'P', 'LN', 'LF', 'K'].forEach(k => U[k] = gl.getUniformLocation(pr, k));
     const num = (k, d) => { const v = parseFloat(this.getAttribute(k)); return isNaN(v) ? d : v; };
     const heavy = mode === 'lens' || mode === 'chrome';
     const scale = num('scale', heavy ? .55 : 1);
     const px = num('px', 3), P = num('variant', 0);
-    const LN = (this.getAttribute('lens') || '0,0.06,0.3,0.17').split(',').map(Number);
+    const LN = (this.getAttribute('lens') || '0,0.06,0.3,0.15').split(',').map(Number);
     const LNP = this.getAttribute('lens-portrait') ? this.getAttribute('lens-portrait').split(',').map(Number) : null;
     const LF = this.getAttribute('lenses') === '1' ? 1 : 0;
     let dpr = 1;
@@ -221,12 +230,17 @@ class PcShader extends HTMLElement {
       gl.viewport(0, 0, cv.width, cv.height);
       gl.uniform2f(U.R, cv.width, cv.height); gl.uniform1f(U.T, t); gl.uniform2f(U.M, m[0], m[1]);
       gl.uniform1f(U.V, v); gl.uniform1f(U.S, Math.max(1, px * dpr)); gl.uniform1f(U.P, P);
-      const ln = LNP && cv.width < cv.height * 0.9 ? LNP : LN;
-      gl.uniform4f(U.LN, ln[0], ln[1], ln[2], ln[3]); gl.uniform1f(U.LF, LF);
+      // `state` permite controlar las lentes desde fuera (p. ej. el hero ligado al scroll).
+      const st = this.state;
+      const ln = st ? [st.x, st.y, st.r, st.s] : LNP && cv.width < cv.height * 0.9 ? LNP : LN;
+      gl.uniform4f(U.LN, ln[0], ln[1], ln[2], ln[3]); gl.uniform1f(U.LF, LF); gl.uniform1f(U.K, st ? st.k : 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     this._raf = requestAnimationFrame(loop);
+    this._redraw = () => { if (REDUCE.matches && this.gl) requestAnimationFrame(loop); };
   }
+  /** Vuelve a pintar un frame cuando el movimiento está reducido (el loop no corre). */
+  redraw() { this._redraw && this._redraw(); }
 }
 customElements.define('pc-shader', PcShader);
 })();

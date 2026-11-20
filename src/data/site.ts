@@ -79,7 +79,7 @@ export const services: Service[] = [
     slug: 'a-la-medida',
     title: 'Desarrollo a la medida',
     short: 'Plataformas, paneles y sistemas internos construidos alrededor de tu operación.',
-    shader: { mode: 'lens', lens: '0,0,0.3,0.17', variant: '4', scale: '0.5' },
+    shader: { mode: 'lens', lens: '0,0,0.3,0.15', variant: '4', scale: '0.5' },
     long: 'Software construido alrededor de los procesos, integraciones y objetivos de tu empresa, con una arquitectura preparada para crecer.',
     includes: ['Plataformas y portales', 'Herramientas internas', 'Integraciones', 'Automatizaciones', 'Arquitectura preparada para evolucionar'],
   },
