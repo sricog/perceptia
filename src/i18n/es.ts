@@ -141,7 +141,7 @@ export const es = {
     book: {
       title: ['Conócenos y ', 'cotiza tu proyecto'],
       body: '30 minutos para entender tu proyecto y decirte cómo lo haríamos. Sin costo y sin compromiso.',
-      cta: 'Cotizar proyecto →',
+      cta: 'Cotizar proyecto',
     },
   },
 
