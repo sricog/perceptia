@@ -43,13 +43,13 @@ export const en: Dict = {
       ['landing pages', 'that convert'],
       ['MVPs', 'ready to validate'],
     ],
-    log: [
-      'initializing project',
-      'resolving architecture',
-      'compiling · <b data-count="12">12</b>/12 modules',
-      'tests · <b data-count="148">148</b> passed',
-      'deployed to production',
-    ],
+    field: {
+      human: ['see', 'understand', 'feel', 'intuition', 'design', 'listen', 'empathy', 'judgment', 'detail', 'taste', 'context', 'clarity'],
+      machine: ['data', 'models', 'agents', 'automate', 'predict', 'learn', 'code', 'APIs', 'scale', 'vectors', 'tokens', 'workflows'],
+    },
+    left: ['Percept', 'ion'],
+    right: [['I', 'ntelligent'], ['A', 'utomation']],
+    note: 'perception + intelligent automation',
     cue: 'Scroll to focus',
     primary: 'Get a quote →',
     secondary: 'See projects',
@@ -58,26 +58,23 @@ export const en: Dict = {
   marquee: 'Technologies we work with',
 
   studio: {
-    eyebrow: '01 · Studio',
+    cta: 'See how we work',
     bright: "We're a software studio. We design and build websites, MVPs and custom systems",
     dim: 'that make sense at first glance and keep working just as well on day one thousand.',
   },
 
   homeServices: {
-    eyebrow: '02 · Services',
     title: ['What we ', 'build'],
     link: 'All services',
   },
 
   featured: {
-    eyebrow: '03 · Featured project',
     sub: 'Web app · design, development and launch',
     aria: 'View MiQuarto live',
     alt: 'MiQuarto platform mockup on laptop and phone',
   },
 
   homeProjects: {
-    eyebrow: '04 · Projects',
     title: ['', 'Live', ' projects'],
   },
 
@@ -88,28 +85,77 @@ export const en: Dict = {
     filters: { web: 'Websites', app: 'Web apps' },
     alt: '{name} mockup on laptop and phone',
     visit: 'Visit site ↗',
+    meta: {
+      miquarto: { sector: 'Proptech · furnished rentals', place: 'Colombia' },
+      imagenes: { sector: 'Healthcare · dental imaging', place: 'Antioquia, CO' },
+      aktiva: { sector: 'B2B corporate events', place: 'Colombia' },
+      raiz: { sector: 'Travel · retreats', place: 'Bahía Solano, CO' },
+      smoke: { sector: 'Restaurant · BBQ', place: 'Guaynabo, PR' },
+      market: { sector: 'Food · online store', place: 'Colombia' },
+      casamayor: { sector: 'Real estate', place: 'Miami, FL' },
+      adastra: { sector: 'Culture · funding', place: 'Spain' },
+    },
+    inFocus: 'In focus',
+    focusing: 'Focusing',
+    index: 'Project index',
+    viewer: 'Viewer',
   },
 
   process: {
-    eyebrow: '05 · Process',
     title: ['How we ', 'work'],
+    lead: 'A short, transparent process: you know what happens at each stage, what you get and when.',
+    more: 'See the full process',
     steps: [
-      { t: 'Understand', d: 'A discovery session to map goals, users and business constraints.' },
-      { t: 'Define', d: 'Scope, architecture and a clickable prototype before any code is written.' },
-      { t: 'Build & validate', d: 'Weekly releases and a staging environment that is always available.' },
-      { t: 'Launch & evolve', d: 'Deployment, metrics and continuous improvement after launch.' },
+      {
+        t: 'Understand',
+        tag: 'Discovery call',
+        d: 'A discovery session to map goals, users and business constraints.',
+        items: ['What you want to achieve and for whom', 'How we will measure success', 'Technical constraints, timing and budget'],
+      },
+      {
+        t: 'Define',
+        tag: 'Proposal & prototype',
+        d: 'Scope, architecture and a clickable prototype before any code is written.',
+        items: ['A proposal with scope and price', 'Recommended architecture and stack', 'A clickable prototype to validate the flow'],
+      },
+      {
+        t: 'Build & validate',
+        tag: 'Weekly cycles',
+        d: 'Weekly releases and a staging environment that is always available.',
+        items: ['A demo of progress every week', 'Staging with the latest version', 'Adjustments from your feedback each cycle'],
+      },
+      {
+        t: 'Launch & evolve',
+        tag: 'Launch',
+        d: 'Deployment, metrics and continuous improvement after launch.',
+        items: ['Deployment, domain and analytics', 'Training for your team', 'Support and continuous improvement'],
+      },
     ],
+    principlesTitle: ['What you ', 'always', ' get'],
+    principles: [
+      { t: 'Direct contact', d: 'You talk to the people who design and build your project, no middlemen.' },
+      { t: 'Progress every week', d: 'You see the product grow in a real environment, not in slide decks.' },
+      { t: 'Everything in your name', d: 'Repository, domain and accounts belong to your company.' },
+      { t: 'Data-driven decisions', d: 'We define metrics before launch so we know what works.' },
+    ],
+    book: {
+      title: ['Book a ', 'call'],
+      body: "30 minutes to understand your project and tell you how we'd build it. Free, no strings attached.",
+      cta: 'Book a call',
+    },
   },
 
   reach: {
-    eyebrow: '06 · Reach',
     title: ['Remote, ', 'borderless'],
-    body: 'Clients in Colombia, Puerto Rico and the United States. Calls, deliveries and support in your time zone.',
+    body: 'Clients in Colombia, Puerto Rico, the United States and Spain. Calls, deliveries and support in your time zone.',
     places: [
-      { name: 'Colombia', tz: 'UTC−5' },
-      { name: 'Puerto Rico', tz: 'UTC−4' },
-      { name: 'United States', tz: 'UTC−5 to −8' },
+      { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
+      { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
+      { id: 'us', name: 'United States', city: 'Miami', tz: 'UTC−5 to −8' },
+      { id: 'es', name: 'Spain', city: 'Madrid', tz: 'UTC+1' },
     ],
+    hint: 'Drag the globe · pick a country to focus it',
+    localTime: 'Local time in {city}',
   },
 
   cta: {
@@ -119,7 +165,7 @@ export const en: Dict = {
     primary: 'Get a quote →',
   },
 
-  footer: { site: 'Site', contact: 'Contact', legal: 'Legal' },
+  footer: { site: 'Site', contact: 'Contact', legal: 'Legal', terms: 'Terms and conditions', privacy: 'Privacy policy' },
 
   pricing: { from: 'From', proposal: 'Proposal', request: 'Request a proposal', quote: 'Get a quote →' },
 
@@ -128,7 +174,6 @@ export const en: Dict = {
       slug: 'websites',
       title: 'Websites & landing pages',
       form: 'Website / landing',
-      price: 'COP 700,000',
       short: 'Fast, measurable, easy-to-edit sites designed to turn visitors into customers.',
       long: 'A clear, fast digital presence designed to turn attention into opportunities. Custom-designed, never templated.',
       includes: ['Custom visual design', 'Responsive experience', 'Contact form or direct line', 'Initial SEO', 'Delivered ready to run'],
@@ -160,6 +205,43 @@ export const en: Dict = {
       long: 'Workflows that move data between your tools, keep your team in the loop and take care of repetitive work, with monitoring so nothing slips through.',
       includes: ['Process mapping', 'Tool and API integrations', 'AI-powered flows where they add value', 'Alerts and monitoring', 'Documentation and handoff'],
     },
+  },
+
+  processPage: {
+    title: 'Process',
+    description: 'How we work at Perceptia: discovery, proposal, weekly cycles and launch. Book a 30-minute call.',
+    eyebrow: 'Process',
+    h1: ['From first coffee to ', 'launch'],
+    lead: 'How we turn an idea into a product in production, step by step and with no surprises.',
+  },
+
+  booking: {
+    id: 'book',
+    title: ['Book your ', 'call'],
+    lead: "Leave your email or WhatsApp and tell us in a few lines what you want to build. We'll reach out to set up the call.",
+    facts: ['30 minutes', 'Video call or WhatsApp', 'Free'],
+    name: 'Name *',
+    namePh: 'Your name',
+    contact: 'Email or WhatsApp *',
+    contactPh: 'you@company.com or your number',
+    about: 'What do you want to build? *',
+    aboutPh: 'Tell us in a few lines about your idea or the problem you want to solve.',
+    submit: 'Get in touch with me',
+    note: "We'll reply through whichever channel you leave us.",
+    errors: {
+      name: 'Enter your name.',
+      contact: 'Enter a valid email or phone number.',
+      about: 'Tell us a bit more (at least 10 characters).',
+    },
+    sending: 'Sending…',
+    sent: {
+      title: "You're all set, {name}!",
+      body: "We got your request. We'll reach out soon by email or WhatsApp to set up the call.",
+      whatsapp: 'Message us on WhatsApp',
+      again: 'Send another request',
+    },
+    failed: "We couldn't save your request. Try again or message us on WhatsApp.",
+    wa: 'Hi Perceptia, this is {name}. I just left my details on your website to talk about a project.',
   },
 
   servicesPage: {
@@ -213,6 +295,7 @@ export const en: Dict = {
       types: 'Pick at least one project type.',
       message: 'Give us a little more context.',
     },
+    failed: "We couldn't send your request. Try again or message us on WhatsApp.",
     sent: {
       title: ['Thanks! Message ', 'perceived', '.'],
       body: "We'll get back to you within 24 business hours with next steps. If you'd rather talk now, message us on WhatsApp.",
@@ -224,6 +307,15 @@ export const en: Dict = {
       want: ". I'd like a quote for: {labels}.",
       budget: ' Budget: {budget}.',
     },
+  },
+
+  consent: {
+    pre: 'I accept the ',
+    terms: 'Terms and conditions',
+    mid: ' and authorize the ',
+    privacy: 'processing of my personal data',
+    post: '.',
+    error: 'To send your request you need to accept the terms and authorize the processing of your data.',
   },
 
   whatsapp: "Hi Perceptia, I'd like a quote for a project.",

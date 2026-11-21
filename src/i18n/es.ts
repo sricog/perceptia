@@ -48,14 +48,14 @@ export const es = {
       ['landing pages', 'que convierten'],
       ['MVPs', 'listos para validar'],
     ],
-    // `<b data-count>` lo anima el script durante su paso (0 → valor final).
-    log: [
-      'inicializando proyecto',
-      'resolviendo arquitectura',
-      'compilando · <b data-count="12">12</b>/12 módulos',
-      'pruebas · <b data-count="148">148</b> pasadas',
-      'desplegado en producción',
-    ],
+    // Campo de palabras que las lentes «escanean» y absorben: humanas a la izquierda, de máquina a la derecha.
+    field: {
+      human: ['ver', 'entender', 'sentir', 'intuir', 'diseñar', 'escuchar', 'empatía', 'criterio', 'detalle', 'mirada', 'contexto', 'claridad'],
+      machine: ['datos', 'modelos', 'agentes', 'automatizar', 'predecir', 'aprender', 'código', 'APIs', 'escalar', 'vectores', 'tokens', 'flujos'],
+    },
+    // De cada lente sobrevive una mitad del nombre: PERCEPT(ible) + I(nteligencia) A(rtificial).
+    left: ['Percept', 'ible'],
+    right: [['I', 'nteligencia'], ['A', 'rtificial']],
     cue: 'Desliza para enfocar',
     primary: 'Cotizar proyecto →',
     secondary: 'Ver proyectos',
@@ -64,26 +64,23 @@ export const es = {
   marquee: 'Tecnologías con las que trabajamos',
 
   studio: {
-    eyebrow: '01 · Estudio',
+    cta: 'Ver cómo trabajamos',
     bright: 'Somos un estudio de software. Diseñamos y programamos websites, MVPs y sistemas a la medida',
     dim: 'que se entienden al primer vistazo y siguen funcionando igual de bien el día mil.',
   },
 
   homeServices: {
-    eyebrow: '02 · Servicios',
     title: ['Lo que ', 'construimos'],
     link: 'Todos los servicios',
   },
 
   featured: {
-    eyebrow: '03 · Proyecto destacado',
     sub: 'App web · diseño, desarrollo y lanzamiento',
     aria: 'Ver MiQuarto en vivo',
     alt: 'Mockup de la plataforma MiQuarto en laptop y móvil',
   },
 
   homeProjects: {
-    eyebrow: '04 · Proyectos',
     title: ['Proyectos ', 'en vivo'],
   },
 
@@ -94,28 +91,76 @@ export const es = {
     filters: { web: 'Websites', app: 'Apps web' },
     alt: 'Mockup de {name} en laptop y móvil',
     visit: 'Ver sitio ↗',
+    meta: {
+      miquarto: { sector: 'Proptech · arriendos amoblados', place: 'Colombia' },
+      imagenes: { sector: 'Salud · imagenología oral', place: 'Antioquia, CO' },
+      aktiva: { sector: 'Eventos corporativos B2B', place: 'Colombia' },
+      raiz: { sector: 'Turismo · retiros', place: 'Bahía Solano, CO' },
+      smoke: { sector: 'Restaurante · BBQ', place: 'Guaynabo, PR' },
+      market: { sector: 'Alimentos · tienda en línea', place: 'Colombia' },
+      casamayor: { sector: 'Bienes raíces', place: 'Miami, FL' },
+      adastra: { sector: 'Cultura · financiación', place: 'España' },
+    },
+    inFocus: 'En foco',
+    focusing: 'Enfocando',
+    index: 'Índice de proyectos',
+    viewer: 'Visor',
   },
 
   process: {
-    eyebrow: '05 · Proceso',
     title: ['Cómo ', 'trabajamos'],
+    lead: 'Un proceso corto y transparente: sabes qué pasa en cada etapa, qué recibes y cuándo.',
+    more: 'Ver el proceso completo',
     steps: [
-      { t: 'Entendemos', d: 'Sesión de descubrimiento: objetivos, usuarios y restricciones del negocio.' },
-      { t: 'Definimos', d: 'Alcance, arquitectura y un prototipo navegable antes de escribir código.' },
-      { t: 'Construimos y validamos', d: 'Entregas semanales y un entorno de pruebas siempre disponible.' },
-      { t: 'Lanzamos y evolucionamos', d: 'Despliegue, métricas y mejoras continuas después del lanzamiento.' },
+      {
+        t: 'Entendemos',
+        tag: 'Llamada de descubrimiento',
+        d: 'Sesión de descubrimiento: objetivos, usuarios y restricciones del negocio.',
+        items: ['Qué quieres lograr y para quién', 'Cómo vamos a medir el éxito', 'Restricciones técnicas, tiempos y presupuesto'],
+      },
+      {
+        t: 'Definimos',
+        tag: 'Propuesta y prototipo',
+        d: 'Alcance, arquitectura y un prototipo navegable antes de escribir código.',
+        items: ['Propuesta con alcance y precio', 'Arquitectura y tecnologías recomendadas', 'Prototipo navegable para validar el flujo'],
+      },
+      {
+        t: 'Construimos y validamos',
+        tag: 'Ciclos semanales',
+        d: 'Entregas semanales y un entorno de pruebas siempre disponible.',
+        items: ['Demo de avances cada semana', 'Entorno de pruebas con la versión más reciente', 'Ajustes con tu feedback en cada ciclo'],
+      },
+      {
+        t: 'Lanzamos y evolucionamos',
+        tag: 'Lanzamiento',
+        d: 'Despliegue, métricas y mejoras continuas después del lanzamiento.',
+        items: ['Despliegue, dominio y analítica', 'Capacitación para tu equipo', 'Soporte y mejoras continuas'],
+      },
     ],
+    principlesTitle: ['Lo que ', 'siempre', ' recibes'],
+    principles: [
+      { t: 'Contacto directo', d: 'Hablas con quienes diseñan y programan tu proyecto, sin intermediarios.' },
+      { t: 'Avances cada semana', d: 'Ves el producto crecer en un entorno real, no en presentaciones.' },
+      { t: 'Todo a tu nombre', d: 'Repositorio, dominio y cuentas quedan a nombre de tu empresa.' },
+      { t: 'Decisiones con datos', d: 'Definimos métricas antes de lanzar para saber qué funciona.' },
+    ],
+    book: {
+      title: ['Conócenos y ', 'cotiza tu proyecto'],
+      body: '30 minutos para entender tu proyecto y decirte cómo lo haríamos. Sin costo y sin compromiso.',
+      cta: 'Cotizar proyecto →',
+    },
   },
 
   reach: {
-    eyebrow: '06 · Alcance',
     title: ['Remoto, ', 'sin fronteras'],
-    body: 'Clientes en Colombia, Puerto Rico y Estados Unidos. Llamadas, entregas y soporte en tu zona horaria.',
+    body: 'Clientes en Colombia, Puerto Rico, Estados Unidos y España. Llamadas, entregas y soporte en tu zona horaria.',
     places: [
-      { name: 'Colombia', tz: 'UTC−5' },
-      { name: 'Puerto Rico', tz: 'UTC−4' },
-      { name: 'Estados Unidos', tz: 'UTC−5 a −8' },
+      { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
+      { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
+      { id: 'us', name: 'Estados Unidos', city: 'Miami', tz: 'UTC−5 a −8' },
+      { id: 'es', name: 'España', city: 'Madrid', tz: 'UTC+1' },
     ],
+    localTime: 'Hora local en {city}',
   },
 
   cta: {
@@ -125,7 +170,7 @@ export const es = {
     primary: 'Cotizar proyecto →',
   },
 
-  footer: { site: 'Sitio', contact: 'Contacto', legal: 'Legal' },
+  footer: { site: 'Sitio', contact: 'Contacto', legal: 'Legal', terms: 'Términos y condiciones', privacy: 'Tratamiento de datos' },
 
   pricing: { from: 'Desde', proposal: 'Propuesta', request: 'Solicitar propuesta', quote: 'Cotizar →' },
 
@@ -135,7 +180,6 @@ export const es = {
       slug: 'websites',
       title: 'Websites y landing pages',
       form: 'Website / landing',
-      price: '$700.000',
       short: 'Sitios rápidos, medibles y fáciles de editar, pensados para convertir visitas en clientes.',
       long: 'Una presencia digital clara, rápida y diseñada para convertir atención en oportunidades. Diseño propio, nada de plantillas.',
       includes: ['Diseño visual personalizado', 'Experiencia responsive', 'Formulario o contacto directo', 'SEO inicial', 'Entrega lista para operar'],
@@ -167,6 +211,43 @@ export const es = {
       long: 'Flujos que mueven datos entre tus herramientas, notifican a tu equipo y se encargan del trabajo repetitivo, con monitoreo para que nada se pierda.',
       includes: ['Mapeo de procesos', 'Integración entre herramientas y APIs', 'Flujos con IA cuando suman', 'Alertas y monitoreo', 'Documentación y traspaso'],
     },
+  },
+
+  processPage: {
+    title: 'Proceso',
+    description: 'Cómo trabajamos en Perceptia: descubrimiento, propuesta, ciclos semanales y lanzamiento. Transparencia y entregas claras en cada etapa.',
+    eyebrow: 'Proceso',
+    h1: ['Del primer café al ', 'lanzamiento'],
+    lead: 'Así convertimos una idea en un producto en producción, paso a paso y sin sorpresas.',
+  },
+
+  booking: {
+    id: 'agendar',
+    title: ['Conócenos y ', 'cotiza tu proyecto'],
+    lead: 'Déjanos tu correo o WhatsApp y cuéntanos en pocas líneas qué quieres construir. Te escribimos para coordinar la llamada.',
+    facts: ['30 minutos', 'Videollamada o WhatsApp', 'Sin costo'],
+    name: 'Nombre *',
+    namePh: 'Tu nombre',
+    contact: 'Correo o WhatsApp *',
+    contactPh: 'tu@empresa.com o tu número',
+    about: '¿Qué quieres construir? *',
+    aboutPh: 'Cuéntanos en pocas líneas tu idea o el problema que quieres resolver.',
+    submit: 'Quiero que me contacten',
+    note: 'Te respondemos por el medio que nos dejes.',
+    errors: {
+      name: 'Escribe tu nombre.',
+      contact: 'Escribe un correo o un número válido.',
+      about: 'Cuéntanos un poco más (mínimo 10 caracteres).',
+    },
+    sending: 'Enviando…',
+    sent: {
+      title: '¡Listo, {name}!',
+      body: 'Recibimos tu solicitud. Te escribimos pronto por correo o WhatsApp para coordinar la llamada.',
+      whatsapp: 'Escríbenos por WhatsApp',
+      again: 'Enviar otra solicitud',
+    },
+    failed: 'No pudimos guardar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.',
+    wa: 'Hola Perceptia, soy {name}. Acabo de dejarles mis datos en la web para hablar de un proyecto.',
   },
 
   servicesPage: {
@@ -221,6 +302,7 @@ export const es = {
       types: 'Elige al menos un tipo de proyecto.',
       message: 'Danos un poco más de contexto.',
     },
+    failed: 'No pudimos enviar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.',
     sent: {
       title: ['¡Gracias! Ya lo ', 'percibimos', '.'],
       body: 'Te responderemos en menos de 24 horas hábiles con los siguientes pasos. Si prefieres hablar ya, escríbenos por WhatsApp.',
@@ -232,6 +314,15 @@ export const es = {
       want: '. Quiero cotizar: {labels}.',
       budget: ' Presupuesto: {budget}.',
     },
+  },
+
+  consent: {
+    pre: 'Acepto los ',
+    terms: 'Términos y condiciones',
+    mid: ' y autorizo el ',
+    privacy: 'tratamiento de mis datos personales',
+    post: '.',
+    error: 'Para enviar la solicitud debes aceptar los términos y autorizar el tratamiento de tus datos.',
   },
 
   whatsapp: 'Hola Perceptia, quiero cotizar un proyecto.',

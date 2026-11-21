@@ -6,7 +6,7 @@ import ContactForm from '../components/ContactForm';
 import Accent from '../components/Accent.astro';
 import { site, services, whatsappUrl } from '../data/site';
 import { useI18n } from '../i18n';
-const { t } = useI18n(Astro.url);
+const { t, lang, href } = useI18n(Astro.url);
 const p = t.contactPage;
 // Opciones del formulario: un chip por servicio (id = slug del idioma, para ?servicio= / ?service=) y "Otro".
 const types = [...services.map((s) => ({ id: t.services[s.id].slug, label: t.services[s.id].form })), { id: 'other', label: t.form.other }];
@@ -36,7 +36,7 @@ const types = [...services.map((s) => ({ id: t.services[s.id].slug, label: t.ser
         <div class="pc-rise hidden lg:block" style="--d:.4s"><BinocularMark id="contact" size={80} metal /></div>
       </div>
       <div class="pc-rise" style="--d:.25s">
-        <ContactForm client:load whatsappNumber={site.whatsappNumber} t={t.form} types={types} />
+        <ContactForm client:load whatsappNumber={site.whatsappNumber} t={t.form} types={types} lang={lang} consent={{ t: t.consent, terms: href('terms'), privacy: href('privacy') }} />
       </div>
     </div>
   </section>

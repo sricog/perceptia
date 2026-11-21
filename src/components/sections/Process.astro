@@ -1,27 +1,73 @@
 ---
+/**
+ * «Cómo trabajamos»: línea de tiempo con haz de luz ligado al scroll. Cada paso trae lo que
+ * recibes en esa etapa. En el home cierra con una invitación a agendar; en /proceso (`full`)
+ * la página continúa con principios y el agendador.
+ */
 import SectionHead from '../SectionHead.astro';
 import Accent from '../Accent.astro';
+import BinocularMark from '../BinocularMark.astro';
 import { useI18n } from '../../i18n';
-const { t } = useI18n(Astro.url);
+interface Props { full?: boolean }
+const { full = false } = Astro.props;
+const { t, href } = useI18n(Astro.url);
 const steps = t.process.steps.map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0') }));
 ---
 
-<section id={t.ids.process} class="wrap scroll-mt-24 pb-28 pt-16 md:pb-36">
-  <SectionHead eyebrow={t.process.eyebrow} class="mb-16 md:mb-18"><Accent parts={t.process.title} /></SectionHead>
-  <div class="relative grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4" data-progress>
+<section id={t.ids.process} class:list={['wrap scroll-mt-24 pb-28 md:pb-36', full ? 'pt-6' : 'pt-16']}>
+  {
+    !full && (
+      <SectionHead class="mb-16 md:mb-18" link={{ href: href('process'), label: t.process.more }}>
+        <Accent parts={t.process.title} />
+      </SectionHead>
+    )
+  }
+  <div class="relative grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8" data-progress>
     <div class="absolute bottom-0 left-[7px] top-0 w-px bg-salvia/20 lg:bottom-auto lg:left-0 lg:right-0 lg:top-[7px] lg:h-px lg:w-auto"></div>
     <div class="beam absolute left-[6px] top-0 w-[3px] rounded-[3px] lg:left-0 lg:top-[6px] lg:h-[3px]"></div>
     {
       steps.map((s, i) => (
         <div class="step relative flex flex-col gap-3.5 pl-10 lg:pl-0 lg:pt-11" data-reveal style={`--d:${i * 0.1}s;--i:${i}`}>
           <div class="dot absolute left-0 top-0 size-4 rounded-full border border-aqua bg-noche transition-[background,box-shadow] duration-500" />
-          <span class="font-mono text-[12px] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="font-mono text-[12px] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
+            <span class="rounded-full border border-salvia/25 px-2.5 py-1 font-mono text-[11px] uppercase leading-none tracking-[0.1em] text-salvia">{s.tag}</span>
+          </div>
           <h3 class="text-[26px] font-semibold leading-[1.1] tracking-[-0.03em] md:text-[28px]">{s.t}</h3>
           <p class="text-[16px] leading-[1.55] text-salvia">{s.d}</p>
+          <ul class="mt-2 flex flex-col gap-2.5 border-t border-salvia/14 pt-4">
+            {s.items.map((it) => (
+              <li class="flex gap-2.5 text-[15px] leading-[1.45] text-bruma">
+                <span class="mt-[0.5em] size-1.5 flex-none rounded-full bg-aqua shadow-[0_0_8px_#14E0A5]" aria-hidden="true" />
+                {it}
+              </li>
+            ))}
+          </ul>
         </div>
       ))
     }
   </div>
+
+  {
+    !full && (
+      <div
+        class="relative mt-20 grid items-center gap-8 overflow-hidden rounded-[26px] border border-salvia/16 bg-card p-7 md:mt-24 md:grid-cols-[auto_1fr_auto] md:gap-10 md:p-10"
+        data-reveal
+      >
+        <div class="pointer-events-none absolute -right-20 -top-24 size-[320px] rounded-full bg-aqua/12 blur-[80px]" />
+        <BinocularMark id="book" size={44} metal />
+        <div class="relative flex flex-col gap-2">
+          <h3 class="text-[clamp(28px,3vw,40px)] font-semibold leading-[1.05] tracking-[-0.04em]">
+            <Accent parts={t.process.book.title} />
+          </h3>
+          <p class="max-w-[520px] text-[17px] leading-[1.55] text-salvia">{t.process.book.body}</p>
+        </div>
+        <a href={href('process', t.booking.id)} class="btn btn-primary relative justify-self-start md:justify-self-end">
+          {t.process.book.cta} →
+        </a>
+      </div>
+    )
+  }
 </section>
 
 <style>

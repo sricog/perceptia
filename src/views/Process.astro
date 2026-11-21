@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Shader from '../components/Shader.astro';
+import Process from '../components/sections/Process.astro';
+import BookingForm from '../components/BookingForm';
+import BinocularMark from '../components/BinocularMark.astro';
+import Accent from '../components/Accent.astro';
+import { site } from '../data/site';
+import { useI18n } from '../i18n';
+const { t, lang, href } = useI18n(Astro.url);
+const p = t.processPage;
+const b = t.booking;
+---
+
+<Base title={p.title} description={p.description} route="process">
+  <header class="grain relative overflow-hidden pb-16 pt-40 md:pb-24 md:pt-52">
+    <div class="absolute inset-0 opacity-75"><Shader mode="lens" lenses lens="0.55,0.05,0.2,0.1" variant="2" scale="0.5" /></div>
+    <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,#03130F_0%,rgba(3,19,15,.7)_50%,rgba(3,19,15,.3)_100%)]"></div>
+    <div class="wrap relative">
+      <div class="eyebrow pc-rise">{p.eyebrow}</div>
+      <h1 class="pc-rise mt-5 max-w-[15ch] text-[clamp(48px,7vw,104px)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
+        <Accent parts={p.h1} />
+      </h1>
+      <p class="pc-rise mt-6 max-w-[560px] text-[19px] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
+    </div>
+  </header>
+
+  <Process full />
+
+  <section class="wrap pb-28 md:pb-36">
+    <h2 class="h-section mb-12" data-reveal><Accent parts={t.process.principlesTitle} /></h2>
+    <div class="grid gap-px overflow-hidden rounded-[26px] border border-salvia/14 bg-salvia/14 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        t.process.principles.map((pr, i) => (
+          <div class="flex flex-col gap-3 bg-noche p-7 md:p-8" data-reveal style={`--d:${i * 0.08}s`}>
+            <span class="font-mono text-[12px] tracking-[0.14em] text-aqua">◐</span>
+            <h3 class="text-[22px] font-semibold leading-tight tracking-[-0.03em]">{pr.t}</h3>
+            <p class="text-[15px] leading-[1.55] text-salvia">{pr.d}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id={b.id} class="wrap grid scroll-mt-24 grid-cols-[minmax(0,1fr)] gap-12 pb-28 md:pb-36 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-16">
+    <div class="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start" data-reveal>
+      <BinocularMark id="booking" size={56} metal />
+      <h2 class="h-section"><Accent parts={b.title} /></h2>
+      <p class="max-w-[420px] text-[18px] leading-[1.55] text-salvia">{b.lead}</p>
+      <ul class="mt-2 flex flex-col font-mono text-[13px] font-medium tracking-[0.06em]">
+        {
+          b.facts.map((f, i) => (
+            <li class:list={['flex items-center gap-3 border-t border-salvia/18 py-4', i === b.facts.length - 1 && 'border-b']}>
+              <span class="size-1.5 rounded-full bg-aqua shadow-[0_0_8px_#14E0A5]" aria-hidden="true" />
+              {f}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="min-h-[640px] min-w-0" data-reveal style="--d:.1s">
+      <BookingForm client:only="react" t={b} lang={lang} whatsappNumber={site.whatsappNumber} consent={{ t: t.consent, terms: href('terms'), privacy: href('privacy') }} />
+    </div>
+  </section>
+</Base>

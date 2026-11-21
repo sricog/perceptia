@@ -9,7 +9,7 @@ const { t, lang, href } = useI18n(Astro.url);
 const links = [
   { label: t.nav.services, href: href('services'), match: routes.services[lang] },
   { label: t.nav.projects, href: href('projects'), match: routes.projects[lang] },
-  { label: t.nav.process, href: href('home', t.ids.process) },
+  { label: t.nav.process, href: href('process'), match: routes.process[lang] },
   { label: t.nav.contact, href: href('contact'), match: routes.contact[lang] },
 ];
 // Página equivalente en cada idioma. El script la actualiza en cada navegación,

@@ -21,6 +21,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.4.12",
+    "cobe": "^2.0.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.5"
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "cf": "^1.0.0-rc.2",
+    "simple-icons": "^16.38.0",
     "typescript": "^6.0.3"
   }
 }
