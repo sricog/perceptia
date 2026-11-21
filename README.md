@@ -4,11 +4,13 @@ Sitio de Perceptia (estudio de software). Astro 7 + Tailwind v4 + React (solo el
 
 ## Desarrollo
 
+Se usa [Bun](https://bun.sh) como gestor de paquetes (`bun.lock`). No usar `npm install`: crearía un `package-lock.json` que se desincroniza.
+
 ```bash
-npm install
-npm run dev      # http://localhost:4321
-npm run build    # genera dist/ (estático)
-npx astro check  # tipos
+bun install       # volver a correrlo tras cada git pull que cambie package.json
+bun dev           # http://localhost:4321
+bun run build     # genera dist/ (estático)
+bunx astro check  # tipos
 ```
 
 ## Estructura
@@ -35,10 +37,16 @@ La solicitud de llamada de `/proceso` y el formulario de `/contacto` guardan cad
    Crea la tabla con RLS (el sitio solo puede insertar, no leer) y guarda la autorización de datos de cada
    solicitud (`consent_at`, `consent_version`); sin ella el insert se rechaza.
 2. Copiar `.env.example` a `.env` con la URL del proyecto y la clave pública (anon/publishable).
-3. En Cloudflare Pages, poner las mismas dos variables en *Settings → Environment variables* y volver a desplegar.
+3. En Cloudflare, poner las mismas dos variables como variables de build del Worker `perceptia` y volver a desplegar
+   (se leen al construir el sitio, no en tiempo de ejecución).
 
 Para seguimiento, cambiar `status` (`contacted`, `scheduled`, `won`, `lost`, `spam`) y usar `notes` desde el panel.
 
-## Despliegue en Cloudflare Pages
+## Despliegue en Cloudflare Workers
 
-Build command `npm run build`, output `dist`. O desde la terminal: `npx wrangler pages deploy dist`. Después, conectar el dominio `perceptiastudio.com` al proyecto en Pages.
+El sitio se sirve como un Worker de solo assets (`cloudflare.config.ts`, Worker `perceptia`, dominios `perceptiastudio.com` y `www.perceptiastudio.com`).
+Workers Builds lo construye automáticamente al hacer push. Para desplegar a mano desde la terminal:
+
+```bash
+bun run deploy    # astro build && cf deploy ./dist
+```
