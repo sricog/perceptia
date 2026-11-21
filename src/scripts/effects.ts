@@ -263,12 +263,50 @@ function filters() {
   });
 }
 
+/** Grilla de logos: cada pocos segundos una celda cambia su logo por uno de la reserva (con desenfoque). */
+function logoGrids() {
+  if (reduce()) return;
+  document.querySelectorAll<HTMLElement>('[data-logo-grid]').forEach((grid) => {
+    const pool = grid.querySelector<HTMLElement>('[data-logo-pool]');
+    const cells = [...grid.querySelectorAll<HTMLElement>('.cell')];
+    if (!pool || !pool.children.length || !cells.length) return;
+    let last = -1, visible = false;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+    io.observe(grid);
+    const swap = () => {
+      if (!visible || document.hidden) return;
+      let i = Math.floor(Math.random() * cells.length);
+      if (i === last) i = (i + 1) % cells.length;
+      last = i;
+      const cell = cells[i];
+      const out = cell.querySelector<HTMLElement>('.logo');
+      const next = pool.firstElementChild as HTMLElement | null;
+      if (!out || !next || cell.matches(':hover')) return;
+      out.classList.add('is-out');
+      window.setTimeout(() => {
+        out.classList.remove('is-out', 'is-in');
+        pool.append(out);
+        next.classList.remove('is-in');
+        cell.append(next);
+        void next.offsetWidth;
+        next.classList.add('is-in');
+      }, 420);
+    };
+    const id = window.setInterval(swap, 2200);
+    disposers.push(() => {
+      clearInterval(id);
+      io.disconnect();
+    });
+  });
+}
+
 export function initPage() {
   hero();
   reveals();
   rotators();
   scrubbers();
   filters();
+  logoGrids();
   showcases(disposers);
   loupes(disposers);
   if (document.querySelector('[data-globe]')) import('./globe').then((m) => m.globes(disposers));

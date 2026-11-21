@@ -12,6 +12,7 @@ import adastra from '../assets/projects/ad-astra-heritage-neon.webp';
 export const site = {
   name: 'Perceptia',
   url: 'https://perceptiastudio.com',
+  email: 'perceptiastudio@gmail.com',
   // TODO: confirmar número e Instagram de Perceptia (vienen de inoxa.online)
   whatsappNumber: '573187057176',
   whatsappDisplay: '+57 318 705 7176',
@@ -20,11 +21,11 @@ export const site = {
 
 export const whatsappUrl = (text: string) => `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-export const tech = [
-  'Astro', 'React', 'TypeScript', 'Next.js', 'Node.js', 'PostgreSQL',
-  'Supabase', 'Tailwind CSS', 'Cloudflare', 'Figma', 'Stripe', 'OpenAI',
-  'AWS',
-];
+/** Tecnologías de la grilla de logos (nombres de export de `simple-icons`). */
+export const stack = [
+  'siAstro', 'siReact', 'siNextdotjs', 'siSupabase', 'siStripe', 'siCursor',
+  'siClaude', 'siFigma', 'siTailwindcss', 'siCloudflare', 'siN8n', 'siTypescript',
+] as const;
 
 export type ShaderSpec = { mode: string; variant?: string; scale?: string; px?: string; lens?: string };
 

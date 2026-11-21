@@ -1,21 +1,122 @@
 ---
+/**
+ * Estudio + tecnologías: el texto se ilumina con el scroll y a la derecha una grilla de logos
+ * que rota cada pocos segundos (una celda a la vez, con desenfoque). Logos de simple-icons (CC0);
+ * solo se usan en el build, no viajan al navegador como librería.
+ */
+import * as icons from 'simple-icons';
+import { stack } from '../../data/site';
 import { useI18n } from '../../i18n';
-const { t } = useI18n(Astro.url);
+const { t, href } = useI18n(Astro.url);
 const { bright, dim } = t.studio;
 const all = [...bright.split(' ').map((w) => ({ w, b: true })), ...dim.split(' ').map((w) => ({ w, b: false }))];
+
+// Color de marca al pasar el cursor; si es muy oscuro para el fondo, se usa aqua.
+const lum = (hex: string) => {
+  const n = parseInt(hex, 16);
+  return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+};
+const logos = stack.map((k) => {
+  const i = icons[k];
+  return { title: i.title, path: i.path, hover: lum(i.hex) > 0.32 ? `#${i.hex}` : '#14E0A5' };
+});
+const CELLS = 6;
 ---
 
-<section class="wrap grid gap-8 pb-28 pt-28 md:grid-cols-[220px_1fr] md:gap-12 md:pb-40 md:pt-44">
-  <div class="eyebrow" data-reveal>{t.studio.eyebrow}</div>
-  <p class="studio text-[clamp(30px,4vw,58px)] font-medium leading-[1.12] tracking-[-0.04em] [text-wrap:pretty]" data-scrub-words>
-    {all.map(({ w, b }) => <><span data-w class:list={[b && 'b']}>{w}</span>{' '}</>)}
-  </p>
+<section class="hairline grid border-y lg:grid-cols-[minmax(0,1fr)_minmax(0,600px)]">
+  <div class="wrap flex flex-col justify-center gap-10 py-24 md:py-32 lg:pr-16">
+    <p class="studio text-[clamp(28px,3.1vw,46px)] font-medium leading-[1.14] tracking-[-0.04em] [text-wrap:pretty]" data-scrub-words>
+      {all.map(({ w, b }) => <><span data-w class:list={[b && 'b']}>{w}</span>{' '}</>)}
+    </p>
+    <a href={href('process')} class="btn btn-ghost self-start" data-reveal>
+      {t.studio.cta} <span aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <div class="logos grid grid-cols-2 gap-px border-t border-salvia/14 bg-salvia/14 sm:grid-cols-3 lg:grid-cols-2 lg:border-l lg:border-t-0" data-logo-grid aria-label={t.marquee} role="list">
+    {
+      logos.slice(0, CELLS).map((l) => (
+        <div class="cell" role="listitem">
+          <div class="logo" style={`--h:${l.hover}`} title={l.title}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={l.path} /></svg>
+            <span>{l.title}</span>
+          </div>
+        </div>
+      ))
+    }
+    <div hidden data-logo-pool>
+      {
+        logos.slice(CELLS).map((l) => (
+          <div class="logo" style={`--h:${l.hover}`} title={l.title}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={l.path} /></svg>
+            <span>{l.title}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
 </section>
 
 <style>
-  /* Sin JS se ve como en el diseño (primera frase clara, el resto apagado). Con JS se ilumina palabra por palabra al hacer scroll. */
+  /* Sin JS se ve la primera frase clara y el resto apagado. Con JS se ilumina palabra por palabra al hacer scroll. */
   .studio span { color: #3e5e55; transition: color 0.4s ease; }
   .studio span.b { color: var(--color-niebla); }
   .studio[data-armed] span { color: #3e5e55; }
   .studio[data-armed] span.lit { color: var(--color-niebla); }
+
+  .cell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: clamp(120px, 14vw, 172px);
+    background: var(--color-noche);
+    overflow: hidden;
+  }
+  .cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgb(20 224 165 / 0.1), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .cell:hover::before {
+    opacity: 1;
+  }
+  .logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-niebla);
+    transition:
+      opacity 0.45s ease,
+      filter 0.45s ease,
+      scale 0.6s var(--ease-out-expo);
+  }
+  .logo svg {
+    width: 30px;
+    height: 30px;
+    fill: currentColor;
+    transition: fill 0.35s;
+  }
+  .logo span {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+  .cell:hover .logo svg {
+    fill: var(--h);
+  }
+  .logo:global(.is-out) {
+    opacity: 0;
+    filter: blur(10px);
+    scale: 0.92;
+  }
+  .logo:global(.is-in) {
+    animation: logoIn 0.7s var(--ease-out-expo) both;
+  }
+  @keyframes logoIn {
+    from { opacity: 0; filter: blur(12px); scale: 1.06; }
+  }
 </style>

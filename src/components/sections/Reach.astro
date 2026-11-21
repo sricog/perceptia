@@ -20,9 +20,8 @@ const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
   <div class="relative mx-auto aspect-square w-full max-w-[640px]" data-reveal="focus">
     <!-- Halo y dial (decorativos) -->
     <div class="pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(circle,rgba(20,224,165,.16)_0%,rgba(14,59,48,.25)_45%,transparent_70%)] blur-2xl"></div>
-    <svg viewBox="-100 -100 200 200" class="dial pointer-events-none absolute inset-0 size-full" aria-hidden="true">
-      <circle r="97" fill="none" stroke="#8FB0A5" stroke-opacity=".14" stroke-width=".3"></circle>
-      <g class="dial-ticks">
+    <svg viewBox="-100 -100 200 200" class="dial-ticks pointer-events-none absolute inset-0 size-full" aria-hidden="true">
+      <g>
         {
           ticks.map((d) => (
             <line
@@ -38,6 +37,9 @@ const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
           ))
         }
       </g>
+    </svg>
+    <svg viewBox="-100 -100 200 200" class="dial pointer-events-none absolute inset-0 size-full" aria-hidden="true">
+      <circle r="97" fill="none" stroke="#8FB0A5" stroke-opacity=".14" stroke-width=".3"></circle>
       <g font-family="Geist Mono Variable, monospace" font-size="3.2" fill="#8FB0A5" fill-opacity=".7" text-anchor="middle" letter-spacing=".4">
         <text y="-87.5">N 0°</text>
         <text y="90.5">S 180°</text>
@@ -61,7 +63,6 @@ const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
   </div>
 
   <div class="flex flex-col gap-6" data-reveal style="--d:.1s">
-    <div class="eyebrow">{t.reach.eyebrow}</div>
     <h2 class="h-section"><Accent parts={t.reach.title} /></h2>
     <p class="max-w-[460px] text-[19px] leading-[1.55] text-salvia">{t.reach.body}</p>
     <ul class="mt-2 flex flex-col border-b border-salvia/18">
@@ -105,8 +106,10 @@ const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
   .globe:global(.is-dragging) canvas {
     cursor: grabbing;
   }
+  /* Las marcas van en su propio <svg> y se gira el elemento entero: girar un <g> dentro del SVG
+     tomaba un eje corrido y el anillo se desplazaba hacia un lado con el tiempo. */
   .dial-ticks {
-    transform-origin: center;
+    transform-origin: 50% 50%;
     animation: dialSpin 120s linear infinite;
   }
   @keyframes dialSpin {

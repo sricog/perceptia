@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { Dict } from '../i18n';
+import { saveLead } from '../lib/leads';
 
 type Props = {
   whatsappNumber: string;
@@ -7,6 +8,7 @@ type Props = {
   t: Dict['form'];
   /** Un chip por tipo de proyecto; `id` coincide con el slug del servicio (?servicio= / ?service=). */
   types: { id: string; label: string }[];
+  lang: 'es' | 'en';
 };
 
 const fill = (tpl: string, vars: Record<string, string>) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
@@ -16,11 +18,11 @@ const field =
 const chip =
   'cursor-pointer rounded-full border px-4 py-2.5 text-[14px] font-medium leading-none transition select-none';
 
-export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) {
+export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [budget, setBudget] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
   const [summary, setSummary] = useState('');
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) 
 
   const toggle = (id: string) => setTypes((t) => (t.includes(id) ? t.filter((x) => x !== id) : [...t, id]));
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const name = String(data.get('name') || '').trim();
@@ -53,9 +55,26 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) 
         (budget ? fill(t.wa.budget, { budget }) : '') +
         ` ${message}`,
     );
-    // TODO: conectar a un backend (webhook, Formspree, etc.). Por ahora solo UI.
+    // Campo trampa: si un bot lo llena, se finge el envío sin guardar nada.
+    if (String(data.get('website') || '')) return setStatus('sent');
+
     setStatus('sending');
-    setTimeout(() => setStatus('sent'), 900);
+    try {
+      await saveLead({
+        kind: 'quote',
+        name,
+        contact: email,
+        message,
+        company: company || undefined,
+        services: TYPES.filter((t) => types.includes(t.id)).map((t) => t.label),
+        budget: budget || undefined,
+        lang,
+      });
+      setStatus('sent');
+    } catch (err) {
+      console.error(err);
+      setStatus('failed');
+    }
   };
 
   if (status === 'sent') {
@@ -81,7 +100,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) 
   }
 
   return (
-    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-7 rounded-[26px] border border-salvia/14 bg-card p-6 md:p-10">
+    <form noValidate onSubmit={onSubmit} className="relative flex flex-col gap-7 rounded-[26px] border border-salvia/14 bg-card p-6 md:p-10">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.name}</span>
@@ -142,6 +161,17 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES }: Props) 
         <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} aria-invalid={!!errors.message} />
         {errors.message && <span className="text-[13px] text-[#ff8a80]">{errors.message}</span>}
       </label>
+
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+
+      {status === 'failed' && (
+        <p role="alert" className="rounded-2xl border border-[#ff8a80]/40 bg-[#ff8a80]/8 px-5 py-4 text-[14px] text-[#ffb4ab]">
+          {t.failed}{' '}
+          <a className="underline underline-offset-4" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(summary)}`} target="_blank" rel="noopener">
+            WhatsApp ↗
+          </a>
+        </p>
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-[13px] text-salvia">{t.note}</span>

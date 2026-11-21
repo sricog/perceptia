@@ -43,13 +43,13 @@ export const en: Dict = {
       ['landing pages', 'that convert'],
       ['MVPs', 'ready to validate'],
     ],
-    log: [
-      'initializing project',
-      'resolving architecture',
-      'compiling · <b data-count="12">12</b>/12 modules',
-      'tests · <b data-count="148">148</b> passed',
-      'deployed to production',
-    ],
+    field: {
+      human: ['see', 'understand', 'feel', 'intuition', 'design', 'listen', 'empathy', 'judgment', 'detail', 'taste', 'context', 'clarity'],
+      machine: ['data', 'models', 'agents', 'automate', 'predict', 'learn', 'code', 'APIs', 'scale', 'vectors', 'tokens', 'workflows'],
+    },
+    left: ['percept', 'ion'],
+    right: [['I', 'ntelligent'], ['A', 'utomation']],
+    note: 'perception + intelligent automation',
     cue: 'Scroll to focus',
     primary: 'Get a quote →',
     secondary: 'See projects',
@@ -58,26 +58,23 @@ export const en: Dict = {
   marquee: 'Technologies we work with',
 
   studio: {
-    eyebrow: '01 · Studio',
+    cta: 'See how we work',
     bright: "We're a software studio. We design and build websites, MVPs and custom systems",
     dim: 'that make sense at first glance and keep working just as well on day one thousand.',
   },
 
   homeServices: {
-    eyebrow: '02 · Services',
     title: ['What we ', 'build'],
     link: 'All services',
   },
 
   featured: {
-    eyebrow: '03 · Featured project',
     sub: 'Web app · design, development and launch',
     aria: 'View MiQuarto live',
     alt: 'MiQuarto platform mockup on laptop and phone',
   },
 
   homeProjects: {
-    eyebrow: '04 · Projects',
     title: ['', 'Live', ' projects'],
   },
 
@@ -105,18 +102,50 @@ export const en: Dict = {
   },
 
   process: {
-    eyebrow: '05 · Process',
     title: ['How we ', 'work'],
+    lead: 'A short, transparent process: you know what happens at each stage, what you get and when.',
+    more: 'See the full process',
     steps: [
-      { t: 'Understand', d: 'A discovery session to map goals, users and business constraints.' },
-      { t: 'Define', d: 'Scope, architecture and a clickable prototype before any code is written.' },
-      { t: 'Build & validate', d: 'Weekly releases and a staging environment that is always available.' },
-      { t: 'Launch & evolve', d: 'Deployment, metrics and continuous improvement after launch.' },
+      {
+        t: 'Understand',
+        tag: 'Discovery call',
+        d: 'A discovery session to map goals, users and business constraints.',
+        items: ['What you want to achieve and for whom', 'How we will measure success', 'Technical constraints, timing and budget'],
+      },
+      {
+        t: 'Define',
+        tag: 'Proposal & prototype',
+        d: 'Scope, architecture and a clickable prototype before any code is written.',
+        items: ['A proposal with scope and price', 'Recommended architecture and stack', 'A clickable prototype to validate the flow'],
+      },
+      {
+        t: 'Build & validate',
+        tag: 'Weekly cycles',
+        d: 'Weekly releases and a staging environment that is always available.',
+        items: ['A demo of progress every week', 'Staging with the latest version', 'Adjustments from your feedback each cycle'],
+      },
+      {
+        t: 'Launch & evolve',
+        tag: 'Launch',
+        d: 'Deployment, metrics and continuous improvement after launch.',
+        items: ['Deployment, domain and analytics', 'Training for your team', 'Support and continuous improvement'],
+      },
     ],
+    principlesTitle: ['What you ', 'always', ' get'],
+    principles: [
+      { t: 'Direct contact', d: 'You talk to the people who design and build your project, no middlemen.' },
+      { t: 'Progress every week', d: 'You see the product grow in a real environment, not in slide decks.' },
+      { t: 'Everything in your name', d: 'Repository, domain and accounts belong to your company.' },
+      { t: 'Data-driven decisions', d: 'We define metrics before launch so we know what works.' },
+    ],
+    book: {
+      title: ['Book a ', 'call'],
+      body: "30 minutes to understand your project and tell you how we'd build it. Free, no strings attached.",
+      cta: 'Book a call',
+    },
   },
 
   reach: {
-    eyebrow: '06 · Reach',
     title: ['Remote, ', 'borderless'],
     body: 'Clients in Colombia, Puerto Rico, the United States and Spain. Calls, deliveries and support in your time zone.',
     places: [
@@ -178,6 +207,47 @@ export const en: Dict = {
     },
   },
 
+  processPage: {
+    title: 'Process',
+    description: 'How we work at Perceptia: discovery, proposal, weekly cycles and launch. Book a 30-minute call.',
+    eyebrow: 'Process',
+    h1: ['From first coffee to ', 'launch'],
+    lead: 'How we turn an idea into a product in production, step by step and with no surprises.',
+  },
+
+  booking: {
+    id: 'book',
+    title: ['Book your ', 'call'],
+    lead: "Pick the day and time you prefer. We'll reach out to confirm the slot.",
+    facts: ['30 minutes', 'Video call or WhatsApp', 'Free'],
+    day: 'Day',
+    time: 'Time',
+    tzNote: 'Colombia time (UTC−5)',
+    yourTime: 'your time: {time}',
+    name: 'Name *',
+    namePh: 'Your name',
+    contact: 'Email or WhatsApp *',
+    contactPh: 'you@company.com or your number',
+    about: 'What do you want to build? *',
+    aboutPh: 'Tell us in a few lines about your idea or the problem you want to solve.',
+    submit: 'Book call',
+    errors: {
+      slot: 'Pick a day and a time.',
+      name: 'Enter your name.',
+      contact: 'Enter a valid email or phone number.',
+      about: 'Tell us a bit more (at least 10 characters).',
+    },
+    sending: 'Sending…',
+    sent: {
+      title: "You're all set, {name}!",
+      body: "We got your request for {when} (Colombia time). We'll reach out soon to confirm the slot.",
+      whatsapp: 'Message us on WhatsApp',
+      again: 'Book another call',
+    },
+    failed: "We couldn't save your request. Try again or message us on WhatsApp.",
+    wa: 'Hi Perceptia, this is {name}. I just requested a call for {when} (Colombia time).',
+  },
+
   servicesPage: {
     title: 'Services',
     description:
@@ -229,6 +299,7 @@ export const en: Dict = {
       types: 'Pick at least one project type.',
       message: 'Give us a little more context.',
     },
+    failed: "We couldn't send your request. Try again or message us on WhatsApp.",
     sent: {
       title: ['Thanks! Message ', 'perceived', '.'],
       body: "We'll get back to you within 24 business hours with next steps. If you'd rather talk now, message us on WhatsApp.",
