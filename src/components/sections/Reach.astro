@@ -1,5 +1,8 @@
 ---
 import Shader from '../Shader.astro';
+import Accent from '../Accent.astro';
+import { useI18n } from '../../i18n';
+const { t } = useI18n(Astro.url);
 ---
 
 <section class="wrap grid items-center gap-12 pb-24 pt-10 md:pb-30 lg:grid-cols-[minmax(0,620px)_1fr] lg:gap-18">
@@ -7,14 +10,18 @@ import Shader from '../Shader.astro';
     <Shader mode="globe" />
   </div>
   <div class="flex flex-col gap-6" data-reveal style="--d:.1s">
-    <div class="eyebrow">06 · Alcance</div>
-    <h2 class="h-section">Remoto, <em class="accent">sin fronteras</em></h2>
-    <p class="max-w-[460px] text-[19px] leading-[1.55] text-salvia">
-      Clientes en Colombia y Puerto Rico. Llamadas, entregas y soporte en tu zona horaria.
-    </p>
-    <div class="mt-2 flex flex-col font-mono text-[13px] font-medium tracking-[0.06em]">
-      <div class="flex justify-between border-t border-salvia/18 py-4.5"><span>Colombia</span><span class="text-salvia">UTC−5</span></div>
-      <div class="flex justify-between border-y border-salvia/18 py-4.5"><span>Puerto Rico</span><span class="text-salvia">UTC−4</span></div>
-    </div>
+    <div class="eyebrow">{t.reach.eyebrow}</div>
+    <h2 class="h-section"><Accent parts={t.reach.title} /></h2>
+    <p class="max-w-[460px] text-[19px] leading-[1.55] text-salvia">{t.reach.body}</p>
+    <ul class="mt-2 flex flex-col font-mono text-[13px] font-medium tracking-[0.06em]">
+      {
+        t.reach.places.map((p, i) => (
+          <li class:list={['flex justify-between border-t border-salvia/18 py-4.5', i === t.reach.places.length - 1 && 'border-b']}>
+            <span>{p.name}</span>
+            <span class="text-salvia">{p.tz}</span>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>

@@ -1,11 +1,12 @@
 ---
-const bright = 'Somos un estudio de software. Diseñamos y programamos websites, MVPs y sistemas a la medida';
-const dim = 'que se entienden al primer vistazo y siguen funcionando igual de bien el día mil.';
+import { useI18n } from '../../i18n';
+const { t } = useI18n(Astro.url);
+const { bright, dim } = t.studio;
 const all = [...bright.split(' ').map((w) => ({ w, b: true })), ...dim.split(' ').map((w) => ({ w, b: false }))];
 ---
 
 <section class="wrap grid gap-8 pb-28 pt-28 md:grid-cols-[220px_1fr] md:gap-12 md:pb-40 md:pt-44">
-  <div class="eyebrow" data-reveal>01 · Estudio</div>
+  <div class="eyebrow" data-reveal>{t.studio.eyebrow}</div>
   <p class="studio text-[clamp(30px,4vw,58px)] font-medium leading-[1.12] tracking-[-0.04em] [text-wrap:pretty]" data-scrub-words>
     {all.map(({ w, b }) => <><span data-w class:list={[b && 'b']}>{w}</span>{' '}</>)}
   </p>

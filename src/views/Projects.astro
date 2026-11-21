@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Shader from '../components/Shader.astro';
+import ProjectsGrid from '../components/ProjectsGrid.astro';
+import FilterPills from '../components/FilterPills.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import Accent from '../components/Accent.astro';
+import { projects } from '../data/site';
+import { useI18n } from '../i18n';
+const { t } = useI18n(Astro.url);
+const p = t.projectsPage;
+---
+
+<Base title={p.title} description={p.description} route="projects">
+  <header class="grain relative overflow-hidden pb-16 pt-40 md:pb-24 md:pt-52">
+    <div class="absolute inset-0 opacity-80"><Shader mode="dither" variant="2.2" px="4" /></div>
+    <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,#03130F_0%,rgba(3,19,15,.75)_50%,rgba(3,19,15,.35)_100%)]"></div>
+    <div class="wrap relative flex flex-wrap items-end justify-between gap-8">
+      <div>
+        <div class="eyebrow pc-rise">{p.eyebrow} · {String(projects.length).padStart(2, '0')}</div>
+        <h1 class="pc-rise mt-5 text-[clamp(48px,7vw,104px)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
+          <Accent parts={p.h1} />
+        </h1>
+        <p class="pc-rise mt-6 max-w-[520px] text-[19px] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
+      </div>
+      <div class="pc-rise" style="--d:.3s"><FilterPills target="all-grid" /></div>
+    </div>
+  </header>
+
+  <section class="wrap pb-28 pt-4 md:pb-36">
+    <ProjectsGrid id="all-grid" />
+  </section>
+
+  <CtaBand />
+</Base>

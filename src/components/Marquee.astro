@@ -1,10 +1,12 @@
 ---
 import { tech } from '../data/site';
+import { useI18n } from '../i18n';
+const { t } = useI18n(Astro.url);
 ---
 
 <div
   class="pc-marquee-host hairline overflow-hidden border-y py-6.5 [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]"
-  aria-label="Tecnologías con las que trabajamos"
+  aria-label={t.marquee}
 >
   <div class="pc-marquee" style="--dur:40s">
     {

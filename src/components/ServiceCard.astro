@@ -1,12 +1,15 @@
 ---
 import Shader from './Shader.astro';
 import type { Service } from '../data/site';
-interface Props { s: Service; href?: string; delay?: number }
-const { s, href = `/servicios#${s.slug}`, delay = 0 } = Astro.props;
+import { useI18n } from '../i18n';
+interface Props { s: Service; delay?: number }
+const { s: svc, delay = 0 } = Astro.props;
+const { t, href } = useI18n(Astro.url);
+const s = { ...svc, ...t.services[svc.id] };
 ---
 
 <a
-  href={href}
+  href={href('services', s.slug)}
   class="svc group relative flex flex-col rounded-[26px] border border-salvia/14 bg-card p-2.5 text-niebla transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-aqua/40 hover:text-niebla"
   data-reveal
   style={`--d:${delay}s`}
@@ -23,12 +26,12 @@ const { s, href = `/servicios#${s.slug}`, delay = 0 } = Astro.props;
     {
       s.price ? (
         <div class="flex flex-col gap-1.5 sm:items-end">
-          <span class="mono-tag">Desde</span>
+          <span class="mono-tag">{t.pricing.from}</span>
           <span class="text-[24px] font-[650] leading-none tracking-[-0.04em] md:text-[30px]">{s.price}</span>
         </div>
       ) : (
         <span class="whitespace-nowrap font-mono text-[13px] text-niebla">
-          Propuesta <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+          {t.pricing.proposal} <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
         </span>
       )
     }

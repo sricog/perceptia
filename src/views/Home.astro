@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Studio from '../components/sections/Studio.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Featured from '../components/sections/Featured.astro';
+import ProjectsGrid from '../components/ProjectsGrid.astro';
+import FilterPills from '../components/FilterPills.astro';
+import Process from '../components/sections/Process.astro';
+import Reach from '../components/sections/Reach.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import Accent from '../components/Accent.astro';
+import { services } from '../data/site';
+import { useI18n } from '../i18n';
+const { t, href } = useI18n(Astro.url);
+---
+
+<Base route="home">
+  <Hero />
+  <Marquee />
+  <Studio />
+
+  <section id={t.ids.services} class="wrap scroll-mt-24 pb-28 md:pb-36">
+    <SectionHead eyebrow={t.homeServices.eyebrow} link={{ href: href('services'), label: t.homeServices.link }}>
+      <Accent parts={t.homeServices.title} />
+    </SectionHead>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {services.map((s, i) => <ServiceCard s={s} delay={(i % 2) * 0.1} />)}
+    </div>
+  </section>
+
+  <Featured />
+
+  <section id={t.ids.projects} class="wrap scroll-mt-24 pb-28 pt-14 md:pb-36">
+    <SectionHead eyebrow={t.homeProjects.eyebrow}>
+      <Accent parts={t.homeProjects.title} />
+      <FilterPills slot="aside" target="home-grid" />
+    </SectionHead>
+    <ProjectsGrid id="home-grid" />
+  </section>
+
+  <Process />
+  <Reach />
+  <CtaBand />
+</Base>

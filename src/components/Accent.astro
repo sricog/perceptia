@@ -1,0 +1,7 @@
+---
+/** Título con palabra de acento: ['antes ', 'acento', ' después'] → antes <em class="accent">acento</em> después */
+interface Props { parts: string[] }
+const [before = '', accent = '', after = ''] = Astro.props.parts;
+---
+
+{before}<em class="accent">{accent}</em>{after}

@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import { projects } from '../data/site';
+import { useI18n, fill } from '../i18n';
+const { t } = useI18n(Astro.url);
 interface Props { id?: string; limit?: number }
 const { id = 'proyectos-grid', limit } = Astro.props;
 const list = limit ? projects.slice(0, limit) : projects;
@@ -15,7 +17,7 @@ const list = limit ? projects.slice(0, limit) : projects;
           target="_blank"
           rel="noopener"
           data-project
-          data-type={p.type === 'App web' ? 'app' : 'web'}
+          data-type={p.kind}
           class="proj group flex flex-col gap-3.5 text-niebla hover:text-niebla"
           data-reveal
           style={`--d:${(i % 4) * 0.08}s`}
@@ -23,7 +25,7 @@ const list = limit ? projects.slice(0, limit) : projects;
           <div class="relative aspect-[4/3] overflow-hidden rounded-2xl border border-salvia/16 bg-hondo transition-[border-color,box-shadow] duration-500 group-hover:border-aqua group-hover:shadow-[0_0_40px_-6px_rgba(20,224,165,.6)]">
             <Image
               src={p.image}
-              alt={`Mockup de ${p.name} en laptop y móvil`}
+              alt={fill(t.projects.alt, { name: p.name })}
               widths={[480, 720, 960]}
               sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
               class="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
@@ -33,7 +35,7 @@ const list = limit ? projects.slice(0, limit) : projects;
           </div>
           <div class="flex items-baseline justify-between gap-3">
             <span class="text-[18px] font-medium leading-tight tracking-[-0.01em]">{p.name}</span>
-            <span class="mono-tag flex-none">{p.type}</span>
+            <span class="mono-tag flex-none">{t.projects.kinds[p.kind]}</span>
           </div>
         </a>
       ))
@@ -41,7 +43,7 @@ const list = limit ? projects.slice(0, limit) : projects;
   </div>
   <div data-cursor-pill class="cursor-pill pointer-events-none absolute left-0 top-0 z-10 flex items-center gap-2" aria-hidden="true">
     <div class="size-3.5 rounded-full bg-aqua shadow-[0_0_18px_#14E0A5]"></div>
-    <div class="rounded-full bg-niebla px-3 py-2 font-mono text-[12px] font-semibold leading-none tracking-[0.06em] text-noche">Ver sitio ↗</div>
+    <div class="rounded-full bg-niebla px-3 py-2 font-mono text-[12px] font-semibold leading-none tracking-[0.06em] text-noche">{t.projects.visit}</div>
   </div>
 </div>
 
