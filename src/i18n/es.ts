@@ -74,12 +74,6 @@ export const es = {
     link: 'Todos los servicios',
   },
 
-  featured: {
-    sub: 'App web · diseño, desarrollo y lanzamiento',
-    aria: 'Ver MiQuarto en vivo',
-    alt: 'Mockup de la plataforma MiQuarto en laptop y móvil',
-  },
-
   homeProjects: {
     title: ['Proyectos ', 'en vivo'],
   },
