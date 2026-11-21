@@ -1,0 +1,158 @@
+---
+/**
+ * Páginas legales (términos y tratamiento de datos). El contenido vive en data/legal.ts;
+ * aquí solo se maqueta: índice fijo a la izquierda en escritorio y secciones numeradas.
+ */
+import Base from '../layouts/Base.astro';
+import Accent from '../components/Accent.astro';
+import { site } from '../data/site';
+import { legal } from '../data/legal';
+import { useI18n } from '../i18n';
+interface Props { doc: 'terms' | 'privacy' }
+const { doc } = Astro.props;
+const { lang, href } = useI18n(Astro.url);
+const d = legal[lang][doc];
+
+const vars: Record<string, string> = {
+  email: site.email,
+  whatsapp: site.whatsappDisplay,
+  owner: site.legal.owner,
+  taxid: site.legal.taxId ? `, NIT ${site.legal.taxId}` : '',
+  city: site.legal.city,
+  site: site.url.replace(/^https?:\/\//, ''),
+};
+const fillVars = (s: string) => s.replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
+
+/** Parte un párrafo en texto, enlaces [texto](terms|privacy) y el correo (que se vuelve mailto). */
+type Part = { text: string; href?: string };
+const parts = (raw: string): Part[] => {
+  const out: Part[] = [];
+  const re = /\[([^\]]+)\]\((terms|privacy)\)|\{email\}/g;
+  let last = 0;
+  for (const m of raw.matchAll(re)) {
+    if (m.index! > last) out.push({ text: fillVars(raw.slice(last, m.index)) });
+    if (m[1]) out.push({ text: m[1], href: href(m[2] as 'terms' | 'privacy') });
+    else out.push({ text: site.email, href: `mailto:${site.email}` });
+    last = m.index! + m[0].length;
+  }
+  if (last < raw.length) out.push({ text: fillVars(raw.slice(last)) });
+  return out;
+};
+const n = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+<Base title={d.title} description={d.description} route={doc}>
+  <header class="wrap pb-14 pt-40 md:pb-20 md:pt-48">
+    <div class="eyebrow pc-rise">{d.eyebrow}</div>
+    <h1 class="pc-rise mt-5 max-w-[16ch] text-[clamp(44px,6vw,88px)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
+      <Accent parts={d.h1} />
+    </h1>
+    <p class="pc-rise mt-6 font-mono text-[12px] tracking-[0.08em] text-salvia" style="--d:.2s">{d.updated}</p>
+  </header>
+
+  <div class="wrap grid grid-cols-[minmax(0,1fr)] gap-12 pb-28 md:pb-36 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)] lg:gap-20">
+    <nav class="hidden lg:block" aria-label={d.title}>
+      <ol class="sticky top-28 flex flex-col gap-1 border-l border-salvia/18 text-[14px]">
+        {
+          d.sections.map((s, i) => (
+            <li>
+              <a href={`#${s.id}`} class="-ml-px flex gap-3 border-l border-transparent py-1.5 pl-4 text-salvia hover:border-aqua hover:text-niebla">
+                <span class="font-mono text-[11px] leading-[1.9] text-salvia/70">{n(i)}</span>
+                {s.h}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <article class="legal max-w-[720px]">
+      {d.intro.map((p) => <p class="lead">{parts(p).map((x) => (x.href ? <a href={x.href}>{x.text}</a> : x.text))}</p>)}
+      {
+        d.sections.map((s, i) => (
+          <section id={s.id} class="scroll-mt-28">
+            <h2>
+              <span>{n(i)}</span>
+              {s.h}
+            </h2>
+            {s.p?.map((p) => <p>{parts(p).map((x) => (x.href ? <a href={x.href}>{x.text}</a> : x.text))}</p>)}
+            {s.list && (
+              <ul>
+                {s.list.map((li) => <li>{parts(li).map((x) => (x.href ? <a href={x.href}>{x.text}</a> : x.text))}</li>)}
+              </ul>
+            )}
+            {s.after?.map((p) => <p>{parts(p).map((x) => (x.href ? <a href={x.href}>{x.text}</a> : x.text))}</p>)}
+          </section>
+        ))
+      }
+    </article>
+  </div>
+</Base>
+
+<style>
+  .legal {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-bruma);
+  }
+  .legal .lead {
+    margin-bottom: 8px;
+    font-size: 19px;
+    color: var(--color-niebla);
+  }
+  .legal section {
+    padding-top: 40px;
+    margin-top: 40px;
+    border-top: 1px solid rgb(143 176 165 / 0.14);
+  }
+  .legal h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 16px;
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--color-niebla);
+  }
+  .legal h2 span {
+    font: 500 12px/1 var(--font-mono);
+    letter-spacing: 0.14em;
+    color: var(--color-aqua);
+  }
+  .legal p + p,
+  .legal ul + p,
+  .legal p + ul {
+    margin-top: 14px;
+  }
+  .legal ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .legal li {
+    position: relative;
+    padding-left: 22px;
+  }
+  .legal li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.72em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-aqua);
+    box-shadow: 0 0 8px #14e0a5;
+  }
+  .legal a {
+    color: var(--color-aqua);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgb(20 224 165 / 0.4);
+  }
+  .legal a:hover {
+    text-decoration-color: currentColor;
+  }
+</style>

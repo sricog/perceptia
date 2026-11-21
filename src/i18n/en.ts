@@ -47,7 +47,7 @@ export const en: Dict = {
       human: ['see', 'understand', 'feel', 'intuition', 'design', 'listen', 'empathy', 'judgment', 'detail', 'taste', 'context', 'clarity'],
       machine: ['data', 'models', 'agents', 'automate', 'predict', 'learn', 'code', 'APIs', 'scale', 'vectors', 'tokens', 'workflows'],
     },
-    left: ['percept', 'ion'],
+    left: ['Percept', 'ion'],
     right: [['I', 'ntelligent'], ['A', 'utomation']],
     note: 'perception + intelligent automation',
     cue: 'Scroll to focus',
@@ -165,7 +165,7 @@ export const en: Dict = {
     primary: 'Get a quote →',
   },
 
-  footer: { site: 'Site', contact: 'Contact', legal: 'Legal' },
+  footer: { site: 'Site', contact: 'Contact', legal: 'Legal', terms: 'Terms and conditions', privacy: 'Privacy policy' },
 
   pricing: { from: 'From', proposal: 'Proposal', request: 'Request a proposal', quote: 'Get a quote →' },
 
@@ -218,21 +218,17 @@ export const en: Dict = {
   booking: {
     id: 'book',
     title: ['Book your ', 'call'],
-    lead: "Pick the day and time you prefer. We'll reach out to confirm the slot.",
+    lead: "Leave your email or WhatsApp and tell us in a few lines what you want to build. We'll reach out to set up the call.",
     facts: ['30 minutes', 'Video call or WhatsApp', 'Free'],
-    day: 'Day',
-    time: 'Time',
-    tzNote: 'Colombia time (UTC−5)',
-    yourTime: 'your time: {time}',
     name: 'Name *',
     namePh: 'Your name',
     contact: 'Email or WhatsApp *',
     contactPh: 'you@company.com or your number',
     about: 'What do you want to build? *',
     aboutPh: 'Tell us in a few lines about your idea or the problem you want to solve.',
-    submit: 'Book call',
+    submit: 'Get in touch with me',
+    note: "We'll reply through whichever channel you leave us.",
     errors: {
-      slot: 'Pick a day and a time.',
       name: 'Enter your name.',
       contact: 'Enter a valid email or phone number.',
       about: 'Tell us a bit more (at least 10 characters).',
@@ -240,12 +236,12 @@ export const en: Dict = {
     sending: 'Sending…',
     sent: {
       title: "You're all set, {name}!",
-      body: "We got your request for {when} (Colombia time). We'll reach out soon to confirm the slot.",
+      body: "We got your request. We'll reach out soon by email or WhatsApp to set up the call.",
       whatsapp: 'Message us on WhatsApp',
-      again: 'Book another call',
+      again: 'Send another request',
     },
     failed: "We couldn't save your request. Try again or message us on WhatsApp.",
-    wa: 'Hi Perceptia, this is {name}. I just requested a call for {when} (Colombia time).',
+    wa: 'Hi Perceptia, this is {name}. I just left my details on your website to talk about a project.',
   },
 
   servicesPage: {
@@ -311,6 +307,15 @@ export const en: Dict = {
       want: ". I'd like a quote for: {labels}.",
       budget: ' Budget: {budget}.',
     },
+  },
+
+  consent: {
+    pre: 'I accept the ',
+    terms: 'Terms and conditions',
+    mid: ' and authorize the ',
+    privacy: 'processing of my personal data',
+    post: '.',
+    error: 'To send your request you need to accept the terms and authorize the processing of your data.',
   },
 
   whatsapp: "Hi Perceptia, I'd like a quote for a project.",

@@ -1,15 +1,45 @@
 ---
 /**
- * Hero «Convergencia»: dos lentes que se acercan con el scroll mientras un registro de
- * compilación avanza; al cruzarse forman el isotipo de Perceptia y entra el titular.
- * La coreografía vive en `hero()` de scripts/effects.ts; sin JS o con movimiento reducido
- * se muestra directamente el estado final.
+ * Hero «PERCEPT·IA». Dos lentes, dos mundos: a la izquierda la percepción humana, a la derecha la
+ * inteligencia artificial. Con el scroll las lentes escanean un campo de palabras (nítidas solo a
+ * través del vidrio), lo absorben, destilan cada mundo a una mitad del nombre y, al cruzarse en el
+ * isotipo, PERCEPT + IA se unen y bajan como sello del titular.
+ * La coreografía vive en `hero()` de scripts/effects.ts; sin JS o con movimiento reducido se
+ * muestra directamente el estado final.
  */
 import Shader from '../Shader.astro';
 import Accent from '../Accent.astro';
 import { useI18n } from '../../i18n';
 const { t, href } = useI18n(Astro.url);
-const { words, log: buildLog } = t.hero;
+const { words, field, left, right, note } = t.hero;
+
+// Posiciones del campo: rejilla 3×4 por lado con desorden fijo (mismo resultado en cada build).
+let seed = 11;
+const rnd = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let v = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  v = (v + Math.imul(v ^ (v >>> 7), 61 | v)) ^ v;
+  return ((v ^ (v >>> 14)) >>> 0) / 4294967296;
+};
+const place = (list: string[], side: 'h' | 'm') =>
+  list.map((w, i) => {
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    const x = (side === 'h' ? 0.03 : 0.57) + ((col + 0.2 + rnd() * 0.6) * 0.4) / 3;
+    const y = 0.1 + ((row + 0.15 + rnd() * 0.7) * 0.74) / 4;
+    return {
+      w,
+      side,
+      alt: i % 2 === 1, // en móvil se muestra la mitad
+      x: +(x * 100).toFixed(2),
+      y: +(y * 100).toFixed(2),
+      fs: side === 'h' ? 16 + Math.round(rnd() * 10) : 12 + Math.round(rnd() * 5),
+      d: +rnd().toFixed(3),
+    };
+  });
+const fieldWords = [...place(field.human, 'h'), ...place(field.machine, 'm')].map((f, i) => ({ ...f, i }));
+// El nombre tal como se escribe siempre: «Perceptia».
+const seal = left[0] + right.map((r) => r[0]).join('').toLowerCase();
 ---
 
 <section data-hero class="hero relative" aria-label={t.hero.label}>
@@ -19,17 +49,31 @@ const { words, log: buildLog } = t.hero;
     </div>
     <div class="hero-shade pointer-events-none absolute inset-0"></div>
 
-    <ol class="hero-log" aria-hidden="true">
-      {
-        buildLog.map((line) => (
-          <li data-step>
-            <span class="hero-log-prompt">&gt;</span>
-            <span class="hero-log-text" set:html={line} />
-            <span class="hero-log-status" />
-          </li>
-        ))
-      }
-    </ol>
+    <div class="hero-field" data-hero-field aria-hidden="true">
+      <div class="hf-blur">{fieldWords.map((f) => <span data-fw data-i={f.i} data-side={f.side} data-x={f.x} data-y={f.y} data-d={f.d} class:list={[f.side, f.alt && 'alt']} style={`--x:${f.x}%;--y:${f.y}%;--fs:${f.fs}`}>{f.w}</span>)}</div>
+      <div class="hf-lens hf-l"><div class="hf-zoom">{fieldWords.filter((x) => x.side === 'h').map((f) => <span data-fw data-i={f.i} data-side={f.side} data-x={f.x} data-y={f.y} data-d={f.d} class:list={[f.side, f.alt && 'alt']} style={`--x:${f.x}%;--y:${f.y}%;--fs:${f.fs}`}>{f.w}</span>)}</div></div>
+      <div class="hf-lens hf-r"><div class="hf-zoom">{fieldWords.filter((x) => x.side === 'm').map((f) => <span data-fw data-i={f.i} data-side={f.side} data-x={f.x} data-y={f.y} data-d={f.d} class:list={[f.side, f.alt && 'alt']} style={`--x:${f.x}%;--y:${f.y}%;--fs:${f.fs}`}>{f.w}</span>)}</div></div>
+    </div>
+
+    <div class="hero-word" data-hero-word aria-hidden="true">
+      <div class="hw-g hw-l" data-g="l">
+        <span class="hw-line">
+          {[...left[0]].map((c) => <span data-ch data-keep>{c}</span>)}{[...left[1]].map((c) => <span data-ch>{c}</span>)}
+        </span>
+      </div>
+      <div class="hw-g hw-r" data-g="r">
+        {
+          right.map(([k, rest]) => (
+            <span class="hw-line">
+              <span data-ch data-keep>{k}</span>
+              {[...rest].map((c) => <span data-ch>{c}</span>)}
+            </span>
+          ))
+        }
+      </div>
+      <div class="hw-sweep"></div>
+      <div class="hw-note">{note}</div>
+    </div>
 
     <div class="hero-cue" aria-hidden="true">
       <span>{t.hero.cue}</span>
@@ -37,6 +81,7 @@ const { words, log: buildLog } = t.hero;
     </div>
 
     <div class="hero-final wrap absolute inset-x-0 bottom-12 z-[2] flex flex-col items-center text-center md:bottom-18">
+      <p class="hero-seal" data-hero-seal>{seal}</p>
       <h1 class="pc-rise text-[clamp(46px,6.55vw,94px)] font-bold leading-none tracking-[-0.055em] [text-wrap:balance]" style="--d:.5s">
         <Accent parts={t.hero.title} />
       </h1>
@@ -71,90 +116,196 @@ const { words, log: buildLog } = t.hero;
     min-height: 600px;
   }
   .hero[data-armed] {
-    height: 240svh;
+    height: 340svh;
   }
   .hero-shade {
     background: linear-gradient(0deg, rgb(3 19 15 / 0.92) 0%, rgb(3 19 15 / 0.55) 24%, rgb(3 19 15 / 0) 46%);
     opacity: var(--f, 1);
   }
 
-  .hero-log,
+  .hero-field,
+  .hero-word,
   .hero-cue {
     display: none;
   }
 
-  /* Registro de compilación bajo las lentes. Cada línea: pending → active → done. */
-  [data-armed] .hero-log {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: max-content;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font: 500 13px/1.5 var(--font-mono);
-    letter-spacing: 0.04em;
+  /* Sello PERCEPT·IA sobre el titular. Con la coreografía activa, las letras animadas aterrizan aquí. */
+  .hero-seal {
+    margin: 0 0 22px;
+    font-size: clamp(24px, 2.2vw, 32px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
     white-space: nowrap;
+  }
+  [data-armed] .hero-seal {
+    visibility: hidden;
+  }
+
+  /* ── Campo de palabras ───────────────────────────────────────────── */
+  [data-armed] .hero-field {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
-    opacity: var(--o, 0);
-    transform: translate3d(var(--x, 50vw), var(--y, 50vh), 0) translate(-50%, 0);
+    opacity: var(--fo, 0);
+  }
+  .hero-field > div,
+  .hf-zoom {
+    position: absolute;
+    inset: 0;
+  }
+  [data-fw] {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    translate: -50% -50%;
+    font-size: calc(var(--fs) * 1px);
+    line-height: 1;
+    white-space: nowrap;
     will-change: transform, opacity;
   }
-  .hero-log li {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    color: var(--color-salvia);
-    transition: opacity 0.35s ease, transform 0.5s var(--ease-out-expo), color 0.35s ease;
-  }
-  .hero-log li:not([data-state]) {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  .hero-log li[data-state='active'] {
-    color: var(--color-niebla);
-  }
-  .hero-log li[data-state='done'] {
-    opacity: 0.55;
-  }
-  .hero-log-prompt {
-    color: var(--color-aqua);
-  }
-  .hero-log-text :global(b) {
+  [data-fw].h {
     font-weight: 500;
-    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  [data-fw].m {
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  /* Fuera de las lentes: desenfocado y tenue. Los huecos siguen a las lentes. */
+  .hf-blur {
+    color: var(--color-salvia);
+    -webkit-mask-image:
+      radial-gradient(circle at var(--c1x) var(--cy), transparent calc(var(--rp) - 1px), #000 calc(var(--rp) + 2px)),
+      radial-gradient(circle at var(--c2x) var(--cy), transparent calc(var(--rp) - 1px), #000 calc(var(--rp) + 2px));
+    -webkit-mask-composite: source-in;
+    mask-image:
+      radial-gradient(circle at var(--c1x) var(--cy), transparent calc(var(--rp) - 1px), #000 calc(var(--rp) + 2px)),
+      radial-gradient(circle at var(--c2x) var(--cy), transparent calc(var(--rp) - 1px), #000 calc(var(--rp) + 2px));
+    mask-composite: intersect;
+  }
+  .hf-blur [data-fw] {
+    opacity: 0.5;
+    filter: blur(2.5px);
+  }
+  /* A través del vidrio: nítido y un poco ampliado, como una lente de verdad. */
+  .hf-l {
+    -webkit-mask-image: radial-gradient(circle at var(--c1x) var(--cy), #000 calc(var(--rp) - 1px), transparent calc(var(--rp) + 1px));
+    mask-image: radial-gradient(circle at var(--c1x) var(--cy), #000 calc(var(--rp) - 1px), transparent calc(var(--rp) + 1px));
+  }
+  .hf-r {
+    -webkit-mask-image: radial-gradient(circle at var(--c2x) var(--cy), #000 calc(var(--rp) - 1px), transparent calc(var(--rp) + 1px));
+    mask-image: radial-gradient(circle at var(--c2x) var(--cy), #000 calc(var(--rp) - 1px), transparent calc(var(--rp) + 1px));
+  }
+  .hf-zoom {
+    scale: 1.18;
+  }
+  .hf-l .hf-zoom {
+    transform-origin: var(--c1x) var(--cy);
     color: var(--color-niebla);
   }
-  .hero-log-status {
-    min-width: 1ch;
+  .hf-r .hf-zoom {
+    transform-origin: var(--c2x) var(--cy);
+    color: #a8f7df;
   }
-  .hero-log li[data-state='active'] .hero-log-status::after {
-    content: '▍';
-    color: var(--color-aqua);
-    animation: heroBlink 1s steps(1) infinite;
+  .hf-lens [data-fw] {
+    text-shadow: 0 0 14px rgb(3 19 15 / 0.7);
   }
-  .hero-log li[data-state='done'] .hero-log-status::after {
-    content: '✓';
-    color: var(--color-aqua);
-  }
-  /* El último paso, ya completo, queda resaltado. */
-  .hero-log li:last-child[data-state='done'] {
-    opacity: 1;
-    color: var(--color-niebla);
-  }
-  @keyframes heroBlink {
-    50% { opacity: 0; }
-  }
-  @media (max-width: 480px) {
-    [data-armed] .hero-log {
-      font-size: 12px;
+  @media (max-width: 640px) {
+    [data-fw].alt {
+      display: none;
+    }
+    [data-fw] {
+      font-size: calc(var(--fs) * 0.8px);
     }
   }
 
+  /* ── La palabra ──────────────────────────────────────────────────── */
+  [data-armed] .hero-word {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hw-g {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: var(--F, 64px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  .hw-line {
+    display: block;
+  }
+  .hw-g [data-ch] {
+    display: inline-block;
+    transform-origin: 0 0;
+    will-change: transform, opacity;
+  }
+  .hw-l {
+    color: var(--color-niebla);
+    text-shadow: 0 0 28px rgb(3 19 15 / 0.55);
+  }
+  .hw-r {
+    color: #c9fff0;
+    text-shadow: 0 0 28px rgb(3 19 15 / 0.55);
+  }
+  .hw-r [data-ch] {
+    text-align: center;
+  }
+  .hw-r [data-ch]:global(.glyph) {
+    color: var(--color-aqua);
+  }
+  .hw-r [data-keep] {
+    color: var(--color-aqua);
+    text-shadow: 0 0 calc(var(--glow, 0) * 28px) rgb(20 224 165 / 0.85);
+  }
+  /* Al unirse con «Percept», la I y la A pasan a minúscula y al color del nombre. */
+  .hw-r [data-keep]:global(.is-word) {
+    color: var(--color-niebla);
+    text-shadow: 0 0 28px rgb(3 19 15 / 0.55);
+  }
+  .hw-r [data-keep] {
+    transition: color 0.5s ease, text-shadow 0.5s ease;
+  }
+  .hw-sweep {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, transparent, #eef5f2 30%, #14e0a5 70%, transparent);
+    box-shadow: 0 0 28px 8px rgb(20 224 165 / 0.5);
+    opacity: 0;
+  }
+  .hw-note {
+    position: absolute;
+    left: 0;
+    top: 0;
+    translate: -50% 0;
+    font: 500 12px/1 var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-salvia);
+    white-space: nowrap;
+    opacity: 0;
+  }
+  @media (max-width: 480px) {
+    .hw-note {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  /* ── Indicador de scroll ─────────────────────────────────────────── */
   [data-armed] .hero-cue {
     position: absolute;
     inset-inline: 0;

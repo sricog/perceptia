@@ -54,9 +54,8 @@ export const es = {
       machine: ['datos', 'modelos', 'agentes', 'automatizar', 'predecir', 'aprender', 'código', 'APIs', 'escalar', 'vectores', 'tokens', 'flujos'],
     },
     // De cada lente sobrevive una mitad del nombre: PERCEPT(ible) + I(nteligencia) A(rtificial).
-    left: ['percept', 'ible'],
+    left: ['Percept', 'ible'],
     right: [['I', 'nteligencia'], ['A', 'rtificial']],
-    note: 'perceptible + inteligencia artificial',
     cue: 'Desliza para enfocar',
     primary: 'Cotizar proyecto →',
     secondary: 'Ver proyectos',
@@ -146,9 +145,9 @@ export const es = {
       { t: 'Decisiones con datos', d: 'Definimos métricas antes de lanzar para saber qué funciona.' },
     ],
     book: {
-      title: ['Agenda una ', 'llamada'],
+      title: ['Conócenos y ', 'cotiza tu proyecto'],
       body: '30 minutos para entender tu proyecto y decirte cómo lo haríamos. Sin costo y sin compromiso.',
-      cta: 'Agendar llamada',
+      cta: 'Cotizar proyecto →',
     },
   },
 
@@ -171,7 +170,7 @@ export const es = {
     primary: 'Cotizar proyecto →',
   },
 
-  footer: { site: 'Sitio', contact: 'Contacto', legal: 'Legal' },
+  footer: { site: 'Sitio', contact: 'Contacto', legal: 'Legal', terms: 'Términos y condiciones', privacy: 'Tratamiento de datos' },
 
   pricing: { from: 'Desde', proposal: 'Propuesta', request: 'Solicitar propuesta', quote: 'Cotizar →' },
 
@@ -216,7 +215,7 @@ export const es = {
 
   processPage: {
     title: 'Proceso',
-    description: 'Cómo trabajamos en Perceptia: descubrimiento, propuesta, ciclos semanales y lanzamiento. Agenda una llamada de 30 minutos.',
+    description: 'Cómo trabajamos en Perceptia: descubrimiento, propuesta, ciclos semanales y lanzamiento. Transparencia y entregas claras en cada etapa.',
     eyebrow: 'Proceso',
     h1: ['Del primer café al ', 'lanzamiento'],
     lead: 'Así convertimos una idea en un producto en producción, paso a paso y sin sorpresas.',
@@ -224,22 +223,18 @@ export const es = {
 
   booking: {
     id: 'agendar',
-    title: ['Agenda tu ', 'llamada'],
-    lead: 'Elige el día y la hora que prefieres. Te escribimos para confirmar el espacio.',
+    title: ['Conócenos y ', 'cotiza tu proyecto'],
+    lead: 'Déjanos tu correo o WhatsApp y cuéntanos en pocas líneas qué quieres construir. Te escribimos para coordinar la llamada.',
     facts: ['30 minutos', 'Videollamada o WhatsApp', 'Sin costo'],
-    day: 'Día',
-    time: 'Hora',
-    tzNote: 'Horario de Colombia (UTC−5)',
-    yourTime: 'tu hora: {time}',
     name: 'Nombre *',
     namePh: 'Tu nombre',
     contact: 'Correo o WhatsApp *',
     contactPh: 'tu@empresa.com o tu número',
     about: '¿Qué quieres construir? *',
     aboutPh: 'Cuéntanos en pocas líneas tu idea o el problema que quieres resolver.',
-    submit: 'Agendar llamada',
+    submit: 'Quiero que me contacten',
+    note: 'Te respondemos por el medio que nos dejes.',
     errors: {
-      slot: 'Elige un día y una hora.',
       name: 'Escribe tu nombre.',
       contact: 'Escribe un correo o un número válido.',
       about: 'Cuéntanos un poco más (mínimo 10 caracteres).',
@@ -247,12 +242,12 @@ export const es = {
     sending: 'Enviando…',
     sent: {
       title: '¡Listo, {name}!',
-      body: 'Recibimos tu solicitud para el {when} (hora Colombia). Te escribimos pronto para confirmar el espacio.',
+      body: 'Recibimos tu solicitud. Te escribimos pronto por correo o WhatsApp para coordinar la llamada.',
       whatsapp: 'Escríbenos por WhatsApp',
-      again: 'Agendar otra llamada',
+      again: 'Enviar otra solicitud',
     },
     failed: 'No pudimos guardar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.',
-    wa: 'Hola Perceptia, soy {name}. Acabo de pedir una llamada para el {when} (hora Colombia).',
+    wa: 'Hola Perceptia, soy {name}. Acabo de dejarles mis datos en la web para hablar de un proyecto.',
   },
 
   servicesPage: {
@@ -319,6 +314,15 @@ export const es = {
       want: '. Quiero cotizar: {labels}.',
       budget: ' Presupuesto: {budget}.',
     },
+  },
+
+  consent: {
+    pre: 'Acepto los ',
+    terms: 'Términos y condiciones',
+    mid: ' y autorizo el ',
+    privacy: 'tratamiento de mis datos personales',
+    post: '.',
+    error: 'Para enviar la solicitud debes aceptar los términos y autorizar el tratamiento de tus datos.',
   },
 
   whatsapp: 'Hola Perceptia, quiero cotizar un proyecto.',

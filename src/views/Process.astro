@@ -7,7 +7,7 @@ import BinocularMark from '../components/BinocularMark.astro';
 import Accent from '../components/Accent.astro';
 import { site } from '../data/site';
 import { useI18n } from '../i18n';
-const { t, lang } = useI18n(Astro.url);
+const { t, lang, href } = useI18n(Astro.url);
 const p = t.processPage;
 const b = t.booking;
 ---
@@ -59,7 +59,7 @@ const b = t.booking;
       </ul>
     </div>
     <div class="min-h-[640px] min-w-0" data-reveal style="--d:.1s">
-      <BookingForm client:only="react" t={b} lang={lang} whatsappNumber={site.whatsappNumber} />
+      <BookingForm client:only="react" t={b} lang={lang} whatsappNumber={site.whatsappNumber} consent={{ t: t.consent, terms: href('terms'), privacy: href('privacy') }} />
     </div>
   </section>
 </Base>

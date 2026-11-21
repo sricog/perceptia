@@ -13,10 +13,15 @@ export const site = {
   name: 'Perceptia',
   url: 'https://perceptiastudio.com',
   email: 'perceptiastudio@gmail.com',
-  // TODO: confirmar número e Instagram de Perceptia (vienen de inoxa.online)
   whatsappNumber: '573187057176',
   whatsappDisplay: '+57 318 705 7176',
-  instagram: 'https://www.instagram.com/inoxa.online/',
+  instagram: 'https://www.instagram.com/perceptia_/',
+  /** Datos del responsable para las páginas legales. Completar razón social y NIT cuando existan. */
+  legal: {
+    owner: 'Perceptia',
+    taxId: '', // NIT; si queda vacío no se muestra
+    city: 'Medellín, Colombia',
+  },
 };
 
 export const whatsappUrl = (text: string) => `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(text)}`;

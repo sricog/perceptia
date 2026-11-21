@@ -19,6 +19,8 @@ export const routes = {
   projects: { es: '/proyectos', en: '/en/projects' },
   process: { es: '/proceso', en: '/en/process' },
   contact: { es: '/contacto', en: '/en/contact' },
+  terms: { es: '/terminos', en: '/en/terms' },
+  privacy: { es: '/tratamiento-de-datos', en: '/en/privacy' },
 } satisfies Record<string, Record<Lang, string>>;
 export type RouteKey = keyof typeof routes;
 

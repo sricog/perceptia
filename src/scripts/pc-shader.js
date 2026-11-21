@@ -40,21 +40,22 @@ void main(){
  col=mix(col,lc,ins*(1.-ves)*.75);
  vec3 vc=mix(C2,C4,smoothstep(.45,.95,f)*.8);
  col=mix(col,vc,ves);
- col+=C4*(exp(-abs(d1)*320.)+exp(-abs(d2)*320.))*.35;
- col+=C2*(exp(-abs(d1-.006)*260.)+exp(-abs(d2-.006)*260.))*.25;
+ // Filos y halo de las lentes; se apagan con K para que el isotipo quede limpio, sin borde.
+ float rim=1.-K;
+ col+=C4*(exp(-abs(d1)*320.)+exp(-abs(d2)*320.))*.35*rim;
+ col+=C2*(exp(-abs(d1-.006)*260.)+exp(-abs(d2-.006)*260.))*.25*rim;
  float dv=max(d1,d2);
- col+=C2*exp(-max(dv,0.)*9.)*.16;
- col+=C4*exp(-abs(dv)*220.)*.4;
+ col+=C2*exp(-max(dv,0.)*9.)*.16*rim;
+ col+=C4*exp(-abs(dv)*220.)*.4*rim;
  vec3 L=normalize(vec3(-.5,.65,.9));
  col+=C4*(e1*pow(max(0.,dot(vec3(l1,z1),L)),50.)+e2*pow(max(0.,dot(vec3(l2,z2),L)),50.))*.35;
  col+=C2*exp(-md*md*16.)*.07;
- // K: transición al isotipo (medialunas claras, vesica calada con filo aqua).
+ // K: transición al isotipo (medialunas claras y vesica calada, sin filo).
  if(K>0.){
   vec3 wc=C4*(.93+.07*smoothstep(.2,.9,f));
   vec3 lg=mix(col,wc,ins*(1.-ves));
   lg=mix(lg,C0+C1*.3*smoothstep(.3,.9,f),ves);
   col=mix(col,lg,K);
-  col+=C2*exp(-abs(dv)*380.)*.55*K;
  }
  col*=1.-.65*pow(length((uv-.5)*vec2(1.,.9)),2.2);
  col+=grain()*.05;

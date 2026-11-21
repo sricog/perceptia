@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { Dict } from '../i18n';
 import { saveLead } from '../lib/leads';
+import Consent, { type ConsentProps } from './Consent';
 
 type Props = {
   whatsappNumber: string;
@@ -9,6 +10,8 @@ type Props = {
   /** Un chip por tipo de proyecto; `id` coincide con el slug del servicio (?servicio= / ?service=). */
   types: { id: string; label: string }[];
   lang: 'es' | 'en';
+  /** Casilla de autorización: textos y enlaces a las páginas legales. */
+  consent: ConsentProps;
 };
 
 const fill = (tpl: string, vars: Record<string, string>) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
@@ -18,7 +21,7 @@ const field =
 const chip =
   'cursor-pointer rounded-full border px-4 py-2.5 text-[14px] font-medium leading-none transition select-none';
 
-export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: Props) {
+export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, consent }: Props) {
   const [types, setTypes] = useState<string[]>([]);
   const [budget, setBudget] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -43,6 +46,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: P
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = t.errors.email;
     if (!types.length) errs.types = t.errors.types;
     if (message.length < 10) errs.message = t.errors.message;
+    if (!data.get('consent')) errs.consent = consent.t.error;
     setErrors(errs);
     if (Object.keys(errs).length) return;
 
@@ -69,6 +73,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: P
         services: TYPES.filter((t) => types.includes(t.id)).map((t) => t.label),
         budget: budget || undefined,
         lang,
+        consent_at: new Date().toISOString(),
       });
       setStatus('sent');
     } catch (err) {
@@ -79,7 +84,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: P
 
   if (status === 'sent') {
     return (
-      <div className="flex min-h-[520px] flex-col items-start justify-center gap-6 rounded-[26px] border border-aqua/30 bg-card p-8 md:p-12">
+      <div className="flex min-h-[520px] flex-col items-start justify-center gap-6 rounded-[26px] border border-aqua/30 bg-card p-8 md:p-12" role="status">
         <div className="flex size-14 items-center justify-center rounded-full bg-aqua/15 text-2xl text-aqua">✓</div>
         <h2 className="text-[40px] font-semibold leading-none tracking-[-0.04em]">
           {t.sent.title[0]}<em className="accent">{t.sent.title[1]}</em>{t.sent.title[2]}
@@ -161,6 +166,8 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang }: P
         <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} aria-invalid={!!errors.message} />
         {errors.message && <span className="text-[13px] text-[#ff8a80]">{errors.message}</span>}
       </label>
+
+      <Consent {...consent} error={errors.consent} />
 
       <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
 

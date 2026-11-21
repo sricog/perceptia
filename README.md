@@ -17,7 +17,8 @@ npx astro check  # tipos
 - `src/scripts/pc-shader.js` — fondos WebGL en vivo (`<pc-shader mode="lens|chrome|dither|globe">`), portados del diseño.
 - `src/scripts/effects.ts` — revelados, palabras rotativas, texto que se ilumina con scroll, tablet que se endereza, filtro de proyectos, cursor "Ver sitio".
 - `src/components/` — marca (`BinocularMark`), navegación, footer, secciones.
-- `src/pages/` — `/`, `/servicios`, `/proyectos`, `/proceso`, `/contacto`, `404` (y sus equivalentes en `/en/`).
+- `src/pages/` — `/`, `/servicios`, `/proyectos`, `/proceso`, `/contacto`, `/terminos`, `/tratamiento-de-datos`, `404` (y sus equivalentes en `/en/`).
+- `src/data/legal.ts` — textos de términos y de la política de tratamiento de datos (Ley 1581 de 2012). Completar razón social y NIT en `site.legal` (`src/data/site.ts`).
 
 ## Pendiente
 
@@ -26,11 +27,13 @@ npx astro check  # tipos
 
 ## Solicitudes (Supabase)
 
-El agendador de `/proceso` y el formulario de `/contacto` guardan cada solicitud en la tabla `leads` de Supabase
+La solicitud de llamada de `/proceso` y el formulario de `/contacto` guardan cada solicitud en la tabla `leads` de Supabase
 (`kind = 'call'` o `'quote'`, `status = 'new'`). El equipo las revisa en el panel y contacta al cliente.
 
 1. En Supabase, abrir **SQL Editor** y ejecutar `supabase/migrations/20261121000000_leads.sql`
-   (o `supabase db push` con la CLI). Crea la tabla con RLS: el sitio solo puede insertar, no leer.
+   y después `supabase/migrations/20261121010000_leads_consent.sql` (o `supabase db push` con la CLI).
+   Crea la tabla con RLS (el sitio solo puede insertar, no leer) y guarda la autorización de datos de cada
+   solicitud (`consent_at`, `consent_version`); sin ella el insert se rechaza.
 2. Copiar `.env.example` a `.env` con la URL del proyecto y la clave pública (anon/publishable).
 3. En Cloudflare Pages, poner las mismas dos variables en *Settings → Environment variables* y volver a desplegar.
 
