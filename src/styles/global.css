@@ -153,6 +153,20 @@
   opacity: 1;
   transform: none;
 }
+/* Variante «enfoque»: entra desenfocada y se vuelve nítida. */
+[data-reveal='focus'] {
+  filter: blur(18px) saturate(0.6);
+  transform: scale(1.05);
+  transition:
+    opacity 0.9s var(--ease-out-expo),
+    transform 1.4s var(--ease-out-expo),
+    filter 1.2s var(--ease-out-expo);
+  transition-delay: var(--d, 0s);
+}
+[data-reveal='focus'].is-in {
+  filter: none;
+  transform: none;
+}
 
 /* Entrada del hero */
 .pc-rise {
@@ -177,5 +191,5 @@
     scroll-behavior: auto !important;
   }
   .pc-marquee { animation: none !important; }
-  [data-reveal] { opacity: 1; transform: none; }
+  [data-reveal] { opacity: 1; transform: none; filter: none; }
 }

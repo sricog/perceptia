@@ -160,7 +160,7 @@ void main(){
   col+=mix(C3*.35,C3,land)*dt*(.12+.88*dif)*.6*lim;
   col+=C2*pow(1.-n.z,3.)*.4;
  }
- // A: Colombia (Bogotá) · B: Puerto Rico · U: Estados Unidos (Miami)
+ // A: Colombia (Medellín) · B: Puerto Rico · U: Estados Unidos (Miami)
  vec3 A=sph(4.6,-74.1),B=sph(18.2,-66.5),U=sph(25.8,-80.2);
  col+=arcCol(arc(p,A,B))+arcCol(arc(p,A,U));
  col+=pin(p,tv(A),0.)+pin(p,tv(B),.5)+pin(p,tv(U),.25);

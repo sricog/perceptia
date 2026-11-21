@@ -88,6 +88,20 @@ export const en: Dict = {
     filters: { web: 'Websites', app: 'Web apps' },
     alt: '{name} mockup on laptop and phone',
     visit: 'Visit site ↗',
+    meta: {
+      miquarto: { sector: 'Proptech · furnished rentals', place: 'Colombia' },
+      imagenes: { sector: 'Healthcare · dental imaging', place: 'Antioquia, CO' },
+      aktiva: { sector: 'B2B corporate events', place: 'Colombia' },
+      raiz: { sector: 'Travel · retreats', place: 'Bahía Solano, CO' },
+      smoke: { sector: 'Restaurant · BBQ', place: 'Guaynabo, PR' },
+      market: { sector: 'Food · online store', place: 'Colombia' },
+      casamayor: { sector: 'Real estate', place: 'Miami, FL' },
+      adastra: { sector: 'Culture · funding', place: 'Spain' },
+    },
+    inFocus: 'In focus',
+    focusing: 'Focusing',
+    index: 'Project index',
+    viewer: 'Viewer',
   },
 
   process: {
@@ -104,12 +118,15 @@ export const en: Dict = {
   reach: {
     eyebrow: '06 · Reach',
     title: ['Remote, ', 'borderless'],
-    body: 'Clients in Colombia, Puerto Rico and the United States. Calls, deliveries and support in your time zone.',
+    body: 'Clients in Colombia, Puerto Rico, the United States and Spain. Calls, deliveries and support in your time zone.',
     places: [
-      { name: 'Colombia', tz: 'UTC−5' },
-      { name: 'Puerto Rico', tz: 'UTC−4' },
-      { name: 'United States', tz: 'UTC−5 to −8' },
+      { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
+      { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
+      { id: 'us', name: 'United States', city: 'Miami', tz: 'UTC−5 to −8' },
+      { id: 'es', name: 'Spain', city: 'Madrid', tz: 'UTC+1' },
     ],
+    hint: 'Drag the globe · pick a country to focus it',
+    localTime: 'Local time in {city}',
   },
 
   cta: {
@@ -128,7 +145,6 @@ export const en: Dict = {
       slug: 'websites',
       title: 'Websites & landing pages',
       form: 'Website / landing',
-      price: 'COP 700,000',
       short: 'Fast, measurable, easy-to-edit sites designed to turn visitors into customers.',
       long: 'A clear, fast digital presence designed to turn attention into opportunities. Custom-designed, never templated.',
       includes: ['Custom visual design', 'Responsive experience', 'Contact form or direct line', 'Initial SEO', 'Delivered ready to run'],

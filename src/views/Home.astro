@@ -6,7 +6,7 @@ import Studio from '../components/sections/Studio.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import Featured from '../components/sections/Featured.astro';
-import ProjectsGrid from '../components/ProjectsGrid.astro';
+import ProjectsShowcase from '../components/ProjectsShowcase.astro';
 import FilterPills from '../components/FilterPills.astro';
 import Process from '../components/sections/Process.astro';
 import Reach from '../components/sections/Reach.astro';
@@ -38,7 +38,7 @@ const { t, href } = useI18n(Astro.url);
       <Accent parts={t.homeProjects.title} />
       <FilterPills slot="aside" target="home-grid" />
     </SectionHead>
-    <ProjectsGrid id="home-grid" />
+    <ProjectsShowcase id="home-grid" />
   </section>
 
   <Process />

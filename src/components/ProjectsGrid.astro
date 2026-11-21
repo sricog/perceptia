@@ -1,65 +1,84 @@
 ---
-import { Image } from 'astro:assets';
-import { projects } from '../data/site';
+/**
+ * Galería de /proyectos: tarjetas grandes en dos columnas desfasadas.
+ * Al pasar el cursor por una, las demás se desenfocan (solo CSS, con :has) y una lupa
+ * binocular amplía la captura. Cada tarjeta entra con un cambio de foco.
+ */
+import { Image, getImage } from 'astro:assets';
+import { projects, domainOf } from '../data/site';
 import { useI18n, fill } from '../i18n';
+import Loupe from './Loupe.astro';
+interface Props { id?: string }
+const { id = 'proyectos-grid' } = Astro.props;
 const { t } = useI18n(Astro.url);
-interface Props { id?: string; limit?: number }
-const { id = 'proyectos-grid', limit } = Astro.props;
-const list = limit ? projects.slice(0, limit) : projects;
+const big = await Promise.all(projects.map((p) => getImage({ src: p.image, width: 1920, format: 'webp' })));
 ---
 
-<div class="relative" data-cursor-area>
-  <div id={id} class="grid grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
-    {
-      list.map((p, i) => (
-        <a
-          href={p.url}
-          target="_blank"
-          rel="noopener"
-          data-project
-          data-type={p.kind}
-          class="proj group flex flex-col gap-3.5 text-niebla hover:text-niebla"
-          data-reveal
-          style={`--d:${(i % 4) * 0.08}s`}
-        >
-          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl border border-salvia/16 bg-hondo transition-[border-color,box-shadow] duration-500 group-hover:border-aqua group-hover:shadow-[0_0_40px_-6px_rgba(20,224,165,.6)]">
-            <Image
-              src={p.image}
-              alt={fill(t.projects.alt, { name: p.name })}
-              widths={[480, 720, 960]}
-              sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
-              class="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(3,19,15,.55))]" />
+<div id={id} class="pgrid grid grid-cols-1 gap-x-6 gap-y-14 md:grid-cols-2 md:gap-y-20">
+  {
+    projects.map((p, i) => {
+      const m = t.projects.meta[p.id];
+      return (
+        <a href={p.url} target="_blank" rel="noopener" data-type={p.kind} class="card group block text-niebla hover:text-niebla">
+          <div
+            data-loupe-area
+            data-loupe-src={big[i].src}
+            class="frame relative aspect-[3/2] overflow-hidden rounded-[20px] border border-niebla/12 bg-hondo transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_60px_-12px_rgba(20,224,165,.55)]"
+          >
+            <div class="size-full" data-reveal="focus" style={`--d:${(i % 2) * 0.1}s`}>
+              <Image
+                src={p.image}
+                alt={fill(t.projects.alt, { name: p.name })}
+                widths={[640, 960, 1280]}
+                sizes="(min-width:768px) 46vw, 100vw"
+                class="size-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+                loading={i < 2 ? 'eager' : 'lazy'}
+              />
+            </div>
+            <span class="pointer-events-none absolute left-5 top-5 font-mono text-[11px] font-medium tracking-[0.14em] text-niebla/80">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <Loupe label={t.projects.visit} />
           </div>
-          <div class="flex items-baseline justify-between gap-3">
-            <span class="text-[18px] font-medium leading-tight tracking-[-0.01em]">{p.name}</span>
-            <span class="mono-tag flex-none">{t.projects.kinds[p.kind]}</span>
+          <div class="mt-5 grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-2" data-reveal style={`--d:${(i % 2) * 0.1 + 0.1}s`}>
+            <span class="text-[clamp(24px,2.3vw,32px)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
+            <span class="mono-tag">{t.projects.kinds[p.kind]}</span>
+            <span class="text-[15px] text-salvia">{m.sector} · {m.place}</span>
+            <span class="font-mono text-[12px] tracking-[0.04em] text-salvia transition-colors group-hover:text-aqua">{domainOf(p.url)} ↗</span>
           </div>
         </a>
-      ))
-    }
-  </div>
-  <div data-cursor-pill class="cursor-pill pointer-events-none absolute left-0 top-0 z-10 flex items-center gap-2" aria-hidden="true">
-    <div class="size-3.5 rounded-full bg-aqua shadow-[0_0_18px_#14E0A5]"></div>
-    <div class="rounded-full bg-niebla px-3 py-2 font-mono text-[12px] font-semibold leading-none tracking-[0.06em] text-noche">{t.projects.visit}</div>
-  </div>
+      );
+    })
+  }
 </div>
 
 <style>
-  .cursor-pill {
-    opacity: 0;
-    scale: 0.6;
-    transition: opacity 0.25s, scale 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  .card {
+    transition:
+      opacity 0.5s var(--ease-out-expo),
+      filter 0.6s var(--ease-out-expo);
   }
-  .cursor-pill:global(.is-on) {
-    opacity: 1;
-    scale: 1;
+  @media (min-width: 768px) {
+    /* Segunda columna desfasada; se recalcula sola con el filtro porque ignora las ocultas. */
+    .pgrid > .card:nth-child(even of :not([hidden])) {
+      translate: 0 7rem;
+    }
+    .pgrid {
+      padding-bottom: 7rem;
+    }
   }
   @media (hover: hover) and (pointer: fine) {
-    [data-cursor-area] .proj {
+    .pgrid:has(.card:hover) .card:not(:hover) {
+      opacity: 0.45;
+      filter: blur(3px) saturate(0.5);
+    }
+    .frame {
       cursor: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pgrid:has(.card:hover) .card:not(:hover) {
+      filter: none;
     }
   }
 </style>

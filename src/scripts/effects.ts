@@ -1,4 +1,6 @@
 // Efectos de página. Se reinician en cada navegación (astro:page-load) y se limpian antes del swap.
+import { showcases, loupes } from './projects';
+
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let disposers: Array<() => void> = [];
 
@@ -238,41 +240,6 @@ function hero() {
 }
 
 /** Pastilla "Ver sitio ↗" que sigue al cursor sobre la grilla de proyectos. */
-function cursorPills() {
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  document.querySelectorAll<HTMLElement>('[data-cursor-area]').forEach((area) => {
-    const pill = area.querySelector<HTMLElement>('[data-cursor-pill]');
-    if (!pill) return;
-    let x = 0, y = 0, tx = 0, ty = 0, raf = 0, active = false;
-    const loop = () => {
-      x += (tx - x) * 0.2;
-      y += (ty - y) * 0.2;
-      pill.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      raf = active || Math.hypot(tx - x, ty - y) > 0.5 ? requestAnimationFrame(loop) : 0;
-    };
-    const move = (e: PointerEvent) => {
-      const r = area.getBoundingClientRect();
-      tx = e.clientX - r.left + 14;
-      ty = e.clientY - r.top + 14;
-      const overCard = (e.target as HTMLElement).closest('[data-project]');
-      pill.classList.toggle('is-on', !!overCard);
-      if (!active) {
-        active = true;
-        if (!raf) { x = tx; y = ty; raf = requestAnimationFrame(loop); }
-      }
-    };
-    const leave = () => { active = false; pill.classList.remove('is-on'); };
-    area.addEventListener('pointermove', move);
-    area.addEventListener('pointerleave', leave);
-    disposers.push(() => {
-      area.removeEventListener('pointermove', move);
-      area.removeEventListener('pointerleave', leave);
-      cancelAnimationFrame(raf);
-    });
-  });
-}
-
-/** Filtro Todos / Websites / Apps web. */
 function filters() {
   document.querySelectorAll<HTMLElement>('[data-filter-group]').forEach((group) => {
     const target = document.getElementById(group.dataset.filterGroup!);
@@ -287,7 +254,12 @@ function filters() {
         if (show && !reduce()) c.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: 'cubic-bezier(.16,1,.3,1)' });
       });
     };
-    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        apply(b.dataset.filter!);
+        target.dispatchEvent(new CustomEvent('pc:filter'));
+      }),
+    );
   });
 }
 
@@ -296,8 +268,10 @@ export function initPage() {
   reveals();
   rotators();
   scrubbers();
-  cursorPills();
   filters();
+  showcases(disposers);
+  loupes(disposers);
+  if (document.querySelector('[data-globe]')) import('./globe').then((m) => m.globes(disposers));
 }
 
 document.addEventListener('astro:before-swap', () => {

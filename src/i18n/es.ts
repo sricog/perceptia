@@ -94,6 +94,20 @@ export const es = {
     filters: { web: 'Websites', app: 'Apps web' },
     alt: 'Mockup de {name} en laptop y móvil',
     visit: 'Ver sitio ↗',
+    meta: {
+      miquarto: { sector: 'Proptech · arriendos amoblados', place: 'Colombia' },
+      imagenes: { sector: 'Salud · imagenología oral', place: 'Antioquia, CO' },
+      aktiva: { sector: 'Eventos corporativos B2B', place: 'Colombia' },
+      raiz: { sector: 'Turismo · retiros', place: 'Bahía Solano, CO' },
+      smoke: { sector: 'Restaurante · BBQ', place: 'Guaynabo, PR' },
+      market: { sector: 'Alimentos · tienda en línea', place: 'Colombia' },
+      casamayor: { sector: 'Bienes raíces', place: 'Miami, FL' },
+      adastra: { sector: 'Cultura · financiación', place: 'España' },
+    },
+    inFocus: 'En foco',
+    focusing: 'Enfocando',
+    index: 'Índice de proyectos',
+    viewer: 'Visor',
   },
 
   process: {
@@ -110,12 +124,14 @@ export const es = {
   reach: {
     eyebrow: '06 · Alcance',
     title: ['Remoto, ', 'sin fronteras'],
-    body: 'Clientes en Colombia, Puerto Rico y Estados Unidos. Llamadas, entregas y soporte en tu zona horaria.',
+    body: 'Clientes en Colombia, Puerto Rico, Estados Unidos y España. Llamadas, entregas y soporte en tu zona horaria.',
     places: [
-      { name: 'Colombia', tz: 'UTC−5' },
-      { name: 'Puerto Rico', tz: 'UTC−4' },
-      { name: 'Estados Unidos', tz: 'UTC−5 a −8' },
+      { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
+      { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
+      { id: 'us', name: 'Estados Unidos', city: 'Miami', tz: 'UTC−5 a −8' },
+      { id: 'es', name: 'España', city: 'Madrid', tz: 'UTC+1' },
     ],
+    localTime: 'Hora local en {city}',
   },
 
   cta: {
@@ -135,7 +151,6 @@ export const es = {
       slug: 'websites',
       title: 'Websites y landing pages',
       form: 'Website / landing',
-      price: '$700.000',
       short: 'Sitios rápidos, medibles y fáciles de editar, pensados para convertir visitas en clientes.',
       long: 'Una presencia digital clara, rápida y diseñada para convertir atención en oportunidades. Diseño propio, nada de plantillas.',
       includes: ['Diseño visual personalizado', 'Experiencia responsive', 'Formulario o contacto directo', 'SEO inicial', 'Entrega lista para operar'],
