@@ -14,17 +14,17 @@ const types = [...services.map((s) => ({ id: t.services[s.id].slug, label: t.ser
 
 <Base title={p.title} description={p.description} route="contact">
   <section class="grain relative overflow-hidden pb-28 pt-36 md:pb-36 md:pt-48">
-    <div class="absolute inset-x-0 top-0 h-[720px] opacity-60"><Shader mode="dither" lenses lens="0.45,0.1,0.22,0.11" px="4" /></div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[linear-gradient(0deg,#03130F_0%,rgba(3,19,15,.6)_50%,rgba(3,19,15,.3)_100%)]"></div>
+    <div class="absolute inset-x-0 top-0 h-[45rem] opacity-60"><Shader mode="dither" lenses lens="0.45,0.1,0.22,0.11" px="4" /></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[45rem] bg-[linear-gradient(0deg,#03130F_0%,rgba(3,19,15,.6)_50%,rgba(3,19,15,.3)_100%)]"></div>
 
     <div class="wrap relative grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <div class="flex flex-col gap-8">
         <div class="eyebrow pc-rise">{p.eyebrow}</div>
-        <h1 class="pc-rise text-[clamp(48px,6.4vw,96px)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
+        <h1 class="pc-rise text-[clamp(3rem,6.4vw,6rem)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
           <Accent parts={p.h1} />
         </h1>
-        <p class="pc-rise max-w-[440px] text-[19px] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
-        <div class="pc-rise mt-4 flex flex-col font-mono text-[13px] font-medium tracking-[0.06em]" style="--d:.3s">
+        <p class="pc-rise max-w-[27.5rem] text-[1.1875rem] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
+        <div class="pc-rise mt-4 flex flex-col font-mono text-[0.8125rem] font-medium tracking-[0.06em]" style="--d:.3s">
           <a href={whatsappUrl(t.whatsapp)} target="_blank" rel="noopener" class="flex justify-between border-t border-salvia/18 py-4.5 text-niebla hover:text-aqua">
             <span>WhatsApp</span><span class="text-salvia">{site.whatsappDisplay} ↗</span>
           </a>

@@ -25,14 +25,14 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
   data-close-label={t.a11y.closeMenu}
 >
   <div class="grid grid-cols-[1fr_auto] items-center px-5 py-4 md:grid-cols-[1fr_auto_1fr] md:px-12 md:py-7">
-    <a href={href('home')} class="flex items-center gap-3 text-[20px] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla" aria-label={t.a11y.home}>
+    <a href={href('home')} class="flex items-center gap-3 text-[1.25rem] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla" aria-label={t.a11y.home}>
       <BinocularMark id="nav" size={24} anim />
       <span>Perceptia</span>
     </a>
 
     <nav
       aria-label={t.a11y.mainNav}
-      class="hidden gap-1.5 rounded-full border border-niebla/10 bg-noche/45 p-1.5 text-[14px] font-[450] text-bruma backdrop-blur-xl md:flex"
+      class="hidden gap-1.5 rounded-full border border-niebla/10 bg-noche/45 p-1.5 text-[0.875rem] font-[450] text-bruma backdrop-blur-xl md:flex"
     >
       {
         links.map((l) => (
@@ -47,7 +47,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
       <div
         role="group"
         aria-label={t.a11y.language}
-        class="flex h-11 items-center gap-0.5 rounded-full border border-niebla/15 bg-noche/50 p-1 font-mono text-[12px] font-medium tracking-[0.08em] backdrop-blur-xl"
+        class="flex h-11 items-center gap-0.5 rounded-full border border-niebla/15 bg-noche/50 p-1 font-mono text-[0.75rem] font-medium tracking-[0.08em] backdrop-blur-xl"
       >
         {
           switcher.map((s) =>
@@ -73,7 +73,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
       </div>
       <a
         href={href('contact')}
-        class="hidden h-11 items-center rounded-full bg-niebla px-5 text-[14px] font-semibold text-noche transition hover:bg-aqua hover:text-noche sm:flex"
+        class="hidden h-11 items-center rounded-full bg-niebla px-5 text-[0.875rem] font-semibold text-noche transition hover:bg-aqua hover:text-noche sm:flex"
       >
         {t.nav.cta}
       </a>
@@ -100,7 +100,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
         links.map((l, i) => (
           <a
             href={l.href}
-            class="hairline flex items-baseline justify-between border-t py-5 text-[40px] font-semibold tracking-[-0.04em] text-niebla"
+            class="hairline flex items-baseline justify-between border-t py-5 text-[2.5rem] font-semibold tracking-[-0.04em] text-niebla"
           >
             {l.label}
             <span class="mono-tag">0{i + 1}</span>
@@ -115,7 +115,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
 <style>
   #site-nav.is-scrolled {
     background: rgb(3 19 15 / 0.72);
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(1.125rem);
     border-bottom: 1px solid rgb(143 176 165 / 0.12);
   }
   #site-nav.is-open #nav-panel {

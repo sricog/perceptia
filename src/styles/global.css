@@ -29,6 +29,14 @@
     scroll-behavior: smooth;
     color-scheme: dark;
   }
+  /* Escala general del sitio en escritorio. Todos los tamaños están en rem,
+     así que bajar la base al 90% equivale a ver el sitio con zoom 90%.
+     En móvil y tablet se mantiene el 100%. */
+  @media (min-width: 1024px) {
+    html {
+      font-size: 90%;
+    }
+  }
   body {
     min-height: 100svh;
     overflow-x: clip;
@@ -38,22 +46,22 @@
     color: var(--color-noche);
   }
   :focus-visible {
-    outline: 2px solid var(--color-aqua);
-    outline-offset: 3px;
-    border-radius: 6px;
+    outline: 0.125rem solid var(--color-aqua);
+    outline-offset: 0.1875rem;
+    border-radius: 0.375rem;
   }
 }
 
 @layer components {
   /* Etiqueta mono estilo branding book: "02 · Servicios" */
   .eyebrow {
-    font: 500 12px/1.6 var(--font-mono);
+    font: 500 0.75rem/1.6 var(--font-mono);
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-salvia);
   }
   .mono-tag {
-    font: 500 11px/1 var(--font-mono);
+    font: 500 0.6875rem/1 var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-salvia);
@@ -65,23 +73,23 @@
   }
   .h-section {
     font-weight: 650;
-    font-size: clamp(42px, 4.8vw, 68px);
+    font-size: clamp(2.625rem, 4.8vw, 4.25rem);
     line-height: 1;
     letter-spacing: -0.045em;
     text-wrap: balance;
   }
   .wrap {
-    padding-inline: clamp(20px, 6.6vw, 96px);
+    padding-inline: clamp(1.25rem, 6.6vw, 6rem);
   }
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    height: 54px;
-    padding: 0 26px;
-    border-radius: 999px;
-    font: 600 16px/1 var(--font-sans);
+    gap: 0.625rem;
+    height: 3.375rem;
+    padding: 0 1.625rem;
+    border-radius: 62.4375rem;
+    font: 600 1rem/1 var(--font-sans);
     white-space: nowrap;
     transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s, background 0.3s, color 0.3s;
   }
@@ -91,17 +99,17 @@
   .btn-primary {
     background: var(--color-aqua);
     color: var(--color-noche);
-    box-shadow: 0 0 0 1px rgb(20 224 165 / 0.4), 0 18px 60px -12px rgb(20 224 165 / 0.8);
+    box-shadow: 0 0 0 1px rgb(20 224 165 / 0.4), 0 1.125rem 3.75rem -0.75rem rgb(20 224 165 / 0.8);
   }
   .btn-primary:hover {
     color: var(--color-noche);
-    box-shadow: 0 0 0 1px rgb(20 224 165 / 0.6), 0 22px 70px -10px rgb(20 224 165 / 1);
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgb(20 224 165 / 0.6), 0 1.375rem 4.375rem -0.625rem rgb(20 224 165 / 1);
+    transform: translateY(-0.125rem);
   }
   .btn-ghost {
     background: rgb(238 245 242 / 0.06);
     border: 1px solid rgb(238 245 242 / 0.16);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(0.75rem);
     font-weight: 500;
     color: var(--color-niebla);
   }
@@ -127,11 +135,11 @@
 @keyframes pcLens { from { transform: translateX(var(--dx)); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes pcVes { from { transform: scale(.4); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes pcGlow { 0%, 100% { opacity: .45 } 50% { opacity: 1 } }
-@keyframes pcWord { from { opacity: 0; transform: translateY(.45em); filter: blur(10px) } to { opacity: 1; transform: none; filter: none } }
-@keyframes pcWordOut { to { opacity: 0; transform: translateY(-.45em); filter: blur(10px) } }
+@keyframes pcWord { from { opacity: 0; transform: translateY(.45em); filter: blur(0.625rem) } to { opacity: 1; transform: none; filter: none } }
+@keyframes pcWordOut { to { opacity: 0; transform: translateY(-.45em); filter: blur(0.625rem) } }
 @keyframes pcMarq { to { transform: translateX(-50%) } }
 @keyframes pcPing { from { transform: scale(.4); opacity: 1 } to { transform: scale(1.8); opacity: 0 } }
-@keyframes pcRise { from { opacity: 0; transform: translateY(28px) } to { opacity: 1; transform: none } }
+@keyframes pcRise { from { opacity: 0; transform: translateY(1.75rem) } to { opacity: 1; transform: none } }
 
 .pc-marquee {
   display: flex;
@@ -145,7 +153,7 @@
 /* Revelado al hacer scroll */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(1.75rem);
   transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
   transition-delay: var(--d, 0s);
 }
@@ -155,7 +163,7 @@
 }
 /* Variante «enfoque»: entra desenfocada y se vuelve nítida. */
 [data-reveal='focus'] {
-  filter: blur(18px) saturate(0.6);
+  filter: blur(1.125rem) saturate(0.6);
   transform: scale(1.05);
   transition:
     opacity 0.9s var(--ease-out-expo),

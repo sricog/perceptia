@@ -13,7 +13,7 @@ export type ConsentProps = {
 export default function Consent({ t, terms, privacy, error }: ConsentProps & { error?: string }) {
   return (
     <div className="flex flex-col gap-2">
-      <label className="group flex cursor-pointer items-start gap-3 text-[14px] leading-[1.5] text-salvia">
+      <label className="group flex cursor-pointer items-start gap-3 text-[0.875rem] leading-[1.5] text-salvia">
         <input
           type="checkbox"
           name="consent"
@@ -23,7 +23,7 @@ export default function Consent({ t, terms, privacy, error }: ConsentProps & { e
         />
         <span
           aria-hidden="true"
-          className="mt-px flex size-5 flex-none items-center justify-center rounded-md border border-salvia/40 text-[13px] leading-none text-transparent transition group-hover:border-aqua/70 peer-checked:border-aqua peer-checked:bg-aqua peer-checked:text-noche peer-focus-visible:shadow-[0_0_0_4px_rgba(20,224,165,.25)]"
+          className="mt-px flex size-5 flex-none items-center justify-center rounded-md border border-salvia/40 text-[0.8125rem] leading-none text-transparent transition group-hover:border-aqua/70 peer-checked:border-aqua peer-checked:bg-aqua peer-checked:text-noche peer-focus-visible:shadow-[0_0_0_0.25rem_rgba(20,224,165,.25)]"
         >
           ✓
         </span>
@@ -39,7 +39,7 @@ export default function Consent({ t, terms, privacy, error }: ConsentProps & { e
           {t.post}
         </span>
       </label>
-      {error && <span className="text-[13px] text-[#ff8a80]">{error}</span>}
+      {error && <span className="text-[0.8125rem] text-[#ff8a80]">{error}</span>}
     </div>
   );
 }

@@ -17,31 +17,31 @@ const list = services.map((s) => ({ ...s, ...t.services[s.id] }));
     <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(0deg,#03130F_0%,rgba(3,19,15,.6)_45%,rgba(3,19,15,.2)_100%)]"></div>
     <div class="wrap relative">
       <div class="eyebrow pc-rise">{p.eyebrow}</div>
-      <h1 class="pc-rise mt-5 max-w-[14ch] text-[clamp(48px,7vw,104px)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
+      <h1 class="pc-rise mt-5 max-w-[14ch] text-[clamp(3rem,7vw,6.5rem)] font-bold leading-[.95] tracking-[-0.055em]" style="--d:.1s">
         <Accent parts={p.h1} />
       </h1>
-      <p class="pc-rise mt-6 max-w-[560px] text-[19px] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
+      <p class="pc-rise mt-6 max-w-[35rem] text-[1.1875rem] leading-[1.55] text-bruma" style="--d:.2s">{p.lead}</p>
     </div>
   </header>
 
   <section class="wrap flex flex-col gap-5 pb-28 pt-6 md:pb-36">
     {
       list.map((s, i) => (
-        <article id={s.slug} class="grid scroll-mt-28 gap-2.5 rounded-[26px] border border-salvia/14 bg-card p-2.5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" data-reveal>
-          <div class:list={['relative min-h-[240px] overflow-hidden rounded-[18px] lg:min-h-[420px]', i % 2 && 'lg:order-2']}>
+        <article id={s.slug} class="grid scroll-mt-28 gap-2.5 rounded-[1.625rem] border border-salvia/14 bg-card p-2.5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" data-reveal>
+          <div class:list={['relative min-h-[15rem] overflow-hidden rounded-[1.125rem] lg:min-h-[26.25rem]', i % 2 && 'lg:order-2']}>
             <Shader mode={s.shader.mode as any} variant={s.shader.variant} scale={s.shader.scale} px={s.shader.px} lens={s.shader.lens} />
           </div>
           <div class="flex flex-col justify-between gap-10 p-5 md:p-9">
             <div class="flex flex-col gap-4">
-              <span class="font-mono text-[12px] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
-              <h2 class="text-[clamp(32px,3.4vw,48px)] font-semibold leading-[1.02] tracking-[-0.04em]">{s.title}</h2>
-              <p class="max-w-[560px] text-[17px] leading-[1.6] text-salvia">{s.long}</p>
+              <span class="font-mono text-[0.75rem] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
+              <h2 class="text-[clamp(2rem,3.4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.04em]">{s.title}</h2>
+              <p class="max-w-[35rem] text-[1.0625rem] leading-[1.6] text-salvia">{s.long}</p>
             </div>
             <div class="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-end">
               <ul class="grid gap-x-8 gap-y-0 sm:grid-cols-2">
                 {s.includes.map((it) => (
-                  <li class="flex items-center gap-3 border-t border-salvia/14 py-3 text-[15px] text-niebla">
-                    <span class="size-1.5 flex-none rounded-full bg-aqua shadow-[0_0_8px_#14E0A5]" />
+                  <li class="flex items-center gap-3 border-t border-salvia/14 py-3 text-[0.9375rem] text-niebla">
+                    <span class="size-1.5 flex-none rounded-full bg-aqua shadow-[0_0_0.5rem_#14E0A5]" />
                     {it}
                   </li>
                 ))}
@@ -50,12 +50,12 @@ const list = services.map((s) => ({ ...s, ...t.services[s.id] }));
                 {s.price ? (
                   <div class="flex flex-col gap-1.5 sm:items-end">
                     <span class="mono-tag">{t.pricing.from}</span>
-                    <span class="whitespace-nowrap text-[34px] font-[650] leading-none tracking-[-0.04em]">{s.price}</span>
+                    <span class="whitespace-nowrap text-[2.125rem] font-[650] leading-none tracking-[-0.04em]">{s.price}</span>
                   </div>
                 ) : (
                   <span class="mono-tag">{t.pricing.request}</span>
                 )}
-                <a href={`${href('contact')}?${t.form.serviceParam}=${s.slug}`} class="btn btn-primary h-12 px-6 text-[15px]">{t.pricing.quote}</a>
+                <a href={`${href('contact')}?${t.form.serviceParam}=${s.slug}`} class="btn btn-primary h-12 px-6 text-[0.9375rem]">{t.pricing.quote}</a>
               </div>
             </div>
           </div>
