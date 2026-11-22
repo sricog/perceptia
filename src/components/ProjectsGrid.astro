@@ -23,7 +23,7 @@ const big = await Promise.all(projects.map((p) => getImage({ src: p.image, width
           <div
             data-loupe-area
             data-loupe-src={big[i].src}
-            class="frame relative aspect-[3/2] overflow-hidden rounded-[20px] border border-niebla/12 bg-hondo transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_60px_-12px_rgba(20,224,165,.55)]"
+            class="frame relative aspect-[3/2] overflow-hidden rounded-[1.25rem] border border-niebla/12 bg-hondo transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_3.75rem_-0.75rem_rgba(20,224,165,.55)]"
           >
             <div class="size-full" data-reveal="focus" style={`--d:${(i % 2) * 0.1}s`}>
               <Image
@@ -35,16 +35,16 @@ const big = await Promise.all(projects.map((p) => getImage({ src: p.image, width
                 loading={i < 2 ? 'eager' : 'lazy'}
               />
             </div>
-            <span class="pointer-events-none absolute left-5 top-5 font-mono text-[11px] font-medium tracking-[0.14em] text-niebla/80">
+            <span class="pointer-events-none absolute left-5 top-5 font-mono text-[0.6875rem] font-medium tracking-[0.14em] text-niebla/80">
               {String(i + 1).padStart(2, '0')}
             </span>
             <Loupe label={t.projects.visit} />
           </div>
           <div class="mt-5 grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-2" data-reveal style={`--d:${(i % 2) * 0.1 + 0.1}s`}>
-            <span class="text-[clamp(24px,2.3vw,32px)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
+            <span class="text-[clamp(1.5rem,2.3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
             <span class="mono-tag">{t.projects.kinds[p.kind]}</span>
-            <span class="text-[15px] text-salvia">{m.sector} · {m.place}</span>
-            <span class="font-mono text-[12px] tracking-[0.04em] text-salvia transition-colors group-hover:text-aqua">{domainOf(p.url)} ↗</span>
+            <span class="text-[0.9375rem] text-salvia">{m.sector} · {m.place}</span>
+            <span class="font-mono text-[0.75rem] tracking-[0.04em] text-salvia transition-colors group-hover:text-aqua">{domainOf(p.url)} ↗</span>
           </div>
         </a>
       );
@@ -70,7 +70,7 @@ const big = await Promise.all(projects.map((p) => getImage({ src: p.image, width
   @media (hover: hover) and (pointer: fine) {
     .pgrid:has(.card:hover) .card:not(:hover) {
       opacity: 0.45;
-      filter: blur(3px) saturate(0.5);
+      filter: blur(0.1875rem) saturate(0.5);
     }
     .frame {
       cursor: none;

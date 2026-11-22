@@ -7,13 +7,13 @@ const { t, href } = useI18n(Astro.url);
 ---
 
 <Base title={t.notFound.title}>
-  <section class="relative flex h-[100svh] min-h-[600px] items-center justify-center overflow-hidden text-center">
+  <section class="relative flex h-[100svh] min-h-[37.5rem] items-center justify-center overflow-hidden text-center">
     <div class="absolute inset-0"><Shader mode="lens" lens="0,0.05,0.22,0.11" lensPortrait="0,0.05,0.16,0.08" /></div>
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_50%,rgba(3,19,15,.85),rgba(3,19,15,0))]"></div>
     <div class="wrap relative">
       <div class="eyebrow">{t.notFound.eyebrow}</div>
-      <h1 class="mt-5 text-[clamp(48px,7vw,100px)] font-bold leading-[.95] tracking-[-0.055em]"><Accent parts={t.notFound.h1} /></h1>
-      <p class="mt-6 text-[19px] text-bruma">{t.notFound.body}</p>
+      <h1 class="mt-5 text-[clamp(3rem,7vw,6.25rem)] font-bold leading-[.95] tracking-[-0.055em]"><Accent parts={t.notFound.h1} /></h1>
+      <p class="mt-6 text-[1.1875rem] text-bruma">{t.notFound.body}</p>
       <a href={href('home')} class="btn btn-primary mt-9">{t.notFound.back}</a>
     </div>
   </section>

@@ -17,7 +17,7 @@ bunx astro check  # tipos
 
 - `src/data/site.ts` — todo el contenido editable: servicios, proyectos, pasos, tecnologías, WhatsApp e Instagram.
 - `src/scripts/pc-shader.js` — fondos WebGL en vivo (`<pc-shader mode="lens|chrome|dither|globe">`), portados del diseño.
-- `src/scripts/effects.ts` — revelados, palabras rotativas, texto que se ilumina con scroll, tablet que se endereza, filtro de proyectos, cursor "Ver sitio".
+- `src/scripts/effects.ts` — revelados, palabras rotativas, texto que se ilumina con scroll, filtro de proyectos, cursor "Ver sitio".
 - `src/components/` — marca (`BinocularMark`), navegación, footer, secciones.
 - `src/pages/` — `/`, `/servicios`, `/proyectos`, `/proceso`, `/contacto`, `/terminos`, `/tratamiento-de-datos`, `404` (y sus equivalentes en `/en/`).
 - `src/data/legal.ts` — textos de términos y de la política de tratamiento de datos (Ley 1581 de 2012). Completar razón social y NIT en `site.legal` (`src/data/site.ts`).

@@ -20,7 +20,7 @@ const { label } = Astro.props;
 
 <style>
   .loupe {
-    --w: 204px;
+    --w: 12.75rem;
     position: absolute;
     left: 0;
     top: 0;
@@ -55,19 +55,19 @@ const { label } = Astro.props;
     position: absolute;
     inset: 0;
     overflow: visible;
-    filter: drop-shadow(0 0 14px rgb(20 224 165 / 0.45)) drop-shadow(0 10px 30px rgb(0 0 0 / 0.6));
+    filter: drop-shadow(0 0 0.875rem rgb(20 224 165 / 0.45)) drop-shadow(0 0.625rem 1.875rem rgb(0 0 0 / 0.6));
   }
   .loupe-label {
     position: absolute;
     left: 50%;
-    top: calc(100% + 12px);
+    top: calc(100% + 0.75rem);
     translate: -50% 0;
     white-space: nowrap;
-    border-radius: 999px;
+    border-radius: 62.4375rem;
     background: var(--color-niebla);
-    padding: 7px 12px;
+    padding: 0.4375rem 0.75rem;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.06em;
     line-height: 1;

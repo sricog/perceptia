@@ -31,10 +31,10 @@ const first = projects[0];
               rel="noopener"
               class="grid grid-cols-[2.25rem_1fr_auto] items-baseline gap-x-3 border-t border-salvia/16 py-5 text-niebla hover:text-niebla md:grid-cols-[3rem_1fr_auto] md:py-6"
             >
-              <span class="sc-n font-mono text-[12px] tracking-[0.08em] text-salvia">{pad(i + 1)}</span>
-              <span class="sc-name text-[clamp(26px,3vw,42px)] font-semibold leading-[1.05] tracking-[-0.035em]">{p.name}</span>
-              <span class="sc-arrow font-mono text-[14px] text-salvia" aria-hidden="true">↗</span>
-              <span class="col-start-2 col-end-4 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-salvia">
+              <span class="sc-n font-mono text-[0.75rem] tracking-[0.08em] text-salvia">{pad(i + 1)}</span>
+              <span class="sc-name text-[clamp(1.625rem,3vw,2.625rem)] font-semibold leading-[1.05] tracking-[-0.035em]">{p.name}</span>
+              <span class="sc-arrow font-mono text-[0.875rem] text-salvia" aria-hidden="true">↗</span>
+              <span class="col-start-2 col-end-4 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.875rem] text-salvia">
                 <span>{m.sector}</span>
                 <span class="size-1 rounded-full bg-salvia/50" aria-hidden="true" />
                 <span>{m.place}</span>
@@ -68,7 +68,7 @@ const first = projects[0];
         data-loupe-src={big[0].src}
         data-visit={t.projects.visit}
         aria-label={`${first.name} · ${t.projects.visit}`}
-        class="visor relative block aspect-[3/2] overflow-hidden rounded-[22px] border border-niebla/14 bg-hondo shadow-[0_50px_100px_-40px_rgba(0,0,0,.9),inset_0_1px_0_rgba(238,245,242,.12)]"
+        class="visor relative block aspect-[3/2] overflow-hidden rounded-[1.375rem] border border-niebla/14 bg-hondo shadow-[0_3.125rem_6.25rem_-2.5rem_rgba(0,0,0,.9),inset_0_1px_0_rgba(238,245,242,.12)]"
       >
         {
           projects.map((p, i) => (
@@ -107,7 +107,7 @@ const first = projects[0];
         <span class="corner bottom-4 right-4 border-b border-r"></span>
         <span class="crosshair" aria-hidden="true"></span>
 
-        <div class="pointer-events-none absolute inset-x-8 top-7 flex items-center justify-between font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-niebla">
+        <div class="pointer-events-none absolute inset-x-8 top-7 flex items-center justify-between font-mono text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-niebla">
           <span class="flex items-center gap-2">
             <span class="relative flex size-2">
               <span class="absolute inset-0 animate-[pcPing_1.8s_ease-out_infinite] rounded-full bg-aqua"></span>
@@ -119,10 +119,10 @@ const first = projects[0];
         </div>
         <div class="pointer-events-none absolute inset-x-8 bottom-7 flex items-end justify-between gap-6">
           <div class="flex min-w-0 flex-col gap-1.5">
-            <span data-visor-name class="truncate text-[26px] font-semibold leading-none tracking-[-0.03em] text-niebla">{first.name}</span>
-            <span data-visor-meta class="truncate text-[14px] text-bruma">{t.projects.meta[first.id].sector} · {t.projects.meta[first.id].place}</span>
+            <span data-visor-name class="truncate text-[1.625rem] font-semibold leading-none tracking-[-0.03em] text-niebla">{first.name}</span>
+            <span data-visor-meta class="truncate text-[0.875rem] text-bruma">{t.projects.meta[first.id].sector} · {t.projects.meta[first.id].place}</span>
           </div>
-          <span class="flex-none rounded-full bg-niebla px-3.5 py-2 font-mono text-[12px] font-semibold leading-none tracking-[0.06em] text-noche">
+          <span class="flex-none rounded-full bg-niebla px-3.5 py-2 font-mono text-[0.75rem] font-semibold leading-none tracking-[0.06em] text-noche">
             <span data-visor-domain>{domainOf(first.url)}</span> ↗
           </span>
         </div>
@@ -150,7 +150,7 @@ const first = projects[0];
       opacity: 0.4;
     }
     .sc-row.is-active .sc-name {
-      translate: 10px 0;
+      translate: 0.625rem 0;
     }
     .sc-row.is-active .sc-n,
     .sc-row.is-active .sc-arrow {
@@ -161,7 +161,7 @@ const first = projects[0];
   /* Cambio de foco: la captura entra desenfocada y se vuelve nítida. */
   .shot {
     opacity: 0;
-    filter: blur(22px) saturate(0.5);
+    filter: blur(1.375rem) saturate(0.5);
     scale: 1.07;
     transition:
       opacity 0.45s ease,
@@ -206,18 +206,18 @@ const first = projects[0];
     100% { opacity: 0 }
   }
   @keyframes scLeft {
-    from { transform: translateX(-34px) }
+    from { transform: translateX(-2.125rem) }
     to { transform: none }
   }
   @keyframes scRight {
-    from { transform: translateX(34px) }
+    from { transform: translateX(2.125rem) }
     to { transform: none }
   }
 
   .corner {
     position: absolute;
-    width: 22px;
-    height: 22px;
+    width: 1.375rem;
+    height: 1.375rem;
     border-color: rgb(238 245 242 / 0.7);
     pointer-events: none;
     transition: border-color 0.4s;
@@ -229,8 +229,8 @@ const first = projects[0];
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 18px;
-    height: 18px;
+    width: 1.125rem;
+    height: 1.125rem;
     translate: -50% -50%;
     pointer-events: none;
     background:

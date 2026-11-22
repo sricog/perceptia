@@ -68,12 +68,6 @@ export const en: Dict = {
     link: 'All services',
   },
 
-  featured: {
-    sub: 'Web app · design, development and launch',
-    aria: 'View MiQuarto live',
-    alt: 'MiQuarto platform mockup on laptop and phone',
-  },
-
   homeProjects: {
     title: ['', 'Live', ' projects'],
   },

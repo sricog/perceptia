@@ -74,12 +74,6 @@ export const es = {
     link: 'Todos los servicios',
   },
 
-  featured: {
-    sub: 'App web · diseño, desarrollo y lanzamiento',
-    aria: 'Ver MiQuarto en vivo',
-    alt: 'Mockup de la plataforma MiQuarto en laptop y móvil',
-  },
-
   homeProjects: {
     title: ['Proyectos ', 'en vivo'],
   },
@@ -147,7 +141,7 @@ export const es = {
     book: {
       title: ['Conócenos y ', 'cotiza tu proyecto'],
       body: '30 minutos para entender tu proyecto y decirte cómo lo haríamos. Sin costo y sin compromiso.',
-      cta: 'Cotizar proyecto →',
+      cta: 'Cotizar proyecto',
     },
   },
 

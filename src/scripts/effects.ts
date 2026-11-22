@@ -46,20 +46,18 @@ function rotators() {
   });
 }
 
-/** Animaciones ligadas al scroll: texto que se ilumina, tablet que se endereza, línea de proceso. */
+/** Animaciones ligadas al scroll: texto que se ilumina, línea de proceso. */
 function scrubbers() {
   const words = [...document.querySelectorAll<HTMLElement>('[data-scrub-words]')].map((el) => ({
     el,
     spans: [...el.querySelectorAll<HTMLElement>('span[data-w]')],
   }));
-  const tilts = [...document.querySelectorAll<HTMLElement>('[data-tilt]')];
   const progress = [...document.querySelectorAll<HTMLElement>('[data-progress]')];
-  if (!words.length && !tilts.length && !progress.length) return;
+  if (!words.length && !progress.length) return;
   words.forEach((w) => (w.el.dataset.armed = ''));
 
   if (reduce()) {
     words.forEach((w) => w.spans.forEach((s) => s.classList.add('lit')));
-    tilts.forEach((t) => (t.style.transform = 'none'));
     progress.forEach((p) => p.style.setProperty('--p', '1'));
     return;
   }
@@ -79,12 +77,6 @@ function scrubbers() {
       const p = ratio(w.el, 0.85, 0.3);
       const lit = Math.round(p * w.spans.length);
       w.spans.forEach((s, i) => s.classList.toggle('lit', i < lit));
-    }
-    for (const t of tilts) {
-      const p = ratio(t, 1, 0.35);
-      const rx = 24 * (1 - p);
-      const sc = 0.95 + 0.05 * p;
-      t.style.transform = `rotateX(${rx}deg) scale(${sc})`;
     }
     for (const el of progress) {
       el.style.setProperty('--p', String(ratio(el, 0.8, 0.35)));

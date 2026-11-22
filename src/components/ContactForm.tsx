@@ -17,9 +17,9 @@ type Props = {
 const fill = (tpl: string, vars: Record<string, string>) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 
 const field =
-  'w-full rounded-2xl border border-salvia/20 bg-noche/60 px-5 py-4 text-[16px] text-niebla placeholder:text-salvia/60 outline-none transition focus:border-aqua focus:shadow-[0_0_0_4px_rgba(20,224,165,.15)]';
+  'w-full rounded-2xl border border-salvia/20 bg-noche/60 px-5 py-4 text-[1rem] text-niebla placeholder:text-salvia/60 outline-none transition focus:border-aqua focus:shadow-[0_0_0_0.25rem_rgba(20,224,165,.15)]';
 const chip =
-  'cursor-pointer rounded-full border px-4 py-2.5 text-[14px] font-medium leading-none transition select-none';
+  'cursor-pointer rounded-full border px-4 py-2.5 text-[0.875rem] font-medium leading-none transition select-none';
 
 export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, consent }: Props) {
   const [types, setTypes] = useState<string[]>([]);
@@ -84,12 +84,12 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
 
   if (status === 'sent') {
     return (
-      <div className="flex min-h-[520px] flex-col items-start justify-center gap-6 rounded-[26px] border border-aqua/30 bg-card p-8 md:p-12" role="status">
+      <div className="flex min-h-[32.5rem] flex-col items-start justify-center gap-6 rounded-[1.625rem] border border-aqua/30 bg-card p-8 md:p-12" role="status">
         <div className="flex size-14 items-center justify-center rounded-full bg-aqua/15 text-2xl text-aqua">✓</div>
-        <h2 className="text-[40px] font-semibold leading-none tracking-[-0.04em]">
+        <h2 className="text-[2.5rem] font-semibold leading-none tracking-[-0.04em]">
           {t.sent.title[0]}<em className="accent">{t.sent.title[1]}</em>{t.sent.title[2]}
         </h2>
-        <p className="max-w-[460px] text-[17px] leading-[1.6] text-salvia">
+        <p className="max-w-[28.75rem] text-[1.0625rem] leading-[1.6] text-salvia">
           {t.sent.body}
         </p>
         <a
@@ -105,17 +105,17 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
   }
 
   return (
-    <form noValidate onSubmit={onSubmit} className="relative flex flex-col gap-7 rounded-[26px] border border-salvia/14 bg-card p-6 md:p-10">
+    <form noValidate onSubmit={onSubmit} className="relative flex flex-col gap-7 rounded-[1.625rem] border border-salvia/14 bg-card p-6 md:p-10">
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.name}</span>
           <input name="name" autoComplete="name" className={field} placeholder={t.namePh} aria-invalid={!!errors.name} />
-          {errors.name && <span className="text-[13px] text-[#ff8a80]">{errors.name}</span>}
+          {errors.name && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.name}</span>}
         </label>
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.email}</span>
           <input name="email" type="email" autoComplete="email" className={field} placeholder={t.emailPh} aria-invalid={!!errors.email} />
-          {errors.email && <span className="text-[13px] text-[#ff8a80]">{errors.email}</span>}
+          {errors.email && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.email}</span>}
         </label>
       </div>
       <label className="flex flex-col gap-2">
@@ -141,7 +141,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
             );
           })}
         </div>
-        {errors.types && <span className="text-[13px] text-[#ff8a80]">{errors.types}</span>}
+        {errors.types && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.types}</span>}
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
@@ -164,15 +164,15 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
       <label className="flex flex-col gap-2">
         <span className="mono-tag">{t.message}</span>
         <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} aria-invalid={!!errors.message} />
-        {errors.message && <span className="text-[13px] text-[#ff8a80]">{errors.message}</span>}
+        {errors.message && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.message}</span>}
       </label>
 
       <Consent {...consent} error={errors.consent} />
 
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[624.9375rem] h-0 w-0 opacity-0" />
 
       {status === 'failed' && (
-        <p role="alert" className="rounded-2xl border border-[#ff8a80]/40 bg-[#ff8a80]/8 px-5 py-4 text-[14px] text-[#ffb4ab]">
+        <p role="alert" className="rounded-2xl border border-[#ff8a80]/40 bg-[#ff8a80]/8 px-5 py-4 text-[0.875rem] text-[#ffb4ab]">
           {t.failed}{' '}
           <a className="underline underline-offset-4" href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(summary)}`} target="_blank" rel="noopener">
             WhatsApp ↗
@@ -181,7 +181,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <span className="text-[13px] text-salvia">{t.note}</span>
+        <span className="text-[0.8125rem] text-salvia">{t.note}</span>
         <button type="submit" disabled={status === 'sending'} className="btn btn-primary cursor-pointer disabled:opacity-70">
           {status === 'sending' ? t.sending : t.submit}
         </button>
