@@ -1,0 +1,182 @@
+---
+/**
+ * Ilustración animada de cada paso del proceso (0…3): llamada, prototipo, ciclos semanales y
+ * lanzamiento. Las animaciones arrancan cuando un ancestro recibe `data-open` (lo ponen
+ * `steppers()` en el home y `timelines()` en /proceso). Es decorativa (aria-hidden).
+ */
+interface Props { step: number; class?: string }
+const { step, class: cls } = Astro.props;
+// Alturas de la onda de voz del paso 1 (fijas, para que el HTML sea estable entre builds).
+const wave = Array.from({ length: 22 }, (_, i) => (0.25 + 0.75 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.6))).toFixed(2));
+const weeks = [38, 56, 76, 100];
+---
+
+<div class:list={['viz relative grid place-items-center overflow-hidden', cls]} aria-hidden="true">
+  {step === 0 && (
+    <div class="flex items-center gap-4 md:gap-6">
+      <span class="lens" />
+      <span class="flex h-16 items-center gap-[0.1875rem] md:gap-1">
+        {wave.map((h, j) => <span class="wave" style={`--h:${h};--j:${j}`} />)}
+      </span>
+      <span class="lens lens-on" />
+    </div>
+  )}
+  {step === 1 && (
+    <div class="proto relative w-[min(80%,22rem)] rounded-xl border border-salvia/20 bg-noche">
+      <div class="flex gap-1.5 border-b border-salvia/14 px-3.5 py-2.5">
+        <span class="size-1.5 rounded-full bg-musgo" />
+        <span class="size-1.5 rounded-full bg-musgo" />
+        <span class="size-1.5 rounded-full bg-musgo" />
+      </div>
+      <div class="flex flex-col gap-2.5 p-4">
+        <span class="blk h-3 w-1/2 rounded-full bg-bruma/70" style="--j:0" />
+        <span class="blk h-2 w-3/4 rounded-full bg-musgo/70" style="--j:1" />
+        <span class="blk mt-1 flex gap-2" style="--j:2">
+          <span class="proto-cta h-5 w-16 rounded-full bg-aqua" />
+          <span class="h-5 w-12 rounded-full border border-salvia/30" />
+        </span>
+        <span class="mt-1.5 grid grid-cols-3 gap-2">
+          <span class="blk h-10 rounded-md bg-hondo" style="--j:3" />
+          <span class="blk h-10 rounded-md bg-hondo" style="--j:4" />
+          <span class="blk h-10 rounded-md bg-hondo" style="--j:5" />
+        </span>
+      </div>
+      <svg class="cursor absolute left-[3.1rem] top-[5.3rem] size-5" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M4 2l11 8.5-5 .8 3 5.7-2.2 1.1-3-5.8L4 15.5z" fill="#eef5f2" stroke="#03130f" stroke-width="1" stroke-linejoin="round" />
+      </svg>
+    </div>
+  )}
+  {step === 2 && (
+    <div class="flex h-36 items-end gap-4 md:h-44 md:gap-6">
+      {weeks.map((h, j) => (
+        <div class="flex h-full w-11 flex-col items-center justify-end gap-2 md:w-14">
+          <span class="week-check" style={`--j:${j}`}>
+            <svg viewBox="0 0 12 12" class="size-2.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.3 2.3 4.7-5.3" /></svg>
+          </span>
+          <span class:list={['week-bar w-full rounded-t-md', j === weeks.length - 1 ? 'bg-aqua' : 'bg-aqua/25']} style={`height:${h * 0.62}%;--j:${j}`} />
+          <span class="font-mono text-[0.6875rem] tracking-[0.1em] text-salvia">{String(j + 1).padStart(2, '0')}</span>
+        </div>
+      ))}
+    </div>
+  )}
+  {step === 3 && (
+    <svg class="w-[min(84%,24rem)] overflow-visible" viewBox="0 0 320 140" fill="none">
+      <defs>
+        <linearGradient id="paso-area" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#14e0a5" stop-opacity=".28" />
+          <stop offset="1" stop-color="#14e0a5" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d="M0 46.5h320M0 93.5h320M0 139.5h320" stroke="#8fb0a5" stroke-opacity=".14" />
+      <path class="chart-area" d="M0 122C40 118 58 104 90 100S140 84 170 72 232 52 262 36 298 20 310 14V140H0z" fill="url(#paso-area)" />
+      <path class="chart-line" pathLength="1" d="M0 122C40 118 58 104 90 100S140 84 170 72 232 52 262 36 298 20 310 14" stroke="#14e0a5" stroke-width="2.5" stroke-linecap="round" />
+      <circle class="chart-ping" cx="310" cy="14" r="9" stroke="#14e0a5" stroke-width="1.5" />
+      <circle class="chart-dot" cx="310" cy="14" r="5" fill="#14e0a5" />
+    </svg>
+  )}
+</div>
+
+<style>
+  .viz {
+    background:
+      radial-gradient(70% 90% at 50% 110%, rgb(20 224 165 / 0.16), transparent 70%),
+      radial-gradient(rgb(143 176 165 / 0.16) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem;
+  }
+  /* 01 · llamada: dos lentes y la voz entre ellas */
+  .lens {
+    width: 3.25rem;
+    aspect-ratio: 1;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid rgb(143 176 165 / 0.45);
+    background: radial-gradient(circle at 35% 30%, #0e3b30, #03130f 70%);
+  }
+  .lens-on {
+    border-color: var(--color-aqua);
+    box-shadow: 0 0 1.5rem rgb(20 224 165 / 0.45), inset 0 0 1rem rgb(20 224 165 / 0.25);
+  }
+  .wave {
+    width: 0.1875rem;
+    height: calc(var(--h) * 100%);
+    border-radius: 0.1875rem;
+    background: var(--color-aqua);
+    opacity: 0.85;
+    transform: scaleY(0.35);
+  }
+  :global([data-open]) .wave {
+    animation: vizWave 0.9s ease-in-out calc(var(--j) * -0.13s) infinite alternate;
+  }
+  @keyframes vizWave {
+    to { transform: scaleY(1) }
+  }
+  /* 02 · prototipo: la interfaz se arma y el cursor va al botón */
+  :global([data-open]) .blk {
+    animation: vizBlk 0.6s var(--ease-out-expo) calc(0.15s + var(--j) * 0.09s) both;
+  }
+  @keyframes vizBlk {
+    from { opacity: 0; transform: translateY(0.5rem) }
+  }
+  :global([data-open]) .cursor {
+    animation: vizCursor 1.4s var(--ease-out-expo) 0.7s both;
+  }
+  @keyframes vizCursor {
+    from { opacity: 0; transform: translate(9rem, 4rem) }
+  }
+  :global([data-open]) .proto-cta {
+    animation: vizCta 0.5s ease-out 2s both;
+  }
+  @keyframes vizCta {
+    50% { transform: scale(0.92) }
+    to { box-shadow: 0 0 1.25rem rgb(20 224 165 / 0.7) }
+  }
+  /* 03 · ciclos semanales: cada semana entrega un poco más */
+  .week-bar {
+    transform-origin: bottom;
+  }
+  :global([data-open]) .week-bar {
+    animation: vizBar 0.8s var(--ease-out-expo) calc(0.1s + var(--j) * 0.14s) both;
+  }
+  @keyframes vizBar {
+    from { transform: scaleY(0) }
+  }
+  .week-check {
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--color-pino);
+    color: var(--color-aqua);
+  }
+  :global([data-open]) .week-check {
+    animation: vizCheck 0.5s var(--ease-out-expo) calc(0.55s + var(--j) * 0.14s) both;
+  }
+  @keyframes vizCheck {
+    from { opacity: 0; transform: scale(0.4) }
+  }
+  /* 04 · lanzamiento: la métrica sube y queda en vivo */
+  .chart-line {
+    stroke-dasharray: 1;
+  }
+  :global([data-open]) .chart-line {
+    animation: vizLine 1.6s var(--ease-out-expo) 0.1s both;
+  }
+  @keyframes vizLine {
+    from { stroke-dashoffset: 1 }
+  }
+  :global([data-open]) .chart-area,
+  :global([data-open]) .chart-dot {
+    animation: vizFade 0.8s ease-out 0.9s both;
+  }
+  @keyframes vizFade {
+    from { opacity: 0 }
+  }
+  .chart-ping {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+  }
+  :global([data-open]) .chart-ping {
+    animation: pcPing 1.8s ease-out 1.4s infinite;
+  }
+</style>

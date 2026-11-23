@@ -27,6 +27,7 @@ export const en: Dict = {
   },
 
   nav: {
+    home: 'Home',
     services: 'Services',
     projects: 'Projects',
     process: 'Process',
@@ -70,6 +71,7 @@ export const en: Dict = {
 
   homeProjects: {
     title: ['', 'Live', ' projects'],
+    link: 'See all projects',
   },
 
   projects: {
@@ -77,7 +79,9 @@ export const en: Dict = {
     all: 'All',
     kinds: { web: 'Website', app: 'Web app' },
     filters: { web: 'Websites', app: 'Web apps' },
-    alt: '{name} mockup on laptop and phone',
+    shotAlt: 'Screenshot of the {name} website',
+    prev: 'Previous project',
+    next: 'Next project',
     visit: 'Visit site ↗',
     meta: {
       miquarto: { sector: 'Proptech · furnished rentals', place: 'Colombia' },
@@ -89,40 +93,47 @@ export const en: Dict = {
       casamayor: { sector: 'Real estate', place: 'Miami, FL' },
       adastra: { sector: 'Culture · funding', place: 'Spain' },
     },
-    inFocus: 'In focus',
-    focusing: 'Focusing',
-    index: 'Project index',
-    viewer: 'Viewer',
+    index: 'Projects',
   },
 
   process: {
     title: ['How we ', 'work'],
     lead: 'A short, transparent process: you know what happens at each stage, what you get and when.',
     more: 'See the full process',
+    get: 'What you get',
+    stage: 'At this stage',
     steps: [
       {
         t: 'Understand',
         tag: 'Discovery call',
-        d: 'A discovery session to map goals, users and business constraints.',
-        items: ['What you want to achieve and for whom', 'How we will measure success', 'Technical constraints, timing and budget'],
+        d: 'One call to understand your business, your users and your limits.',
+        items: ['Clear goals', 'Success metrics', 'Timing and budget'],
+        long: 'We start with a discovery session to map your goals, your users and your business constraints.',
+        details: ['What you want to achieve and for whom', 'How we will measure success', 'Technical constraints, timing and budget'],
       },
       {
         t: 'Define',
         tag: 'Proposal & prototype',
-        d: 'Scope, architecture and a clickable prototype before any code is written.',
-        items: ['A proposal with scope and price', 'Recommended architecture and stack', 'A clickable prototype to validate the flow'],
+        d: 'You see a clickable prototype before we write any code.',
+        items: ['Scope and price', 'Architecture', 'Clickable prototype'],
+        long: 'We define scope and architecture, and show you a clickable prototype before any code is written.',
+        details: ['A proposal with scope and price', 'Recommended architecture and stack', 'A clickable prototype to validate the flow'],
       },
       {
         t: 'Build & validate',
         tag: 'Weekly cycles',
-        d: 'Weekly releases and a staging environment that is always available.',
-        items: ['A demo of progress every week', 'Staging with the latest version', 'Adjustments from your feedback each cycle'],
+        d: 'Every week you try a new version and tell us what to adjust.',
+        items: ['Weekly demo', 'Staging environment', 'Changes from your feedback'],
+        long: 'We work in weekly cycles: every week there is a release, and a staging environment is always available.',
+        details: ['A demo of progress every week', 'Staging with the latest version', 'Adjustments from your feedback each cycle'],
       },
       {
         t: 'Launch & evolve',
         tag: 'Launch',
-        d: 'Deployment, metrics and continuous improvement after launch.',
-        items: ['Deployment, domain and analytics', 'Training for your team', 'Support and continuous improvement'],
+        d: 'We ship, measure and keep improving with you.',
+        items: ['Deployment and analytics', 'Training', 'Ongoing support'],
+        long: 'We deploy, measure and keep improving the product after launch.',
+        details: ['Deployment, domain and analytics', 'Training for your team', 'Support and continuous improvement'],
       },
     ],
     principlesTitle: ['What you ', 'always', ' get'],
@@ -163,12 +174,14 @@ export const en: Dict = {
 
   pricing: { from: 'From', proposal: 'Proposal', request: 'Request a proposal', quote: 'Get a quote →' },
 
+  servicesViz: { url: 'yourbrand.com', lead: 'New lead', leadSub: 'Website form', idea: 'Idea', product: 'Product' },
+
   services: {
     websites: {
       slug: 'websites',
       title: 'Websites & landing pages',
       form: 'Website / landing',
-      short: 'Fast, measurable, easy-to-edit sites designed to turn visitors into customers.',
+      short: 'Fast, measurable sites that turn visitors into customers.',
       long: 'A clear, fast digital presence designed to turn attention into opportunities. Custom-designed, never templated.',
       includes: ['Custom visual design', 'Responsive experience', 'Contact form or direct line', 'Initial SEO', 'Delivered ready to run'],
     },
@@ -177,7 +190,7 @@ export const en: Dict = {
       title: 'MVPs',
       form: 'MVP',
       price: '',
-      short: 'From idea to a usable product in weeks, ready to validate with real users.',
+      short: 'From idea to a usable product in weeks.',
       long: 'The essential version of your product, built to validate an opportunity with real users without overbuilding.',
       includes: ['Scope definition', 'Prototype and core experience', 'Essential features', 'Testing', 'Launch preparation'],
     },
@@ -186,7 +199,7 @@ export const en: Dict = {
       title: 'Custom software',
       form: 'Custom software',
       price: '',
-      short: 'Platforms, dashboards and internal systems built around the way you operate.',
+      short: 'Platforms and dashboards built around the way you operate.',
       long: "Software built around your company's processes, integrations and goals, on an architecture ready to grow.",
       includes: ['Platforms and portals', 'Internal tools', 'Integrations', 'Automations', 'Architecture built to evolve'],
     },
@@ -195,7 +208,7 @@ export const en: Dict = {
       title: 'Automation',
       form: 'Automation',
       price: '',
-      short: 'We connect your tools and remove repetitive work with reliable workflows.',
+      short: 'We connect your tools and remove the repetitive work.',
       long: 'Workflows that move data between your tools, keep your team in the loop and take care of repetitive work, with monitoring so nothing slips through.',
       includes: ['Process mapping', 'Tool and API integrations', 'AI-powered flows where they add value', 'Alerts and monitoring', 'Documentation and handoff'],
     },

@@ -1,13 +1,22 @@
 // Datos que no dependen del idioma. Los textos viven en src/i18n/{es,en}.ts.
 import type { ImageMetadata } from 'astro';
-import miquarto from '../assets/projects/miquarto-neon.webp';
-import imagenes from '../assets/projects/imagenes-y-especialistas-neon.webp';
-import aktiva from '../assets/projects/aktiva-experience-neon.webp';
-import raiz from '../assets/projects/raiz-y-alma-neon.webp';
-import smoke from '../assets/projects/smoke-master-neon.webp';
-import market from '../assets/projects/market-cerdo-neon.webp';
-import casamayor from '../assets/projects/casa-mayor-realtor-neon.webp';
-import adastra from '../assets/projects/ad-astra-heritage-neon.webp';
+// Capturas reales de cada sitio: escritorio (1440×900) y móvil (500×1082).
+import miquartoShot from '../assets/projects/miquarto-site.webp';
+import miquartoMobile from '../assets/projects/miquarto-site-mobile.webp';
+import imagenesShot from '../assets/projects/imagenes-y-especialistas-site.webp';
+import imagenesMobile from '../assets/projects/imagenes-y-especialistas-site-mobile.webp';
+import aktivaShot from '../assets/projects/aktiva-experience-site.webp';
+import aktivaMobile from '../assets/projects/aktiva-experience-site-mobile.webp';
+import raizShot from '../assets/projects/raiz-y-alma-site.webp';
+import raizMobile from '../assets/projects/raiz-y-alma-site-mobile.webp';
+import smokeShot from '../assets/projects/smoke-master-site.webp';
+import smokeMobile from '../assets/projects/smoke-master-site-mobile.webp';
+import marketShot from '../assets/projects/market-cerdo-site.webp';
+import marketMobile from '../assets/projects/market-cerdo-site-mobile.webp';
+import casamayorShot from '../assets/projects/casa-mayor-realtor-site.webp';
+import casamayorMobile from '../assets/projects/casa-mayor-realtor-site-mobile.webp';
+import adastraShot from '../assets/projects/ad-astra-heritage-site.webp';
+import adastraMobile from '../assets/projects/ad-astra-heritage-site-mobile.webp';
 
 export const site = {
   name: 'Perceptia',
@@ -32,31 +41,26 @@ export const stack = [
   'siClaude', 'siFigma', 'siTailwindcss', 'siCloudflare', 'siN8n', 'siTypescript',
 ] as const;
 
-export type ShaderSpec = { mode: string; variant?: string; scale?: string; px?: string; lens?: string };
-
 export type ServiceId = 'websites' | 'mvps' | 'custom' | 'automation';
-export type Service = { id: ServiceId; n: string; shader: ShaderSpec };
+/** La ilustración de cada servicio sale de su id (components/ServiceViz.astro). */
+export type Service = { id: ServiceId };
 
-export const services: Service[] = [
-  { id: 'websites', n: '01', shader: { mode: 'chrome', variant: '0.2', scale: '0.5' } },
-  { id: 'mvps', n: '02', shader: { mode: 'dither', variant: '1.3', px: '4' } },
-  { id: 'custom', n: '03', shader: { mode: 'lens', lens: '0,0,0.3,0.15', variant: '4', scale: '0.5' } },
-  { id: 'automation', n: '04', shader: { mode: 'chrome', variant: '1.7', scale: '0.5' } },
-];
+/** El orden de esta lista es el orden en que se muestran en el home, /servicios y contacto. */
+export const services: Service[] = [{ id: 'custom' }, { id: 'automation' }, { id: 'mvps' }, { id: 'websites' }];
 
 export type ProjectId = 'miquarto' | 'imagenes' | 'aktiva' | 'raiz' | 'smoke' | 'market' | 'casamayor' | 'adastra';
 /** Sector y lugar del cliente (tomados de cada sitio) viven en i18n: `projects.meta[id]`. */
-export type Project = { id: ProjectId; name: string; kind: 'web' | 'app'; url: string; image: ImageMetadata };
+export type Project = { id: ProjectId; name: string; kind: 'web' | 'app'; url: string; shot: ImageMetadata; shotMobile: ImageMetadata };
 
 export const projects: Project[] = [
-  { id: 'miquarto', name: 'MiQuarto', kind: 'app', url: 'https://miquarto.co/', image: miquarto },
-  { id: 'imagenes', name: 'Imágenes y especialistas', kind: 'web', url: 'https://imagenesyespecialistas.com/', image: imagenes },
-  { id: 'aktiva', name: 'Aktiva Experience', kind: 'web', url: 'https://aktivaexperience.com.co/', image: aktiva },
-  { id: 'raiz', name: 'Raíz & Alma', kind: 'web', url: 'https://raizyalma.com.co/es', image: raiz },
-  { id: 'smoke', name: 'Smoke Master', kind: 'web', url: 'https://smokemasterlamudapr.com/', image: smoke },
-  { id: 'market', name: 'Market Cerdo', kind: 'web', url: 'https://marketcerdo.com/', image: market },
-  { id: 'casamayor', name: 'Casa Mayor Realtor', kind: 'web', url: 'https://casamayorrealtor.com/', image: casamayor },
-  { id: 'adastra', name: 'Ad Astra Heritage', kind: 'web', url: 'https://adastraheritage.site/', image: adastra },
+  { id: 'miquarto', name: 'MiQuarto', kind: 'app', url: 'https://miquarto.co/', shot: miquartoShot, shotMobile: miquartoMobile },
+  { id: 'imagenes', name: 'Imágenes y especialistas', kind: 'web', url: 'https://imagenesyespecialistas.com/', shot: imagenesShot, shotMobile: imagenesMobile },
+  { id: 'aktiva', name: 'Aktiva Experience', kind: 'web', url: 'https://aktivaexperience.com.co/', shot: aktivaShot, shotMobile: aktivaMobile },
+  { id: 'raiz', name: 'Raíz & Alma', kind: 'web', url: 'https://raizyalma.com.co/es', shot: raizShot, shotMobile: raizMobile },
+  { id: 'smoke', name: 'Smoke Master', kind: 'web', url: 'https://smokemasterlamudapr.com/', shot: smokeShot, shotMobile: smokeMobile },
+  { id: 'market', name: 'Market Cerdo', kind: 'web', url: 'https://marketcerdo.com/', shot: marketShot, shotMobile: marketMobile },
+  { id: 'casamayor', name: 'Casa Mayor Realtor', kind: 'web', url: 'https://casamayorrealtor.com/', shot: casamayorShot, shotMobile: casamayorMobile },
+  { id: 'adastra', name: 'Ad Astra Heritage', kind: 'web', url: 'https://adastraheritage.site/', shot: adastraShot, shotMobile: adastraMobile },
 ];
 
 /** Dominio legible para etiquetas: https://raizyalma.com.co/es → raizyalma.com.co */

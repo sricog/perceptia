@@ -32,6 +32,7 @@ export const es = {
   },
 
   nav: {
+    home: 'Inicio',
     services: 'Servicios',
     projects: 'Proyectos',
     process: 'Proceso',
@@ -76,6 +77,7 @@ export const es = {
 
   homeProjects: {
     title: ['Proyectos ', 'en vivo'],
+    link: 'Ver todos los proyectos',
   },
 
   projects: {
@@ -83,7 +85,9 @@ export const es = {
     all: 'Todos',
     kinds: { web: 'Website', app: 'App web' },
     filters: { web: 'Websites', app: 'Apps web' },
-    alt: 'Mockup de {name} en laptop y móvil',
+    shotAlt: 'Captura del sitio de {name}',
+    prev: 'Proyecto anterior',
+    next: 'Proyecto siguiente',
     visit: 'Ver sitio ↗',
     meta: {
       miquarto: { sector: 'Proptech · arriendos amoblados', place: 'Colombia' },
@@ -95,40 +99,48 @@ export const es = {
       casamayor: { sector: 'Bienes raíces', place: 'Miami, FL' },
       adastra: { sector: 'Cultura · financiación', place: 'España' },
     },
-    inFocus: 'En foco',
-    focusing: 'Enfocando',
-    index: 'Índice de proyectos',
-    viewer: 'Visor',
+    index: 'Proyectos',
   },
 
   process: {
     title: ['Cómo ', 'trabajamos'],
     lead: 'Un proceso corto y transparente: sabes qué pasa en cada etapa, qué recibes y cuándo.',
     more: 'Ver el proceso completo',
+    get: 'Lo que recibes',
+    stage: 'En esta etapa',
     steps: [
       {
         t: 'Entendemos',
         tag: 'Llamada de descubrimiento',
-        d: 'Sesión de descubrimiento: objetivos, usuarios y restricciones del negocio.',
-        items: ['Qué quieres lograr y para quién', 'Cómo vamos a medir el éxito', 'Restricciones técnicas, tiempos y presupuesto'],
+        d: 'Una llamada para entender tu negocio, tus usuarios y tus límites.',
+        items: ['Objetivos claros', 'Métricas de éxito', 'Tiempos y presupuesto'],
+        // `long` y `details`: versión detallada para /proceso.
+        long: 'Empezamos con una sesión de descubrimiento para entender tus objetivos, tus usuarios y las restricciones del negocio.',
+        details: ['Qué quieres lograr y para quién', 'Cómo vamos a medir el éxito', 'Restricciones técnicas, tiempos y presupuesto'],
       },
       {
         t: 'Definimos',
         tag: 'Propuesta y prototipo',
-        d: 'Alcance, arquitectura y un prototipo navegable antes de escribir código.',
-        items: ['Propuesta con alcance y precio', 'Arquitectura y tecnologías recomendadas', 'Prototipo navegable para validar el flujo'],
+        d: 'Ves un prototipo navegable antes de que escribamos código.',
+        items: ['Alcance y precio', 'Arquitectura', 'Prototipo navegable'],
+        long: 'Definimos el alcance y la arquitectura, y te mostramos un prototipo navegable antes de escribir código.',
+        details: ['Propuesta con alcance y precio', 'Arquitectura y tecnologías recomendadas', 'Prototipo navegable para validar el flujo'],
       },
       {
         t: 'Construimos y validamos',
         tag: 'Ciclos semanales',
-        d: 'Entregas semanales y un entorno de pruebas siempre disponible.',
-        items: ['Demo de avances cada semana', 'Entorno de pruebas con la versión más reciente', 'Ajustes con tu feedback en cada ciclo'],
+        d: 'Cada semana pruebas una versión nueva y nos dices qué ajustar.',
+        items: ['Demo semanal', 'Entorno de pruebas', 'Ajustes con tu feedback'],
+        long: 'Trabajamos en ciclos semanales: cada semana hay una entrega y un entorno de pruebas siempre disponible.',
+        details: ['Demo de avances cada semana', 'Entorno de pruebas con la versión más reciente', 'Ajustes con tu feedback en cada ciclo'],
       },
       {
         t: 'Lanzamos y evolucionamos',
         tag: 'Lanzamiento',
-        d: 'Despliegue, métricas y mejoras continuas después del lanzamiento.',
-        items: ['Despliegue, dominio y analítica', 'Capacitación para tu equipo', 'Soporte y mejoras continuas'],
+        d: 'Publicamos, medimos y seguimos mejorando contigo.',
+        items: ['Despliegue y analítica', 'Capacitación', 'Soporte continuo'],
+        long: 'Desplegamos, medimos y seguimos mejorando el producto después del lanzamiento.',
+        details: ['Despliegue, dominio y analítica', 'Capacitación para tu equipo', 'Soporte y mejoras continuas'],
       },
     ],
     principlesTitle: ['Lo que ', 'siempre', ' recibes'],
@@ -168,13 +180,16 @@ export const es = {
 
   pricing: { from: 'Desde', proposal: 'Propuesta', request: 'Solicitar propuesta', quote: 'Cotizar →' },
 
+  // Textos dentro de las ilustraciones de servicios (components/ServiceViz.astro).
+  servicesViz: { url: 'tumarca.com', lead: 'Nuevo contacto', leadSub: 'Formulario web', idea: 'Idea', product: 'Producto' },
+
   // Por id interno de servicio (ver `services` en data/site.ts).
   services: {
     websites: {
       slug: 'websites',
       title: 'Websites y landing pages',
       form: 'Website / landing',
-      short: 'Sitios rápidos, medibles y fáciles de editar, pensados para convertir visitas en clientes.',
+      short: 'Sitios rápidos y medibles que convierten visitas en clientes.',
       long: 'Una presencia digital clara, rápida y diseñada para convertir atención en oportunidades. Diseño propio, nada de plantillas.',
       includes: ['Diseño visual personalizado', 'Experiencia responsive', 'Formulario o contacto directo', 'SEO inicial', 'Entrega lista para operar'],
     },
@@ -183,7 +198,7 @@ export const es = {
       title: 'MVPs',
       form: 'MVP',
       price: '',
-      short: 'De la idea a un producto usable en semanas, listo para validar con usuarios reales.',
+      short: 'De la idea a un producto usable en semanas.',
       long: 'La versión esencial de tu producto para validar una oportunidad con usuarios reales, sin construir de más.',
       includes: ['Definición de alcance', 'Prototipo y experiencia principal', 'Funcionalidades esenciales', 'Pruebas', 'Preparación de lanzamiento'],
     },
@@ -192,7 +207,7 @@ export const es = {
       title: 'Desarrollo a la medida',
       form: 'Software a la medida',
       price: '',
-      short: 'Plataformas, paneles y sistemas internos construidos alrededor de tu operación.',
+      short: 'Plataformas y paneles hechos alrededor de tu operación.',
       long: 'Software construido alrededor de los procesos, integraciones y objetivos de tu empresa, con una arquitectura preparada para crecer.',
       includes: ['Plataformas y portales', 'Herramientas internas', 'Integraciones', 'Automatizaciones', 'Arquitectura preparada para evolucionar'],
     },
@@ -201,7 +216,7 @@ export const es = {
       title: 'Automatizaciones',
       form: 'Automatización',
       price: '',
-      short: 'Conectamos tus herramientas y eliminamos tareas repetitivas con flujos confiables.',
+      short: 'Conectamos tus herramientas y eliminamos el trabajo repetitivo.',
       long: 'Flujos que mueven datos entre tus herramientas, notifican a tu equipo y se encargan del trabajo repetitivo, con monitoreo para que nada se pierda.',
       includes: ['Mapeo de procesos', 'Integración entre herramientas y APIs', 'Flujos con IA cuando suman', 'Alertas y monitoreo', 'Documentación y traspaso'],
     },

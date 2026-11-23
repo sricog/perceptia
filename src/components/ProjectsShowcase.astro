@@ -1,55 +1,47 @@
 ---
 /**
- * Proyectos del home: índice a la izquierda y un visor fijo a la derecha (desde lg).
- * El proyecto «en foco» cambia con el scroll o al pasar el cursor por el índice; el visor
- * hace un cambio de foco (desenfoque → nítido) y las dos lentes del isotipo convergen.
- * En móvil cada fila muestra su propia captura. La lógica vive en scripts/projects.ts.
+ * Proyectos del home: carril horizontal con la captura real de cada sitio dentro de un marco
+ * de navegador. Es scroll nativo con `scroll-snap` (deslizar, trackpad o teclado); los botones
+ * y la barra de avance los maneja `rails()` en scripts/projects.ts. El carril va de borde a
+ * borde de la ventana; las tarjetas se alinean con el margen del resto del sitio.
  */
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { projects, domainOf } from '../data/site';
 import { useI18n, fill } from '../i18n';
-import Loupe from './Loupe.astro';
+import BrowserFrame from './BrowserFrame.astro';
 interface Props { id: string }
 const { id } = Astro.props;
 const { t } = useI18n(Astro.url);
 const pad = (n: number) => String(n).padStart(2, '0');
-const total = pad(projects.length);
-const big = await Promise.all(projects.map((p) => getImage({ src: p.image, width: 1920, format: 'webp' })));
-const first = projects[0];
 ---
 
-<div id={id} data-showcase class="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 xl:gap-20">
-  <ol aria-label={t.projects.index} class="flex flex-col border-b border-salvia/16">
+<div id={id} data-rail>
+  <ol class="rail -my-8 flex snap-x snap-mandatory gap-5 overflow-x-auto py-8 md:gap-7" aria-label={t.projects.index} data-rail-track>
     {
       projects.map((p, i) => {
         const m = t.projects.meta[p.id];
         return (
-          <li data-type={p.kind} data-row={i} class:list={['sc-row', i === 0 && 'is-active']}>
-            <a
-              href={p.url}
-              target="_blank"
-              rel="noopener"
-              class="grid grid-cols-[2.25rem_1fr_auto] items-baseline gap-x-3 border-t border-salvia/16 py-5 text-niebla hover:text-niebla md:grid-cols-[3rem_1fr_auto] md:py-6"
-            >
-              <span class="sc-n font-mono text-[0.75rem] tracking-[0.08em] text-salvia">{pad(i + 1)}</span>
-              <span class="sc-name text-[clamp(1.625rem,3vw,2.625rem)] font-semibold leading-[1.05] tracking-[-0.035em]">{p.name}</span>
-              <span class="sc-arrow font-mono text-[0.875rem] text-salvia" aria-hidden="true">↗</span>
-              <span class="col-start-2 col-end-4 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.875rem] text-salvia">
-                <span>{m.sector}</span>
-                <span class="size-1 rounded-full bg-salvia/50" aria-hidden="true" />
-                <span>{m.place}</span>
-                <span class="mono-tag ml-auto">{t.projects.kinds[p.kind]}</span>
-              </span>
-              <span class="col-start-1 col-end-4 mt-5 block overflow-hidden rounded-2xl border border-salvia/16 bg-hondo lg:hidden" data-reveal="focus">
+          <li class="w-[min(80vw,46rem)] flex-none snap-start" data-reveal style={`--d:${Math.min(i, 2) * 0.1}s`}>
+            <a href={p.url} target="_blank" rel="noopener" class="group block text-niebla hover:text-niebla">
+              <BrowserFrame
+                domain={domainOf(p.url)}
+                class="rounded-[1.25rem] transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_3.75rem_-0.75rem_rgba(20,224,165,.55)]"
+              >
                 <Image
-                  src={p.image}
-                  alt={fill(t.projects.alt, { name: p.name })}
-                  widths={[480, 720, 960]}
-                  sizes="(min-width:640px) 80vw, 100vw"
-                  class="aspect-[3/2] size-full object-cover"
-                  loading="lazy"
+                  src={p.shot}
+                  alt={fill(t.projects.shotAlt, { name: p.name })}
+                  widths={[480, 760, 1100, 1440]}
+                  sizes="(min-width:920px) 46rem, 80vw"
+                  class="aspect-[16/10] w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+                  loading={i < 2 ? 'eager' : 'lazy'}
                 />
-              </span>
+              </BrowserFrame>
+              <div class="mt-5 grid grid-cols-[auto_1fr_auto] items-baseline gap-x-4 gap-y-2">
+                <span class="font-mono text-[0.75rem] tracking-[0.08em] text-aqua">{pad(i + 1)}</span>
+                <span class="text-[clamp(1.5rem,2.3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
+                <span class="mono-tag">{t.projects.kinds[p.kind]}</span>
+                <span class="col-start-2 col-end-4 text-[0.9375rem] text-salvia">{m.sector} · {m.place}</span>
+              </div>
             </a>
           </li>
         );
@@ -57,203 +49,58 @@ const first = projects[0];
     }
   </ol>
 
-  <div class="hidden lg:block">
-    <div class="sticky top-28" data-visor aria-label={t.projects.viewer} role="region">
-      <a
-        href={first.url}
-        target="_blank"
-        rel="noopener"
-        data-visor-link
-        data-loupe-area
-        data-loupe-src={big[0].src}
-        data-visit={t.projects.visit}
-        aria-label={`${first.name} · ${t.projects.visit}`}
-        class="visor relative block aspect-[3/2] overflow-hidden rounded-[1.375rem] border border-niebla/14 bg-hondo shadow-[0_3.125rem_6.25rem_-2.5rem_rgba(0,0,0,.9),inset_0_1px_0_rgba(238,245,242,.12)]"
-      >
-        {
-          projects.map((p, i) => (
-            <div
-              class:list={['shot absolute inset-0', i === 0 && 'is-active']}
-              data-shot={i}
-              data-src={big[i].src}
-              data-url={p.url}
-              data-name={p.name}
-              data-domain={domainOf(p.url)}
-              data-meta={`${t.projects.meta[p.id].sector} · ${t.projects.meta[p.id].place}`}
-            >
-              <Image
-                src={p.image}
-                alt={fill(t.projects.alt, { name: p.name })}
-                widths={[960, 1440]}
-                sizes="(min-width:1024px) 56vw, 1px"
-                class="size-full object-cover"
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
-            </div>
-          ))
-        }
-
-        <!-- Lentes que convergen en cada cambio de foco -->
-        <svg viewBox="0 0 120 80" class="converge" aria-hidden="true">
-          <circle class="c-l" cx="40" cy="40" r="39" />
-          <circle class="c-r" cx="80" cy="40" r="39" />
-        </svg>
-
-        <!-- HUD del visor -->
-        <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(3,19,15,.55)_0%,transparent_22%,transparent_70%,rgba(3,19,15,.8)_100%)]"></div>
-        <span class="corner left-4 top-4 border-l border-t"></span>
-        <span class="corner right-4 top-4 border-r border-t"></span>
-        <span class="corner bottom-4 left-4 border-b border-l"></span>
-        <span class="corner bottom-4 right-4 border-b border-r"></span>
-        <span class="crosshair" aria-hidden="true"></span>
-
-        <div class="pointer-events-none absolute inset-x-8 top-7 flex items-center justify-between font-mono text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-niebla">
-          <span class="flex items-center gap-2">
-            <span class="relative flex size-2">
-              <span class="absolute inset-0 animate-[pcPing_1.8s_ease-out_infinite] rounded-full bg-aqua"></span>
-              <span class="relative size-2 rounded-full bg-aqua"></span>
-            </span>
-            <span data-visor-state data-focus={t.projects.inFocus} data-focusing={t.projects.focusing}>{t.projects.inFocus}</span>
-          </span>
-          <span><span data-visor-n>01</span> / {total}</span>
-        </div>
-        <div class="pointer-events-none absolute inset-x-8 bottom-7 flex items-end justify-between gap-6">
-          <div class="flex min-w-0 flex-col gap-1.5">
-            <span data-visor-name class="truncate text-[1.625rem] font-semibold leading-none tracking-[-0.03em] text-niebla">{first.name}</span>
-            <span data-visor-meta class="truncate text-[0.875rem] text-bruma">{t.projects.meta[first.id].sector} · {t.projects.meta[first.id].place}</span>
-          </div>
-          <span class="flex-none rounded-full bg-niebla px-3.5 py-2 font-mono text-[0.75rem] font-semibold leading-none tracking-[0.06em] text-noche">
-            <span data-visor-domain>{domainOf(first.url)}</span> ↗
-          </span>
-        </div>
-
-        <Loupe />
-      </a>
+  <div class="wrap mt-8 flex items-center gap-6 md:mt-10">
+    <div class="h-px flex-1 overflow-hidden bg-salvia/20" aria-hidden="true"><div class="rail-thumb h-full origin-left bg-aqua"></div></div>
+    <span class="font-mono text-[0.75rem] tracking-[0.1em] text-salvia"><span data-rail-n>01</span> / {pad(projects.length)}</span>
+    <div class="flex gap-2">
+      <button type="button" class="rail-btn" aria-label={t.projects.prev} data-rail-prev disabled>←</button>
+      <button type="button" class="rail-btn" aria-label={t.projects.next} data-rail-next>→</button>
     </div>
   </div>
 </div>
 
 <style>
-  /* Índice: una fila en foco, el resto atenuado (solo con el visor visible). */
-  .sc-row a {
-    transition: opacity 0.5s var(--ease-out-expo);
+  .rail {
+    --gutter: clamp(1.25rem, 6.6vw, 6rem); /* igual a .wrap */
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    /* Solo se desplaza en horizontal: si el carril pudiera moverse en vertical (aunque sea unos
+       píxeles) se «tragaría» la rueda del mouse y la página no bajaría. */
+    overflow-y: hidden;
   }
-  .sc-name,
-  .sc-n,
-  .sc-arrow {
-    transition:
-      color 0.4s,
-      translate 0.6s var(--ease-out-expo);
+  /* Las tarjetas entran solo con opacidad: el desplazamiento vertical del revelado normal
+     crearía justo ese desborde vertical dentro del carril. */
+  .rail > [data-reveal] {
+    transform: none;
   }
-  @media (min-width: 1024px) {
-    .sc-row:not(.is-active) a {
-      opacity: 0.4;
-    }
-    .sc-row.is-active .sc-name {
-      translate: 0.625rem 0;
-    }
-    .sc-row.is-active .sc-n,
-    .sc-row.is-active .sc-arrow {
-      color: var(--color-aqua);
-    }
+  .rail::-webkit-scrollbar {
+    display: none;
   }
-
-  /* Cambio de foco: la captura entra desenfocada y se vuelve nítida. */
-  .shot {
-    opacity: 0;
-    filter: blur(1.375rem) saturate(0.5);
-    scale: 1.07;
-    transition:
-      opacity 0.45s ease,
-      filter 1s var(--ease-out-expo),
-      scale 1.2s var(--ease-out-expo);
+  /* `--p` (0…1) la pone el script; sin script la barra queda llena. */
+  .rail-thumb {
+    transform: scaleX(var(--p, 1));
   }
-  .shot.is-active {
-    opacity: 1;
-    filter: none;
-    scale: 1;
+  .rail-btn {
+    display: grid;
+    place-items: center;
+    width: 2.875rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgb(143 176 165 / 0.3);
+    font: 500 1rem/1 var(--font-mono);
+    color: var(--color-niebla);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
   }
-
-  .converge {
-    position: absolute;
-    left: 50%;
-    top: 46%;
-    width: 30%;
-    translate: -50% -50%;
-    overflow: visible;
-    pointer-events: none;
-    fill: none;
-    stroke: var(--color-niebla);
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
-    opacity: 0;
+  .rail-btn:hover:not(:disabled) {
+    background: var(--color-niebla);
+    border-color: var(--color-niebla);
+    color: var(--color-noche);
   }
-  .converge circle {
-    vector-effect: non-scaling-stroke;
-  }
-  .visor:global(.is-focusing) .converge {
-    animation: scFade 1s var(--ease-out-expo) both;
-  }
-  .visor:global(.is-focusing) .c-l {
-    animation: scLeft 1s var(--ease-out-expo) both;
-  }
-  .visor:global(.is-focusing) .c-r {
-    animation: scRight 1s var(--ease-out-expo) both;
-  }
-  @keyframes scFade {
-    0% { opacity: 0 }
-    25% { opacity: 0.9 }
-    100% { opacity: 0 }
-  }
-  @keyframes scLeft {
-    from { transform: translateX(-2.125rem) }
-    to { transform: none }
-  }
-  @keyframes scRight {
-    from { transform: translateX(2.125rem) }
-    to { transform: none }
-  }
-
-  .corner {
-    position: absolute;
-    width: 1.375rem;
-    height: 1.375rem;
-    border-color: rgb(238 245 242 / 0.7);
-    pointer-events: none;
-    transition: border-color 0.4s;
-  }
-  .visor:hover .corner {
-    border-color: var(--color-aqua);
-  }
-  .crosshair {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 1.125rem;
-    height: 1.125rem;
-    translate: -50% -50%;
-    pointer-events: none;
-    background:
-      linear-gradient(rgb(238 245 242 / 0.6), rgb(238 245 242 / 0.6)) center / 1px 100% no-repeat,
-      linear-gradient(rgb(238 245 242 / 0.6), rgb(238 245 242 / 0.6)) center / 100% 1px no-repeat;
-    transition: opacity 0.3s;
-  }
-  .visor:hover .crosshair {
-    opacity: 0;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .visor {
-      cursor: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .shot {
-      filter: none;
-      scale: 1;
-      transition: opacity 0.2s;
-    }
-    .visor:global(.is-focusing) :is(.converge, .c-l, .c-r) {
-      animation: none;
-    }
+  .rail-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
   }
 </style>

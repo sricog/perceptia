@@ -1,5 +1,5 @@
 // Efectos de página. Se reinician en cada navegación (astro:page-load) y se limpian antes del swap.
-import { showcases, loupes } from './projects';
+import { rails } from './projects';
 
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let disposers: Array<() => void> = [];
@@ -46,19 +46,17 @@ function rotators() {
   });
 }
 
-/** Animaciones ligadas al scroll: texto que se ilumina, línea de proceso. */
+/** Animaciones ligadas al scroll: texto que se ilumina. */
 function scrubbers() {
   const words = [...document.querySelectorAll<HTMLElement>('[data-scrub-words]')].map((el) => ({
     el,
     spans: [...el.querySelectorAll<HTMLElement>('span[data-w]')],
   }));
-  const progress = [...document.querySelectorAll<HTMLElement>('[data-progress]')];
-  if (!words.length && !progress.length) return;
+  if (!words.length) return;
   words.forEach((w) => (w.el.dataset.armed = ''));
 
   if (reduce()) {
     words.forEach((w) => w.spans.forEach((s) => s.classList.add('lit')));
-    progress.forEach((p) => p.style.setProperty('--p', '1'));
     return;
   }
 
@@ -77,9 +75,6 @@ function scrubbers() {
       const p = ratio(w.el, 0.85, 0.3);
       const lit = Math.round(p * w.spans.length);
       w.spans.forEach((s, i) => s.classList.toggle('lit', i < lit));
-    }
-    for (const el of progress) {
-      el.style.setProperty('--p', String(ratio(el, 0.8, 0.35)));
     }
   };
   const req = () => (raf ||= requestAnimationFrame(update));
@@ -475,15 +470,127 @@ function logoGrids() {
   });
 }
 
+/**
+ * «Cómo trabajamos»: el scroll elige el paso. En escritorio el bloque queda fijo (sticky) y el
+ * tramo recorrido se reparte entre los pasos; `--s` (0…n) mueve las barras de avance.
+ * En móvil los pasos van apilados y cada ilustración se anima al entrar en pantalla.
+ */
+function steppers() {
+  document.querySelectorAll<HTMLElement>('[data-steps]').forEach((root) => {
+    const pin = root.querySelector<HTMLElement>('[data-steps-pin]');
+    const heads = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-step-panel]')];
+    const n = heads.length;
+    if (!pin || n < 2 || n !== panels.length) return;
+    const wide = window.matchMedia('(min-width: 1024px)');
+    let top = 0;
+
+    const show = (i: number) => {
+      heads.forEach((h, j) => h.toggleAttribute('data-active', j === i));
+      panels.forEach((p, j) => p.toggleAttribute('data-open', j === i));
+    };
+    // Centra el bloque fijo en la ventana sin meterlo bajo la barra de navegación (112 px);
+    // si no cabe entero, se prioriza que se vea el final (el panel) sobre el título.
+    const layout = () => {
+      if (!wide.matches) return void (pin.style.top = '');
+      const free = window.innerHeight - pin.offsetHeight;
+      top = free / 2 >= 112 ? free / 2 : Math.min(112, free - 24);
+      pin.style.top = `${top}px`;
+    };
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      if (!wide.matches) return;
+      const r = root.getBoundingClientRect();
+      const travel = r.height - pin.offsetHeight;
+      const s = travel > 0 ? clamp01((top - r.top) / travel) * n : 0;
+      root.style.setProperty('--s', s.toFixed(3));
+      const i = Math.min(n - 1, Math.floor(s));
+      if (!panels[i].hasAttribute('data-open') || root.querySelectorAll('[data-open]').length > 1) show(i);
+    };
+    const req = () => (raf ||= requestAnimationFrame(update));
+
+    // Móvil: cada panel se «abre» (arranca su animación) la primera vez que se ve.
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => !wide.matches && e.isIntersecting && e.target.setAttribute('data-open', '')),
+      { threshold: 0.35 },
+    );
+    panels.forEach((p) => io.observe(p));
+
+    const relayout = () => {
+      layout();
+      req();
+    };
+    const onWide = () => {
+      if (!wide.matches) panels.forEach((p) => p.setAttribute('data-open', ''));
+      relayout();
+    };
+    on(window, 'scroll', req);
+    on(window, 'resize', relayout);
+    wide.addEventListener('change', onWide);
+    disposers.push(() => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      wide.removeEventListener('change', onWide);
+    });
+    layout();
+    update();
+  });
+}
+
+/**
+ * Línea de tiempo de /proceso: `--p` (0…1) es cuánto de la línea ya pasó por el centro de la
+ * pantalla; cada etapa se enciende (`data-on`) al cruzarlo y su ilustración arranca (`data-open`)
+ * la primera vez que entra en pantalla.
+ */
+function timelines() {
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-timeline]')];
+  if (!roots.length) return;
+  const steps = roots.map((r) => [...r.querySelectorAll<HTMLElement>('[data-tl-step]')]);
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const vh = window.innerHeight;
+    roots.forEach((root, k) => {
+      const r = root.getBoundingClientRect();
+      root.style.setProperty('--p', reduce() ? '1' : clamp01((vh * 0.55 - r.top) / r.height).toFixed(4));
+      for (const s of steps[k]) {
+        const top = s.getBoundingClientRect().top;
+        s.toggleAttribute('data-on', reduce() || top < vh * 0.55);
+        if (top < vh * 0.85) s.setAttribute('data-open', '');
+      }
+    });
+  };
+  const req = () => (raf ||= requestAnimationFrame(update));
+  on(window, 'scroll', req);
+  on(window, 'resize', req);
+  update();
+  disposers.push(() => cancelAnimationFrame(raf));
+}
+
+/** Tarjetas con `data-spot`: un brillo sigue al cursor (solo con puntero fino). */
+function spotlights() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.querySelectorAll<HTMLElement>('[data-spot]').forEach((el) =>
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      el.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }),
+  );
+}
+
 export function initPage() {
   hero();
   reveals();
   rotators();
   scrubbers();
+  steppers();
+  timelines();
+  spotlights();
   filters();
   logoGrids();
-  showcases(disposers);
-  loupes(disposers);
+  rails(disposers);
   if (document.querySelector('[data-globe]')) import('./globe').then((m) => m.globes(disposers));
 }
 

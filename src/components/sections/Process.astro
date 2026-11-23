@@ -1,95 +1,109 @@
 ---
 /**
- * «Cómo trabajamos»: línea de tiempo con haz de luz ligado al scroll. Cada paso trae lo que
- * recibes en esa etapa. En el home cierra con una invitación a agendar; en /proceso (`full`)
- * la página continúa con principios y el agendador.
+ * «Cómo trabajamos»: cuatro pasos que cambian con el scroll. En escritorio el bloque se queda
+ * fijo (lista a la izquierda, panel a la derecha) mientras el scroll recorre los pasos; en móvil
+ * los pasos van uno debajo del otro y cada ilustración se anima al entrar en pantalla.
+ * El comportamiento vive en `steppers()` (scripts/effects.ts).
+ * Cierra con una invitación a agendar. La versión detallada de /proceso es ProcessTimeline.
  */
 import SectionHead from '../SectionHead.astro';
 import Accent from '../Accent.astro';
 import BinocularMark from '../BinocularMark.astro';
+import ProcessViz from '../ProcessViz.astro';
 import { useI18n } from '../../i18n';
-interface Props { full?: boolean }
-const { full = false } = Astro.props;
 const { t, href } = useI18n(Astro.url);
 const steps = t.process.steps.map((s, i) => ({ ...s, n: String(i + 1).padStart(2, '0') }));
 ---
 
-<section id={t.ids.process} class:list={['wrap scroll-mt-24 pb-28 md:pb-36', full ? 'pt-6' : 'pt-16']}>
-  {
-    !full && (
-      <SectionHead class="mb-16 md:mb-18" link={{ href: href('process'), label: t.process.more }}>
+<section id={t.ids.process} class="wrap scroll-mt-24 pb-28 pt-16 md:pb-36">
+  <div class="steps" data-steps>
+    <div class="lg:sticky lg:top-28" data-steps-pin>
+      <SectionHead class="mb-12 md:mb-14" link={{ href: href('process'), label: t.process.more }}>
         <Accent parts={t.process.title} />
       </SectionHead>
-    )
-  }
-  <div class="relative grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8" data-progress>
-    <div class="absolute bottom-0 left-[0.4375rem] top-0 w-px bg-salvia/20 lg:bottom-auto lg:left-0 lg:right-0 lg:top-[0.4375rem] lg:h-px lg:w-auto"></div>
-    <div class="beam absolute left-[0.375rem] top-0 w-[0.1875rem] rounded-[0.1875rem] lg:left-0 lg:top-[0.375rem] lg:h-[0.1875rem]"></div>
+    <div class="lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:grid-rows-[repeat(4,auto)_1fr] lg:gap-x-14" data-reveal>
     {
       steps.map((s, i) => (
-        <div class="step relative flex flex-col gap-3.5 pl-10 lg:pl-0 lg:pt-11" data-reveal style={`--d:${i * 0.1}s;--i:${i}`}>
-          <div class="dot absolute left-0 top-0 size-4 rounded-full border border-aqua bg-noche transition-[background,box-shadow] duration-500" />
-          <div class="flex flex-wrap items-center gap-3">
+        <>
+          <div
+            class="step-head relative flex items-center gap-5 border-t border-salvia/16 pb-5 pt-6 lg:col-start-1 lg:py-6"
+            style={`grid-row:${i + 1};--i:${i}`}
+            data-step
+            data-active={i === 0 ? '' : undefined}
+          >
             <span class="font-mono text-[0.75rem] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
-            <span class="rounded-full border border-salvia/25 px-2.5 py-1 font-mono text-[0.6875rem] uppercase leading-none tracking-[0.1em] text-salvia">{s.tag}</span>
+            <div class="flex min-w-0 flex-col gap-2">
+              <h3 class="step-title text-[1.375rem] font-semibold leading-[1.1] tracking-[-0.03em] md:text-[1.625rem]">{s.t}</h3>
+              <span class="mono-tag">{s.tag}</span>
+            </div>
+            <span class="step-bar absolute -bottom-px left-0 hidden h-px w-full origin-left bg-aqua lg:block" />
           </div>
-          <h3 class="text-[1.625rem] font-semibold leading-[1.1] tracking-[-0.03em] md:text-[1.75rem]">{s.t}</h3>
-          <p class="text-[1rem] leading-[1.55] text-salvia">{s.d}</p>
-          <ul class="mt-2 flex flex-col gap-2.5 border-t border-salvia/14 pt-4">
-            {s.items.map((it) => (
-              <li class="flex gap-2.5 text-[0.9375rem] leading-[1.45] text-bruma">
-                <span class="mt-[0.5em] size-1.5 flex-none rounded-full bg-aqua shadow-[0_0_0.5rem_#14E0A5]" aria-hidden="true" />
-                {it}
-              </li>
-            ))}
-          </ul>
-        </div>
+
+          <div class="step-panel pb-10 lg:col-start-2 lg:row-start-1 lg:row-end-6 lg:pb-0" data-step-panel data-open={i === 0 ? '' : undefined}>
+            <div class="overflow-hidden rounded-[1.625rem] border border-salvia/16 bg-card">
+              <ProcessViz step={i} class="h-52 md:h-64 lg:h-72" />
+              <div class="flex flex-col gap-5 border-t border-salvia/14 p-6 md:p-8">
+                <p class="max-w-[30rem] text-[1.1875rem] leading-[1.35] tracking-[-0.015em] text-niebla text-balance md:text-[1.4375rem]">{s.d}</p>
+                <ul class="flex flex-wrap gap-2" aria-label={t.process.get}>
+                  {s.items.map((it) => (
+                    <li class="flex items-center gap-2 rounded-full border border-salvia/20 px-3 py-2 font-mono text-[0.75rem] leading-none tracking-[0.04em] text-bruma">
+                      <span class="size-1.5 flex-none rounded-full bg-aqua shadow-[0_0_0.5rem_#14E0A5]" aria-hidden="true" />
+                      {it}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </>
       ))
     }
+
+      <div class="hidden border-t border-salvia/16 lg:col-start-1 lg:row-start-5 lg:block" />
+    </div>
+    </div>
+    {/* Recorrido de scroll durante el que el bloque queda fijo (solo escritorio). */}
+    <div class="hidden h-[160vh] lg:block" aria-hidden="true" data-steps-space />
   </div>
 
-  {
-    !full && (
-      <div
-        class="relative mt-20 grid items-center gap-8 overflow-hidden rounded-[1.625rem] border border-salvia/16 bg-card p-7 md:mt-24 md:grid-cols-[auto_1fr_auto] md:gap-10 md:p-10"
-        data-reveal
-      >
-        <div class="pointer-events-none absolute -right-20 -top-24 size-[20rem] rounded-full bg-aqua/12 blur-[5rem]" />
-        <BinocularMark id="book" size={44} metal />
-        <div class="relative flex flex-col gap-2">
-          <h3 class="text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
-            <Accent parts={t.process.book.title} />
-          </h3>
-          <p class="max-w-[32.5rem] text-[1.0625rem] leading-[1.55] text-salvia">{t.process.book.body}</p>
-        </div>
-        <a href={href('process', t.booking.id)} class="btn btn-primary relative justify-self-start md:justify-self-end">
-          {t.process.book.cta} →
-        </a>
-      </div>
-    )
-  }
+  <div
+    class="relative mt-20 grid items-center gap-8 overflow-hidden rounded-[1.625rem] border border-salvia/16 bg-card p-7 md:mt-24 md:grid-cols-[auto_1fr_auto] md:gap-10 md:p-10"
+    data-reveal
+  >
+    <div class="pointer-events-none absolute -right-20 -top-24 size-[20rem] rounded-full bg-aqua/12 blur-[5rem]" />
+    <BinocularMark id="book" size={44} metal />
+    <div class="relative flex flex-col gap-2">
+      <h3 class="text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
+        <Accent parts={t.process.book.title} />
+      </h3>
+      <p class="max-w-[32.5rem] text-[1.0625rem] leading-[1.55] text-salvia">{t.process.book.body}</p>
+    </div>
+    <a href={href('process', t.booking.id)} class="btn btn-primary relative justify-self-start md:justify-self-end">
+      {t.process.book.cta} →
+    </a>
+  </div>
 </section>
 
 <style>
-  [data-progress] {
-    --p: 0.38;
-  }
-  .beam {
-    height: calc(var(--p) * 100%);
-    background: linear-gradient(180deg, rgb(20 224 165 / 0), #14e0a5);
-    box-shadow: 0 0 1.125rem #14e0a5;
+  /* ── Paso activo (escritorio): los paneles comparten celda y se funden al cambiar ── */
+  .step-title {
+    transition: color 0.4s;
   }
   @media (min-width: 1024px) {
-    .beam {
-      width: calc(var(--p) * 100%);
-      height: 0.1875rem;
-      background: linear-gradient(90deg, rgb(20 224 165 / 0), #14e0a5);
+    .step-head:not([data-active]) .step-title {
+      color: var(--color-salvia);
+    }
+    .step-panel {
+      transition: opacity 0.45s, transform 0.6s var(--ease-out-expo);
+    }
+    .step-panel:not([data-open]) {
+      opacity: 0;
+      transform: translateY(0.75rem);
+      pointer-events: none;
     }
   }
-  /* Un paso se enciende cuando el haz lo alcanza */
-  .step .dot {
-    --on: clamp(0, (var(--p) * 4 - var(--i)) * 10, 1);
-    background: color-mix(in srgb, #14e0a5 calc(var(--on) * 100%), #03130f);
-    box-shadow: 0 0 calc(var(--on) * 1.125rem) rgb(20 224 165 / 0.8);
+  /* Barra de avance: `--s` (0…n, la pone el script) es la posición del scroll medida en pasos. */
+  .step-bar {
+    transform: scaleX(clamp(0, calc(var(--s, 0) - var(--i)), 1));
   }
 </style>

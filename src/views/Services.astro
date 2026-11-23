@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Shader from '../components/Shader.astro';
-import Process from '../components/sections/Process.astro';
+import ServiceViz from '../components/ServiceViz.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
 import Accent from '../components/Accent.astro';
 import { services } from '../data/site';
@@ -29,11 +29,10 @@ const list = services.map((s) => ({ ...s, ...t.services[s.id] }));
       list.map((s, i) => (
         <article id={s.slug} class="grid scroll-mt-28 gap-2.5 rounded-[1.625rem] border border-salvia/14 bg-card p-2.5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" data-reveal>
           <div class:list={['relative min-h-[15rem] overflow-hidden rounded-[1.125rem] lg:min-h-[26.25rem]', i % 2 && 'lg:order-2']}>
-            <Shader mode={s.shader.mode as any} variant={s.shader.variant} scale={s.shader.scale} px={s.shader.px} lens={s.shader.lens} />
+            <ServiceViz id={s.id} />
           </div>
           <div class="flex flex-col justify-between gap-10 p-5 md:p-9">
             <div class="flex flex-col gap-4">
-              <span class="font-mono text-[0.75rem] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
               <h2 class="text-[clamp(2rem,3.4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.04em]">{s.title}</h2>
               <p class="max-w-[35rem] text-[1.0625rem] leading-[1.6] text-salvia">{s.long}</p>
             </div>
@@ -64,6 +63,5 @@ const list = services.map((s) => ({ ...s, ...t.services[s.id] }));
     }
   </section>
 
-  <Process />
   <CtaBand />
 </Base>

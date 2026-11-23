@@ -1,0 +1,296 @@
+---
+/**
+ * Ilustración animada de cada servicio: una mini interfaz que muestra lo que se entrega
+ * (sitio + contacto nuevo, idea → producto, panel de operación, flujo automatizado).
+ * Es decorativa (aria-hidden) y solo usa CSS/SVG. La usan el home y /servicios.
+ */
+import type { ServiceId } from '../data/site';
+import { useI18n } from '../i18n';
+interface Props { id: ServiceId }
+const { id } = Astro.props;
+const { t } = useI18n(Astro.url);
+const v = t.servicesViz;
+const bars = [34, 52, 44, 66, 58, 78, 70, 92, 84, 100];
+// Flujo: tres orígenes → núcleo → tres destinos (coordenadas del viewBox 420×220).
+const ys = [40, 110, 180];
+const icons = {
+  in: [
+    'M-7 -6h14M-7 0h14M-7 6h8', // formulario
+    'M-8 -6h16v13h-16zM-8 -1h16M-3 -9v5M3 -9v5', // calendario
+    'M-9 -6h18v12h-18zM-9 -1h18', // pago
+  ],
+  out: [
+    'M-8 -6c0-3 16-3 16 0v12c0 3-16 3-16 0zM-8 -6c0 3 16 3 16 0M-8 0c0 3 16 3 16 0', // base de datos
+    'M-7 5h14l-2-3v-4a5 5 0 0 0-10 0v4zM-2 8h4', // aviso
+    'M-9 -6h18v12h-18zM-9 -6l9 7 9-7', // correo
+  ],
+};
+---
+
+<div class="sv relative grid size-full place-items-center overflow-hidden" aria-hidden="true">
+  {
+    id === 'websites' && (
+      <div class="relative w-[min(78%,29rem)]">
+        <div class="win">
+          <div class="flex items-center gap-3 border-b border-niebla/10 px-3.5 py-2.5">
+            <span class="flex gap-1.5"><i class="dot" /><i class="dot" /><i class="dot" /></span>
+            <span class="mx-auto rounded-full bg-hondo px-3 py-1 font-mono text-[0.625rem] leading-none tracking-[0.04em] text-salvia">{v.url}</span>
+          </div>
+          <div class="flex flex-col gap-3.5 p-4">
+            <div class="flex items-center gap-2.5">
+              <span class="size-2.5 rounded-full bg-aqua" />
+              <span class="ml-auto h-1.5 w-6 rounded-full bg-musgo" />
+              <span class="h-1.5 w-6 rounded-full bg-musgo" />
+              <span class="h-1.5 w-6 rounded-full bg-musgo" />
+            </div>
+            <div class="grid grid-cols-[1.25fr_1fr] items-center gap-4">
+              <div class="flex flex-col gap-2">
+                <span class="h-2.5 w-full rounded-full bg-niebla/85" />
+                <span class="h-2.5 w-2/3 rounded-full bg-niebla/85" />
+                <span class="mt-1 h-1.5 w-4/5 rounded-full bg-musgo" />
+                <span class="web-cta mt-1.5 h-5 w-16 rounded-full bg-aqua" />
+              </div>
+              <span class="h-[5.25rem] rounded-lg bg-[linear-gradient(135deg,#0e3b30,rgb(20_224_165/.55))]" />
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <span class="h-8 rounded-md bg-hondo" />
+              <span class="h-8 rounded-md bg-hondo" />
+              <span class="h-8 rounded-md bg-hondo" />
+            </div>
+          </div>
+        </div>
+        <div class="phone absolute -bottom-6 -right-5 flex h-[9.25rem] w-[4.75rem] flex-col gap-1.5 rounded-[1rem] border border-niebla/20 bg-noche p-2">
+          <span class="mx-auto h-1 w-5 rounded-full bg-musgo" />
+          <span class="h-11 rounded-md bg-[linear-gradient(135deg,#0e3b30,rgb(20_224_165/.55))]" />
+          <span class="h-1.5 w-full rounded-full bg-niebla/85" />
+          <span class="h-1.5 w-2/3 rounded-full bg-niebla/85" />
+          <span class="h-1 w-4/5 rounded-full bg-musgo" />
+          <span class="mt-auto h-4 rounded-full bg-aqua" />
+        </div>
+        <div class="toast absolute -left-6 bottom-3 flex items-center gap-2.5 rounded-xl border border-aqua/40 bg-card px-3 py-2.5">
+          <span class="relative flex size-2 flex-none">
+            <span class="absolute inset-0 animate-[pcPing_1.8s_ease-out_infinite] rounded-full bg-aqua" />
+            <span class="relative size-2 rounded-full bg-aqua" />
+          </span>
+          <span class="flex flex-col gap-1">
+            <span class="text-[0.75rem] font-semibold leading-none text-niebla">{v.lead}</span>
+            <span class="font-mono text-[0.5625rem] leading-none tracking-[0.06em] text-salvia">{v.leadSub}</span>
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    id === 'mvps' && (
+      <div class="flex flex-col items-center gap-5">
+        <div class="relative h-[11.5rem] w-[14rem]">
+          <div class="absolute inset-0 flex flex-col gap-2.5 rounded-2xl border border-dashed border-salvia/45 p-3">
+            <div class="flex items-center gap-2">
+              <span class="size-5 rounded-full border border-dashed border-salvia/45" />
+              <span class="h-2 w-16 rounded-full border border-dashed border-salvia/45" />
+            </div>
+            <span class="h-[4.25rem] rounded-lg border border-dashed border-salvia/45" />
+            <div class="flex items-center gap-2">
+              <span class="h-2 flex-1 rounded-full border border-dashed border-salvia/45" />
+              <span class="h-2 w-8 rounded-full border border-dashed border-salvia/45" />
+            </div>
+            <span class="mt-auto h-6 rounded-full border border-dashed border-salvia/45" />
+          </div>
+          <div class="mvp-real absolute inset-0 flex flex-col gap-2.5 rounded-2xl border border-niebla/25 bg-noche p-3">
+            <div class="flex items-center gap-2">
+              <span class="size-5 rounded-full bg-pino" />
+              <span class="h-2 w-16 rounded-full bg-niebla/85" />
+              <span class="ml-auto size-2 rounded-full bg-aqua" />
+            </div>
+            <div class="h-[4.25rem] overflow-hidden rounded-lg bg-hondo">
+              <svg viewBox="0 0 200 68" preserveAspectRatio="none" class="size-full" fill="none">
+                <path d="M0 54C30 50 40 30 70 34S110 46 135 26 175 14 200 10V68H0z" fill="rgb(20 224 165 / .18)" />
+                <path d="M0 54C30 50 40 30 70 34S110 46 135 26 175 14 200 10" stroke="#14e0a5" stroke-width="2" vector-effect="non-scaling-stroke" />
+              </svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="h-2 flex-1 rounded-full bg-musgo" />
+              <span class="h-2 w-8 rounded-full bg-aqua/50" />
+            </div>
+            <span class="mt-auto h-6 rounded-full bg-aqua" />
+          </div>
+          <span class="mvp-scan absolute -bottom-3 -top-3 w-px bg-aqua" />
+        </div>
+        <div class="flex items-center gap-3 font-mono text-[0.6875rem] uppercase leading-none tracking-[0.12em]">
+          <span class="rounded-full border border-dashed border-salvia/50 px-3 py-2 text-salvia">{v.idea}</span>
+          <span class="text-salvia">→</span>
+          <span class="rounded-full bg-aqua px-3 py-2 font-semibold text-noche">{v.product}</span>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    id === 'custom' && (
+      <div class="win flex w-[min(84%,25rem)]">
+        <div class="flex w-10 flex-none flex-col items-center gap-3 border-r border-niebla/10 py-3.5">
+          <span class="size-2.5 rounded-full bg-aqua" />
+          <span class="mt-1 size-4 rounded-md bg-aqua/60" />
+          <span class="size-4 rounded-md bg-hondo" />
+          <span class="size-4 rounded-md bg-hondo" />
+          <span class="size-4 rounded-md bg-hondo" />
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col gap-2.5 p-3.5">
+          <div class="grid grid-cols-3 gap-2">
+            {['1.284', '87%', '32'].map((n, i) => (
+              <div class="flex flex-col gap-2 rounded-lg bg-hondo p-2.5">
+                <span class="h-1 w-8 rounded-full bg-musgo" />
+                <span class:list={['font-mono text-[0.875rem] font-semibold leading-none', i === 1 ? 'text-aqua' : 'text-niebla']}>{n}</span>
+              </div>
+            ))}
+          </div>
+          <div class="flex h-[4.5rem] items-end gap-1.5 rounded-lg bg-hondo p-2.5">
+            {bars.map((h, i) => <span class:list={['dash-bar flex-1 rounded-t-sm', i > 6 ? 'bg-aqua' : 'bg-aqua/30']} style={`height:${h}%;--j:${i}`} />)}
+          </div>
+          {[0, 1].map((i) => (
+            <div class="flex items-center gap-2.5">
+              <span class="size-3.5 flex-none rounded-full bg-pino" />
+              <span class="h-1.5 flex-1 rounded-full bg-musgo/70" />
+              <span class:list={['h-3.5 w-10 rounded-full', i === 0 ? 'bg-aqua' : 'bg-aqua/25']} />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    id === 'automation' && (
+      <svg viewBox="0 0 420 220" class="w-[min(88%,30rem)]" fill="none">
+        {ys.map((y) => <path d={`M68 ${y}C120 ${y} 126 110 176 110`} class="wire" />)}
+        {ys.map((y) => <path d={`M244 110C294 110 300 ${y} 352 ${y}`} class="wire" />)}
+        {ys.map((y, i) => <path d={`M68 ${y}C120 ${y} 126 110 176 110`} pathLength="1" class="pulse" style={`--t:${i * 0.8}s`} />)}
+        {ys.map((y, i) => <path d={`M244 110C294 110 300 ${y} 352 ${y}`} pathLength="1" class="pulse" style={`--t:${i * 0.8 + 1.2}s`} />)}
+        {ys.map((y, i) => (
+          <g transform={`translate(44 ${y})`}>
+            <rect x="-24" y="-24" width="48" height="48" rx="13" class="node" />
+            <path d={icons.in[i]} class="icon" />
+          </g>
+        ))}
+        {ys.map((y, i) => (
+          <g transform={`translate(376 ${y})`}>
+            <rect x="-24" y="-24" width="48" height="48" rx="13" class="node" />
+            <path d={icons.out[i]} class="icon" />
+          </g>
+        ))}
+        <circle cx="210" cy="110" r="46" class="hub-ring" />
+        <circle cx="210" cy="110" r="34" class="hub" />
+        <path d="M214 92l-14 21h10l-4 15 14-21h-10z" fill="#03130f" />
+      </svg>
+    )
+  }
+</div>
+
+<style>
+  .sv {
+    background:
+      radial-gradient(70% 90% at 50% 110%, rgb(20 224 165 / 0.18), transparent 70%),
+      radial-gradient(rgb(143 176 165 / 0.16) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem;
+  }
+  .win {
+    overflow: hidden;
+    border-radius: 0.875rem;
+    border: 1px solid rgb(238 245 242 / 0.14);
+    background: var(--color-noche);
+    box-shadow: 0 1.75rem 3.5rem -1.25rem rgb(0 0 0 / 0.85);
+  }
+  .dot {
+    width: 0.4375rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--color-musgo);
+  }
+
+  /* 01 · sitio que convierte: el botón late y llega un contacto */
+  .phone {
+    box-shadow: 0 1.25rem 2.5rem -0.75rem rgb(0 0 0 / 0.9);
+  }
+  .web-cta {
+    animation: svCta 5s ease-in-out infinite;
+  }
+  @keyframes svCta {
+    0%, 30%, 100% { transform: none; box-shadow: 0 0 0 rgb(20 224 165 / 0) }
+    36% { transform: scale(0.9) }
+    44% { transform: none; box-shadow: 0 0 1.25rem rgb(20 224 165 / 0.8) }
+  }
+  .toast {
+    box-shadow: 0 1rem 2.5rem -0.5rem rgb(0 0 0 / 0.9), 0 0 2rem -0.5rem rgb(20 224 165 / 0.5);
+    animation: svToast 5s var(--ease-out-expo) infinite;
+  }
+  @keyframes svToast {
+    0%, 42% { opacity: 0; transform: translateY(0.75rem) scale(0.94) }
+    52%, 92% { opacity: 1; transform: none }
+    100% { opacity: 0; transform: translateY(-0.5rem) }
+  }
+
+  /* 02 · de la idea al producto: una línea barre el boceto y deja la interfaz real */
+  .mvp-real {
+    animation: svReal 4s ease-in-out infinite alternate;
+  }
+  .mvp-scan {
+    left: 0;
+    box-shadow: 0 0 1rem 0.125rem rgb(20 224 165 / 0.8);
+    animation: svScan 4s ease-in-out infinite alternate;
+  }
+  @keyframes svReal {
+    0%, 12% { clip-path: inset(0 100% 0 0 round 1rem) }
+    88%, 100% { clip-path: inset(0 0 0 0 round 1rem) }
+  }
+  @keyframes svScan {
+    0%, 12% { left: 0 }
+    88%, 100% { left: 100% }
+  }
+
+  /* 03 · panel de operación: las barras respiran */
+  .dash-bar {
+    transform-origin: bottom;
+    animation: svBar 2.6s ease-in-out calc(var(--j) * -0.31s) infinite alternate;
+  }
+  @keyframes svBar {
+    from { transform: scaleY(0.62) }
+  }
+
+  /* 04 · flujo automatizado: los datos viajan de los orígenes al núcleo y a los destinos */
+  .wire {
+    stroke: rgb(143 176 165 / 0.28);
+    stroke-width: 1.5;
+  }
+  .pulse {
+    stroke: var(--color-aqua);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 0.14 1;
+    stroke-dashoffset: 0.14;
+    filter: drop-shadow(0 0 0.25rem #14e0a5);
+    animation: svPulse 2.4s linear var(--t) infinite;
+  }
+  @keyframes svPulse {
+    to { stroke-dashoffset: -1 }
+  }
+  .node {
+    fill: var(--color-noche);
+    stroke: rgb(238 245 242 / 0.18);
+  }
+  .icon {
+    stroke: var(--color-bruma);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hub {
+    fill: var(--color-aqua);
+    filter: drop-shadow(0 0 1.25rem rgb(20 224 165 / 0.7));
+  }
+  .hub-ring {
+    stroke: rgb(20 224 165 / 0.45);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pcPing 2.4s ease-out infinite;
+  }
+</style>
