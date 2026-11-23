@@ -1,40 +1,40 @@
 ---
-import Shader from './Shader.astro';
+/**
+ * Tarjeta de servicio del home («Lo que construimos»): la ilustración animada cuenta qué se
+ * entrega; debajo, nombre y una sola frase. Toda la tarjeta enlaza al servicio.
+ * El brillo que sigue al cursor lo mueve `spotlights()` (scripts/effects.ts).
+ */
+import ServiceViz from './ServiceViz.astro';
 import type { Service } from '../data/site';
 import { useI18n } from '../i18n';
-interface Props { s: Service; delay?: number }
-const { s: svc, delay = 0 } = Astro.props;
+interface Props { s: Service; delay?: number; class?: string }
+const { s: svc, delay = 0, class: cls } = Astro.props;
 const { t, href } = useI18n(Astro.url);
 const s = { ...svc, ...t.services[svc.id] };
 ---
 
 <a
   href={href('services', s.slug)}
-  class="svc group relative flex flex-col rounded-[1.625rem] border border-salvia/14 bg-card p-2.5 text-niebla transition-[border-color,transform] duration-500 hover:-translate-y-1 hover:border-aqua/40 hover:text-niebla"
+  class:list={[
+    'svc group relative flex flex-col overflow-hidden rounded-[1.625rem] border border-salvia/14 bg-card text-niebla transition-[border-color,translate,box-shadow] duration-500 hover:-translate-y-1 hover:border-aqua/45 hover:text-niebla hover:shadow-[0_1.875rem_5rem_-1.875rem_rgba(20,224,165,.5)]',
+    cls,
+  ]}
+  data-spot
   data-reveal
   style={`--d:${delay}s`}
 >
-  <div class="relative h-[13.75rem] overflow-hidden rounded-[1.125rem] md:h-[18.75rem]">
-    <Shader mode={s.shader.mode as any} variant={s.shader.variant} scale={s.shader.scale} px={s.shader.px} lens={s.shader.lens} />
-  </div>
-  <div class="grid grid-cols-1 items-end gap-6 px-4 sm:grid-cols-[1fr_auto] pb-4 pt-7 md:px-6.5 md:pb-5.5 md:pt-7.5">
-    <div class="flex flex-col gap-3.5">
-      <span class="font-mono text-[0.75rem] font-medium tracking-[0.14em] text-aqua">{s.n}</span>
+  <div class="h-[16.5rem] md:h-[19.5rem]"><ServiceViz id={svc.id} /></div>
+  <div class="relative flex items-end justify-between gap-6 border-t border-salvia/12 p-6 md:p-8">
+    <div class="flex flex-col gap-3">
       <h3 class="text-[1.75rem] font-semibold leading-[1.05] tracking-[-0.035em] md:text-[2.125rem]">{s.title}</h3>
-      <p class="max-w-[26.25rem] text-[1rem] leading-[1.55] text-salvia">{s.short}</p>
+      <p class="max-w-[26rem] text-[1rem] leading-[1.5] text-salvia">{s.short}</p>
     </div>
-    {
-      s.price ? (
-        <div class="flex flex-col gap-1.5 sm:items-end">
-          <span class="mono-tag">{t.pricing.from}</span>
-          <span class="text-[1.5rem] font-[650] leading-none tracking-[-0.04em] md:text-[1.875rem]">{s.price}</span>
-        </div>
-      ) : (
-        <span class="whitespace-nowrap font-mono text-[0.8125rem] text-niebla">
-          {t.pricing.proposal} <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
-        </span>
-      )
-    }
+    <span
+      class="grid size-11 flex-none place-items-center rounded-full border border-salvia/30 font-mono text-[1rem] leading-none transition-[background,color,border-color] duration-300 group-hover:border-aqua group-hover:bg-aqua group-hover:text-noche"
+      aria-hidden="true"
+    >
+      →
+    </span>
   </div>
-  <span class="pointer-events-none absolute inset-0 rounded-[1.625rem] opacity-0 shadow-[0_0_0_1px_rgba(20,224,165,.35),0_1.875rem_5rem_-1.875rem_rgba(20,224,165,.55)] transition-opacity duration-500 group-hover:opacity-100"></span>
+  <span class="spot pointer-events-none absolute inset-0" aria-hidden="true"></span>
 </a>
