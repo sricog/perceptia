@@ -1,6 +1,6 @@
 // Datos que no dependen del idioma. Los textos viven en src/i18n/{es,en}.ts.
 import type { ImageMetadata } from 'astro';
-// Capturas reales de cada sitio: escritorio (1440×900) y móvil (500×1082).
+// Capturas reales de cada sitio: escritorio (1440×900) y móvil (750×1623).
 import miquartoShot from '../assets/projects/miquarto-site.webp';
 import miquartoMobile from '../assets/projects/miquarto-site-mobile.webp';
 import imagenesShot from '../assets/projects/imagenes-y-especialistas-site.webp';
