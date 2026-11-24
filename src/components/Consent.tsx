@@ -1,4 +1,5 @@
 import type { Dict } from '../i18n';
+import { errId, errProps } from '../lib/formErrors';
 
 /**
  * Casilla de autorización (Ley 1581 de 2012): sin marcarla no se envía el formulario.
@@ -18,7 +19,7 @@ export default function Consent({ t, terms, privacy, error }: ConsentProps & { e
           type="checkbox"
           name="consent"
           value="1"
-          aria-invalid={!!error}
+          {...errProps('consent', error)}
           className="peer sr-only"
         />
         <span
@@ -39,7 +40,7 @@ export default function Consent({ t, terms, privacy, error }: ConsentProps & { e
           {t.post}
         </span>
       </label>
-      {error && <span className="text-[0.8125rem] text-[#ff8a80]">{error}</span>}
+      {error && <span id={errId('consent')} className="text-[0.8125rem] text-[#ff8a80]">{error}</span>}
     </div>
   );
 }

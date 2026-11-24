@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import type { Dict } from '../i18n';
 
 import { saveLead } from '../lib/leads';
+import { errId, errProps, focusFirstError } from '../lib/formErrors';
 import Consent, { type ConsentProps } from './Consent';
 
 /**
@@ -40,7 +41,7 @@ export default function BookingForm({ t, lang, whatsappNumber, consent }: Props)
     if (about.length < 10) errs.about = t.errors.about;
     if (!data.get('consent')) errs.consent = consent.t.error;
     setErrors(errs);
-    if (Object.keys(errs).length) return;
+    if (Object.keys(errs).length) return focusFirstError(e.currentTarget);
 
     const wa = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fill(t.wa, { name }))}`;
     // Campo trampa: si un bot lo llena, se finge el envío sin guardar nada.
@@ -78,20 +79,20 @@ export default function BookingForm({ t, lang, whatsappNumber, consent }: Props)
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.name}</span>
-          <input name="name" autoComplete="name" className={field} placeholder={t.namePh} aria-invalid={!!errors.name} />
-          {errors.name && <span className={errCls}>{errors.name}</span>}
+          <input name="name" autoComplete="name" className={field} placeholder={t.namePh} {...errProps('name', errors.name)} />
+          {errors.name && <span id={errId('name')} className={errCls}>{errors.name}</span>}
         </label>
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.contact}</span>
-          <input name="contact" autoComplete="email" className={field} placeholder={t.contactPh} aria-invalid={!!errors.contact} />
-          {errors.contact && <span className={errCls}>{errors.contact}</span>}
+          <input name="contact" autoComplete="email" className={field} placeholder={t.contactPh} {...errProps('contact', errors.contact)} />
+          {errors.contact && <span id={errId('contact')} className={errCls}>{errors.contact}</span>}
         </label>
       </div>
 
       <label className="flex flex-col gap-2">
         <span className="mono-tag">{t.about}</span>
-        <textarea name="about" rows={5} className={`${field} resize-y`} placeholder={t.aboutPh} aria-invalid={!!errors.about} />
-        {errors.about && <span className={errCls}>{errors.about}</span>}
+        <textarea name="about" rows={5} className={`${field} resize-y`} placeholder={t.aboutPh} {...errProps('about', errors.about)} />
+        {errors.about && <span id={errId('about')} className={errCls}>{errors.about}</span>}
       </label>
 
       <Consent {...consent} error={errors.consent} />
