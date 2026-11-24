@@ -57,7 +57,7 @@ const n = (i: number) => String(i + 1).padStart(2, '0');
           d.sections.map((s, i) => (
             <li>
               <a href={`#${s.id}`} class="-ml-px flex gap-3 border-l border-transparent py-1.5 pl-4 text-salvia hover:border-aqua hover:text-niebla">
-                <span class="font-mono text-[0.6875rem] leading-[1.9] text-salvia/70">{n(i)}</span>
+                <span class="font-mono text-[0.6875rem] leading-[1.9] text-salvia">{n(i)}</span>
                 {s.h}
               </a>
             </li>

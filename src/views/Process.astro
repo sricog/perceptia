@@ -92,7 +92,7 @@ const icons = [
       </ul>
     </div>
     <div class="min-h-[40rem] min-w-0" data-reveal style="--d:.1s">
-      <BookingForm client:only="react" t={b} lang={lang} whatsappNumber={site.whatsappNumber} consent={{ t: t.consent, terms: href('terms'), privacy: href('privacy') }} />
+      <BookingForm client:load t={b} lang={lang} whatsappNumber={site.whatsappNumber} consent={{ t: t.consent, terms: href('terms'), privacy: href('privacy') }} />
     </div>
   </section>
 </Base>

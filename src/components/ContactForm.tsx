@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { Dict } from '../i18n';
 import { saveLead } from '../lib/leads';
+import { errId, errProps, focusFirstError } from '../lib/formErrors';
 import Consent, { type ConsentProps } from './Consent';
 
 type Props = {
@@ -48,7 +49,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
     if (message.length < 10) errs.message = t.errors.message;
     if (!data.get('consent')) errs.consent = consent.t.error;
     setErrors(errs);
-    if (Object.keys(errs).length) return;
+    if (Object.keys(errs).length) return focusFirstError(e.currentTarget);
 
     const labels = TYPES.filter((t) => types.includes(t.id)).map((t) => t.label).join(', ');
     const company = String(data.get('company') || '').trim();
@@ -109,13 +110,13 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.name}</span>
-          <input name="name" autoComplete="name" className={field} placeholder={t.namePh} aria-invalid={!!errors.name} />
-          {errors.name && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.name}</span>}
+          <input name="name" autoComplete="name" className={field} placeholder={t.namePh} {...errProps('name', errors.name)} />
+          {errors.name && <span id={errId('name')} className="text-[0.8125rem] text-[#ff8a80]">{errors.name}</span>}
         </label>
         <label className="flex flex-col gap-2">
           <span className="mono-tag">{t.email}</span>
-          <input name="email" type="email" autoComplete="email" className={field} placeholder={t.emailPh} aria-invalid={!!errors.email} />
-          {errors.email && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.email}</span>}
+          <input name="email" type="email" autoComplete="email" className={field} placeholder={t.emailPh} {...errProps('email', errors.email)} />
+          {errors.email && <span id={errId('email')} className="text-[0.8125rem] text-[#ff8a80]">{errors.email}</span>}
         </label>
       </div>
       <label className="flex flex-col gap-2">
@@ -123,7 +124,12 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
         <input name="company" autoComplete="organization" className={field} placeholder={t.companyPh} />
       </label>
 
-      <fieldset className="flex flex-col gap-3">
+      <fieldset
+        className="flex flex-col gap-3 outline-none"
+        tabIndex={-1}
+        data-invalid={errors.types ? '' : undefined}
+        aria-describedby={errors.types ? errId('types') : undefined}
+      >
         <legend className="mono-tag mb-3">{t.need}</legend>
         <div className="flex flex-wrap gap-2">
           {TYPES.map((t) => {
@@ -141,7 +147,7 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
             );
           })}
         </div>
-        {errors.types && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.types}</span>}
+        {errors.types && <span id={errId('types')} className="text-[0.8125rem] text-[#ff8a80]">{errors.types}</span>}
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
@@ -163,8 +169,8 @@ export default function ContactForm({ whatsappNumber, t, types: TYPES, lang, con
 
       <label className="flex flex-col gap-2">
         <span className="mono-tag">{t.message}</span>
-        <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} aria-invalid={!!errors.message} />
-        {errors.message && <span className="text-[0.8125rem] text-[#ff8a80]">{errors.message}</span>}
+        <textarea name="message" rows={5} className={`${field} resize-y`} placeholder={t.messagePh} {...errProps('message', errors.message)} />
+        {errors.message && <span id={errId('message')} className="text-[0.8125rem] text-[#ff8a80]">{errors.message}</span>}
       </label>
 
       <Consent {...consent} error={errors.consent} />

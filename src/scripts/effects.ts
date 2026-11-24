@@ -12,18 +12,25 @@ const on = <K extends keyof WindowEventMap>(t: Window, ev: K, fn: (e: WindowEven
 function reveals() {
   const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
   if (reduce()) return els.forEach((el) => el.classList.add('is-in'));
-  const io = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-in');
-          io.unobserve(e.target);
-        }
-      }),
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
-  );
-  els.forEach((el) => io.observe(el));
-  disposers.push(() => io.disconnect());
+  const observer = (opts: IntersectionObserverInit) => {
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        }),
+      opts,
+    );
+    disposers.push(() => io.disconnect());
+    return io;
+  };
+  const io = observer({ rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  // `data-reveal-edge`: lo que queda al final de la página y recortado (la marca del footer) nunca
+  // llega a ese umbral en pantallas bajas; se revela apenas asoma.
+  const edge = observer({ threshold: 0 });
+  els.forEach((el) => (el.hasAttribute('data-reveal-edge') ? edge : io).observe(el));
 }
 
 /** "Hacemos software a la medida" → rota frases con blur. */
