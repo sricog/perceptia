@@ -8,9 +8,14 @@ interface Props {
   variant?: string;
   scale?: string;
   px?: string;
+  /** Tope de densidad de píxeles (por defecto 1.25) y de píxeles totales del canvas. */
+  maxDpr?: string;
+  budget?: string;
+  /** Baja la resolución sola si el equipo no alcanza a dibujar fluido. */
+  adaptive?: boolean;
   class?: string;
 }
-const { mode, lens, lensPortrait, lenses, variant, scale, px, class: cls } = Astro.props;
+const { mode, lens, lensPortrait, lenses, variant, scale, px, maxDpr, budget, adaptive, class: cls } = Astro.props;
 ---
 
 <pc-shader
@@ -21,5 +26,8 @@ const { mode, lens, lensPortrait, lenses, variant, scale, px, class: cls } = Ast
   variant={variant}
   scale={scale}
   px={px}
+  max-dpr={maxDpr}
+  budget={budget}
+  adaptive={adaptive ? '' : undefined}
   class:list={['block size-full', cls]}
   aria-hidden="true"></pc-shader>

@@ -11,6 +11,8 @@ import sitemap from '@astrojs/sitemap';
  * Astro solo genera `404.html` para la página raíz; la de /en/ sale como `en/404/index.html`.
  * Los hostings estáticos (p. ej. Cloudflare Pages) buscan `404.html` en la carpeta más cercana,
  * así que se mueve a `en/404.html` al terminar el build.
+ *
+ * @returns {import('astro').AstroIntegration}
  */
 const localized404 = () => ({
   name: 'localized-404',

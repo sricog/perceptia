@@ -45,7 +45,7 @@ const seal = left[0] + right.map((r) => r[0]).join('').toLowerCase();
 <section data-hero class="hero relative" aria-label={t.hero.label}>
   <div data-hero-stage class="grain sticky top-0 h-[100svh] min-h-[37.5rem] overflow-hidden">
     <div class="absolute inset-0">
-      <Shader mode="lens" lens="0,0.17,0.19,0.095" lensPortrait="0,0.2,0.1,0.05" />
+      <Shader mode="lens" lens="0,0.17,0.19,0.095" lensPortrait="0,0.2,0.1,0.05" scale="1" maxDpr="2" budget="2400000" adaptive />
     </div>
     <div class="hero-shade pointer-events-none absolute inset-0"></div>
 
