@@ -77,8 +77,8 @@ export const en: Dict = {
   projects: {
     filterLabel: 'Filter projects',
     all: 'All',
-    kinds: { web: 'Website', app: 'Web app' },
-    filters: { web: 'Websites', app: 'Web apps' },
+    kinds: { web: 'Website', app: 'Web app', shop: 'Online store' },
+    filters: { web: 'Websites', app: 'Web apps', shop: 'Online stores' },
     shotAlt: 'Screenshot of the {name} website',
     prev: 'Previous project',
     next: 'Next project',
@@ -92,6 +92,9 @@ export const en: Dict = {
       market: { sector: 'Food · online store', place: 'Colombia' },
       casamayor: { sector: 'Real estate', place: 'Miami, FL' },
       adastra: { sector: 'Culture · funding', place: 'Spain' },
+      software360: { sector: 'Logistics software · WMS', place: 'Medellín, CO' },
+      creeser: { sector: 'Mental health · psychotherapy', place: 'Mexico City, MX' },
+      movvida: { sector: 'Healthcare · orthopedic equipment', place: 'Medellín, CO' },
     },
     index: 'Projects',
   },
@@ -152,11 +155,12 @@ export const en: Dict = {
 
   reach: {
     title: ['Remote, ', 'borderless'],
-    body: 'Clients in Colombia, Puerto Rico, the United States and Spain. Calls, deliveries and support in your time zone.',
+    body: 'Clients in Colombia, Puerto Rico, the United States, Mexico and Spain. Calls, deliveries and support in your time zone.',
     places: [
       { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
       { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
       { id: 'us', name: 'United States', city: 'Miami', tz: 'UTC−5 to −8' },
+      { id: 'mx', name: 'Mexico', city: 'CDMX', tz: 'UTC−6' },
       { id: 'es', name: 'Spain', city: 'Madrid', tz: 'UTC+1' },
     ],
     hint: 'Drag the globe · pick a country to focus it',
@@ -181,6 +185,7 @@ export const en: Dict = {
       slug: 'websites',
       title: 'Websites & landing pages',
       form: 'Website / landing',
+      price: '',
       short: 'Fast, measurable sites that turn visitors into customers.',
       long: 'A clear, fast digital presence designed to turn attention into opportunities. Custom-designed, never templated.',
       includes: ['Custom visual design', 'Responsive experience', 'Contact form or direct line', 'Initial SEO', 'Delivered ready to run'],

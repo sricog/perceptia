@@ -7,6 +7,7 @@ const opts = [
   { f: 'all', label: t.projects.all },
   { f: 'web', label: t.projects.filters.web },
   { f: 'app', label: t.projects.filters.app },
+  { f: 'shop', label: t.projects.filters.shop },
 ];
 ---
 
@@ -14,7 +15,7 @@ const opts = [
   data-filter-group={target}
   role="group"
   aria-label={t.projects.filterLabel}
-  class="flex gap-1.5 whitespace-nowrap rounded-full border border-salvia/20 p-1.25 text-[0.875rem] font-medium"
+  class="flex max-w-full gap-1.5 overflow-x-auto whitespace-nowrap rounded-full border border-salvia/20 p-1.25 text-[0.875rem] font-medium [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
 >
   {
     opts.map((o, i) => (

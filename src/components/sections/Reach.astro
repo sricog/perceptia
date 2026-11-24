@@ -10,8 +10,8 @@ const config = JSON.stringify({
   minor: minorPoints,
   places: list.map(({ id, loc, zone }) => ({ id, loc, zone })),
 });
-// Lado de cada etiqueta respecto a su punto, para que no se encimen (Medellín, San Juan y Miami están cerca).
-const side: Record<string, string> = { co: 'b', pr: 'r', us: 'l', es: 't' };
+// Lado de cada etiqueta respecto a su punto, para que no se encimen (Medellín, San Juan, Miami y CDMX están cerca).
+const side: Record<string, string> = { co: 'b', pr: 'r', us: 't', mx: 'b', es: 't' };
 // Marcas del dial exterior cada 5° (más largas cada 30°).
 const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
 ---

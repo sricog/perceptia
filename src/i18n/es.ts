@@ -57,6 +57,8 @@ export const es = {
     // De cada lente sobrevive una mitad del nombre: PERCEPT(ible) + I(nteligencia) A(rtificial).
     left: ['Percept', 'ible'],
     right: [['I', 'nteligencia'], ['A', 'rtificial']],
+    // Leyenda bajo «Perceptia» al terminar el hero; en español va vacía (el inglés sí la muestra).
+    note: '',
     cue: 'Desliza para enfocar',
     primary: 'Cotizar proyecto →',
     secondary: 'Ver proyectos',
@@ -83,8 +85,8 @@ export const es = {
   projects: {
     filterLabel: 'Filtrar proyectos',
     all: 'Todos',
-    kinds: { web: 'Website', app: 'App web' },
-    filters: { web: 'Websites', app: 'Apps web' },
+    kinds: { web: 'Website', app: 'App web', shop: 'Tienda virtual' },
+    filters: { web: 'Websites', app: 'Apps web', shop: 'Tiendas virtuales' },
     shotAlt: 'Captura del sitio de {name}',
     prev: 'Proyecto anterior',
     next: 'Proyecto siguiente',
@@ -98,6 +100,9 @@ export const es = {
       market: { sector: 'Alimentos · tienda en línea', place: 'Colombia' },
       casamayor: { sector: 'Bienes raíces', place: 'Miami, FL' },
       adastra: { sector: 'Cultura · financiación', place: 'España' },
+      software360: { sector: 'Software logístico · WMS', place: 'Medellín, CO' },
+      creeser: { sector: 'Salud mental · psicoterapia', place: 'CDMX, MX' },
+      movvida: { sector: 'Salud · equipos ortopédicos', place: 'Medellín, CO' },
     },
     index: 'Proyectos',
   },
@@ -159,13 +164,15 @@ export const es = {
 
   reach: {
     title: ['Remoto, ', 'sin fronteras'],
-    body: 'Clientes en Colombia, Puerto Rico, Estados Unidos y España. Llamadas, entregas y soporte en tu zona horaria.',
+    body: 'Clientes en Colombia, Puerto Rico, Estados Unidos, México y España. Llamadas, entregas y soporte en tu zona horaria.',
     places: [
       { id: 'co', name: 'Colombia', city: 'Medellín', tz: 'UTC−5' },
       { id: 'pr', name: 'Puerto Rico', city: 'San Juan', tz: 'UTC−4' },
       { id: 'us', name: 'Estados Unidos', city: 'Miami', tz: 'UTC−5 a −8' },
+      { id: 'mx', name: 'México', city: 'CDMX', tz: 'UTC−6' },
       { id: 'es', name: 'España', city: 'Madrid', tz: 'UTC+1' },
     ],
+    hint: 'Arrastra el globo · elige un país para enfocarlo',
     localTime: 'Hora local en {city}',
   },
 
@@ -189,6 +196,7 @@ export const es = {
       slug: 'websites',
       title: 'Websites y landing pages',
       form: 'Website / landing',
+      price: '',
       short: 'Sitios rápidos y medibles que convierten visitas en clientes.',
       long: 'Una presencia digital clara, rápida y diseñada para convertir atención en oportunidades. Diseño propio, nada de plantillas.',
       includes: ['Diseño visual personalizado', 'Experiencia responsive', 'Formulario o contacto directo', 'SEO inicial', 'Entrega lista para operar'],

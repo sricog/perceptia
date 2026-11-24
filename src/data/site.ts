@@ -17,6 +17,12 @@ import casamayorShot from '../assets/projects/casa-mayor-realtor-site.webp';
 import casamayorMobile from '../assets/projects/casa-mayor-realtor-site-mobile.webp';
 import adastraShot from '../assets/projects/ad-astra-heritage-site.webp';
 import adastraMobile from '../assets/projects/ad-astra-heritage-site-mobile.webp';
+import software360Shot from '../assets/projects/360-software-site.webp';
+import software360Mobile from '../assets/projects/360-software-site-mobile.webp';
+import creeserShot from '../assets/projects/cree-ser-site.webp';
+import creeserMobile from '../assets/projects/cree-ser-site-mobile.webp';
+import movvidaShot from '../assets/projects/movvida-site.webp';
+import movvidaMobile from '../assets/projects/movvida-site-mobile.webp';
 
 export const site = {
   name: 'Perceptia',
@@ -48,25 +54,28 @@ export type Service = { id: ServiceId };
 /** El orden de esta lista es el orden en que se muestran en el home, /servicios y contacto. */
 export const services: Service[] = [{ id: 'custom' }, { id: 'automation' }, { id: 'mvps' }, { id: 'websites' }];
 
-export type ProjectId = 'miquarto' | 'imagenes' | 'aktiva' | 'raiz' | 'smoke' | 'market' | 'casamayor' | 'adastra';
+export type ProjectId = 'miquarto' | 'imagenes' | 'aktiva' | 'raiz' | 'smoke' | 'market' | 'casamayor' | 'adastra' | 'software360' | 'creeser' | 'movvida';
 /** Sector y lugar del cliente (tomados de cada sitio) viven en i18n: `projects.meta[id]`. */
-export type Project = { id: ProjectId; name: string; kind: 'web' | 'app'; url: string; shot: ImageMetadata; shotMobile: ImageMetadata };
+export type Project = { id: ProjectId; name: string; kind: 'web' | 'app' | 'shop'; url: string; shot: ImageMetadata; shotMobile: ImageMetadata };
 
 export const projects: Project[] = [
   { id: 'miquarto', name: 'MiQuarto', kind: 'app', url: 'https://miquarto.co/', shot: miquartoShot, shotMobile: miquartoMobile },
   { id: 'imagenes', name: 'Imágenes y especialistas', kind: 'web', url: 'https://imagenesyespecialistas.com/', shot: imagenesShot, shotMobile: imagenesMobile },
+  { id: 'movvida', name: 'Movvida', kind: 'shop', url: 'https://ortopedicosmovvida.com/', shot: movvidaShot, shotMobile: movvidaMobile },
+  { id: 'software360', name: '360 Software', kind: 'web', url: 'https://360software.com.co/', shot: software360Shot, shotMobile: software360Mobile },
   { id: 'aktiva', name: 'Aktiva Experience', kind: 'web', url: 'https://aktivaexperience.com.co/', shot: aktivaShot, shotMobile: aktivaMobile },
   { id: 'raiz', name: 'Raíz & Alma', kind: 'web', url: 'https://raizyalma.com.co/es', shot: raizShot, shotMobile: raizMobile },
   { id: 'smoke', name: 'Smoke Master', kind: 'web', url: 'https://smokemasterlamudapr.com/', shot: smokeShot, shotMobile: smokeMobile },
-  { id: 'market', name: 'Market Cerdo', kind: 'web', url: 'https://marketcerdo.com/', shot: marketShot, shotMobile: marketMobile },
+  { id: 'market', name: 'Market Cerdo', kind: 'shop', url: 'https://marketcerdo.com/', shot: marketShot, shotMobile: marketMobile },
   { id: 'casamayor', name: 'Casa Mayor Realtor', kind: 'web', url: 'https://casamayorrealtor.com/', shot: casamayorShot, shotMobile: casamayorMobile },
   { id: 'adastra', name: 'Ad Astra Heritage', kind: 'web', url: 'https://adastraheritage.site/', shot: adastraShot, shotMobile: adastraMobile },
+  { id: 'creeser', name: 'Cree-Ser', kind: 'web', url: 'https://psicologalatamoriana.com/', shot: creeserShot, shotMobile: creeserMobile },
 ];
 
 /** Dominio legible para etiquetas: https://raizyalma.com.co/es → raizyalma.com.co */
 export const domainOf = (url: string) => new URL(url).hostname.replace(/^www\./, '');
 
-export type PlaceId = 'co' | 'pr' | 'us' | 'es';
+export type PlaceId = 'co' | 'pr' | 'us' | 'mx' | 'es';
 /**
  * Alcance: un punto por país con clientes, la ciudad de referencia para la hora local
  * y su zona IANA. Los textos (nombre, ciudad, UTC) viven en i18n (`reach.places`).
@@ -75,6 +84,7 @@ export const places: Record<PlaceId, { loc: [number, number]; zone: string }> = 
   co: { loc: [4.71, -74.07], zone: 'America/Bogota' },
   pr: { loc: [18.4, -66.1], zone: 'America/Puerto_Rico' },
   us: { loc: [25.76, -80.19], zone: 'America/New_York' },
+  mx: { loc: [19.43, -99.13], zone: 'America/Mexico_City' },
   es: { loc: [40.42, -3.7], zone: 'Europe/Madrid' },
 };
 /** Puntos menores en el globo: otros proyectos en vivo dentro de Colombia (Medellín, Bahía Solano). */
