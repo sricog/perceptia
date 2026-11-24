@@ -1,6 +1,8 @@
 // Portado de Claude Design (Perceptia Home · pc-shader.js).
 // Cambios: lens-portrait para pantallas verticales, un solo frame con prefers-reduced-motion
 // y `state`/K para animar las lentes desde fuera y convertirlas en el isotipo.
+// Resolución: `max-dpr` y `budget` suben el tope por instancia (el hero lo necesita para que el
+// isotipo no se vea pixelado); con `adaptive` baja sola si los cuadros se vuelven lentos.
 (() => {
 if (typeof window === 'undefined' || customElements.get('pc-shader')) return;
 const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -216,19 +218,34 @@ class PcShader extends HTMLElement {
     const LN = (this.getAttribute('lens') || '0,0.06,0.3,0.15').split(',').map(Number);
     const LNP = this.getAttribute('lens-portrait') ? this.getAttribute('lens-portrait').split(',').map(Number) : null;
     const LF = this.getAttribute('lenses') === '1' ? 1 : 0;
+    const maxDpr = num('max-dpr', 1.25), budget = num('budget', MAXPX);
+    const adaptive = this.hasAttribute('adaptive');
+    // Factor de calidad: 1 = resolución completa; se conserva entre reinicios del contexto.
+    if (this._q == null) this._q = 1;
     let dpr = 1;
     const resize = () => {
       const w = cv.clientWidth || 1, h = cv.clientHeight || 1;
-      dpr = Math.min(window.devicePixelRatio || 1, 1.25) * scale;
-      dpr = Math.min(dpr, Math.sqrt(MAXPX / (w * h)));
+      dpr = Math.min(window.devicePixelRatio || 1, maxDpr) * scale * this._q;
+      dpr = Math.min(dpr, Math.sqrt(budget / (w * h)));
       cv.width = Math.max(1, Math.round(w * dpr)); cv.height = Math.max(1, Math.round(h * dpr));
     };
     this._ro = new ResizeObserver(() => { resize(); if (REDUCE.matches) requestAnimationFrame(loop); }); this._ro.observe(cv); resize();
     if (this._t0 == null) this._t0 = performance.now() - num('offset', Math.random() * 20) * 1000;
     const m = this._m || (this._m = [.5, .5]); let v = 0;
+    // Calidad adaptativa: tras un arranque de gracia, si la mayoría de los cuadros tarda más de
+    // ~22 ms (menos de 45 fps), baja la resolución un 20 % (hasta un 35 % de la inicial).
+    let prev = 0, frames = 0, slow = 0;
+    const adapt = now => {
+      const dt = prev ? now - prev : 0; prev = now;
+      if (!dt || dt > 100) return; // pestaña en segundo plano o un tirón aislado
+      if (++frames < 90) return;
+      slow = slow * .95 + (dt > 22 ? .05 : 0);
+      if (slow > .6 && this._q > .35) { this._q = Math.max(.35, this._q * .8); slow = 0; frames = 60; resize(); }
+    };
     const loop = now => {
       if (!REDUCE.matches) this._raf = requestAnimationFrame(loop);
       if (gl.isContextLost()) return;
+      if (adaptive && !REDUCE.matches) adapt(now);
       const t = (now - this._t0) / 1000;
       const idle = !this._ptr || now - this._last > 2500;
       const tg = idle ? [.5 + .17 * Math.cos(t * .37), .52 + .11 * Math.sin(t * .51)] : this._ptr;
