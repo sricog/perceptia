@@ -21,7 +21,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
 <header
   id="site-nav"
   transition:persist={`nav-${lang}`}
-  class="fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color] duration-500"
+  class="fixed inset-x-0 top-0 z-50"
   data-open-label={t.a11y.openMenu}
   data-close-label={t.a11y.closeMenu}
 >
@@ -63,7 +63,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
                 lang={dict(s.l).htmlLang}
                 data-lang-switch={s.l}
                 data-home={routes.home[s.l]}
-                aria-label={fill(dict(s.l).a11y.switchTo, { lang: s.name })}
+                aria-label={`${s.short} · ${fill(dict(s.l).a11y.switchTo, { lang: s.name })}`}
                 class="flex h-full items-center rounded-full px-2.5 text-salvia transition-colors hover:text-niebla"
               >
                 {s.short}
@@ -94,6 +94,7 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
 
   <div
     id="nav-panel"
+    inert
     class="pointer-events-none fixed inset-0 -z-10 flex flex-col justify-end bg-noche/95 px-5 pb-10 opacity-0 backdrop-blur-2xl transition-opacity duration-500 lg:hidden"
   >
     <nav aria-label={t.a11y.mobileNav} class="flex flex-col">
@@ -110,10 +111,22 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
 </header>
 
 <style>
-  #site-nav.is-scrolled {
+  /* El fondo al hacer scroll va en un pseudo-elemento: un `backdrop-filter` en el propio header
+     lo convertiría en el bloque contenedor de sus hijos `fixed` y el panel del menú quedaría
+     encerrado en la franja del header en lugar de cubrir la pantalla. */
+  #site-nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-bottom: 1px solid transparent;
+    transition: background 0.5s, backdrop-filter 0.5s, border-color 0.5s;
+  }
+  #site-nav.is-scrolled:not(.is-open)::before {
     background: rgb(3 19 15 / 0.72);
     backdrop-filter: blur(1.125rem);
-    border-bottom: 1px solid rgb(143 176 165 / 0.12);
+    border-bottom-color: rgb(143 176 165 / 0.12);
   }
   #site-nav.is-open #nav-panel {
     opacity: 1;
@@ -138,17 +151,28 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
   // así que se busca de nuevo en cada navegación y se enlaza una sola vez por elemento.
   const getHeader = () => document.getElementById('site-nav');
 
-  const setOpen = (header: HTMLElement, open: boolean) => {
+  const setOpen = (header: HTMLElement, open: boolean, { restoreFocus = false } = {}) => {
     const toggle = header.querySelector<HTMLButtonElement>('#nav-toggle')!;
+    const panel = header.querySelector<HTMLElement>('#nav-panel')!;
     header.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', (open ? header.dataset.closeLabel : header.dataset.openLabel) ?? '');
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    // Cerrado, el panel no recibe foco ni lo leen los lectores de pantalla. Abierto, lo que queda
+    // detrás (todo menos el header) se desactiva para que el foco no se escape del menú.
+    panel.inert = !open;
+    for (const el of document.body.children) if (el !== header && el.tagName !== 'SCRIPT') (el as HTMLElement).inert = open;
+    if (open) panel.querySelector<HTMLElement>('a')?.focus();
+    else if (restoreFocus) toggle.focus();
   };
 
+  // Headers ya enlazados. No se marca con un atributo: al navegar, Astro sincroniza los atributos
+  // del header persistente con los de la página nueva y la marca se borraba, así que cada
+  // navegación sumaba otro listener y con un número par el botón abría y cerraba a la vez.
+  const bound = new WeakSet<HTMLElement>();
   const bind = (header: HTMLElement) => {
-    if (header.dataset.bound) return;
-    header.dataset.bound = '';
+    if (bound.has(header)) return;
+    bound.add(header);
     header.querySelector('#nav-toggle')!.addEventListener('click', () => setOpen(header, !header.classList.contains('is-open')));
     header.querySelectorAll('#nav-panel a').forEach((a) => a.addEventListener('click', () => setOpen(header, false)));
   };
@@ -157,7 +181,12 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
   window.addEventListener('scroll', onScroll, { passive: true });
   document.addEventListener('keydown', (e) => {
     const header = getHeader();
-    if (e.key === 'Escape' && header) setOpen(header, false);
+    if (e.key === 'Escape' && header?.classList.contains('is-open')) setOpen(header, false, { restoreFocus: true });
+  });
+  // Desde `lg` el panel no existe (lg:hidden): si estaba abierto, se cierra para no dejar la página desactivada.
+  window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => {
+    const header = getHeader();
+    if (e.matches && header?.classList.contains('is-open')) setOpen(header, false);
   });
 
   document.addEventListener('astro:page-load', () => {
