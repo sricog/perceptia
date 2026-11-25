@@ -1,5 +1,5 @@
 // Efectos de página. Se reinician en cada navegación (astro:page-load) y se limpian antes del swap.
-import { rails } from './projects';
+import { marquees } from './marquee';
 
 const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let disposers: Array<() => void> = [];
@@ -597,7 +597,7 @@ export function initPage() {
   spotlights();
   filters();
   logoGrids();
-  rails(disposers);
+  marquees(disposers);
   if (document.querySelector('[data-globe]')) import('./globe').then((m) => m.globes(disposers));
 }
 

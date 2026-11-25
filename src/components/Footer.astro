@@ -7,25 +7,24 @@ const { t, href } = useI18n(Astro.url);
 const year = new Date().getFullYear();
 ---
 
-<footer class="hairline wrap overflow-hidden border-t pt-16">
-  <div class="grid grid-cols-2 gap-10 text-[0.9375rem] leading-[1.9] text-salvia md:grid-cols-[2fr_1fr_1fr_1fr]">
-    <div class="col-span-2 flex flex-col gap-4 md:col-span-1">
-      <a href={href('home')} aria-label={t.a11y.home} class="flex items-center gap-2.5 text-[1.125rem] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla">
+<footer class="hairline wrap overflow-hidden border-t pt-12 md:pt-16">
+  {/*
+    Móvil: logo y lema en una fila; Contacto a todo el ancho para que el correo se lea completo;
+    Sitio y Legal lado a lado (Sitio con su ancho natural y Legal con el resto, así sus enlaces
+    largos no se parten). En md: logo y lema arriba y las tres listas repartidas debajo.
+    Desde lg: cuatro columnas, las de enlaces con su ancho natural.
+  */}
+  <div class="grid grid-cols-[auto_1fr] gap-x-12 gap-y-9 text-[0.9375rem] leading-[1.9] text-salvia md:grid-cols-[repeat(3,auto)] md:justify-between md:gap-x-10 lg:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:justify-normal lg:gap-x-20">
+    <div class="col-span-2 flex items-center gap-4 md:col-span-3 lg:col-span-1 lg:flex-col lg:items-start">
+      <a href={href('home')} aria-label={t.a11y.home} class="flex shrink-0 items-center gap-2.5 text-[1.125rem] font-semibold tracking-[-0.02em] text-niebla hover:text-niebla">
         <BinocularMark id="foot" size={40} metal />
       </a>
-      <span>{t.meta.tagline}</span>
+      <span class="leading-snug">{t.meta.tagline}</span>
     </div>
-    <div class="flex flex-col">
-      <span class="mono-tag leading-[2.6] text-niebla">{t.footer.site}</span>
-      <a class="text-salvia hover:text-niebla" href={href('services')}>{t.nav.services}</a>
-      <a class="text-salvia hover:text-niebla" href={href('projects')}>{t.nav.projects}</a>
-      <a class="text-salvia hover:text-niebla" href={href('process')}>{t.nav.process}</a>
-      <a class="text-salvia hover:text-niebla" href={href('contact')}>{t.nav.contact}</a>
-    </div>
-    <div class="flex flex-col">
+    <div class="col-span-2 flex flex-col md:order-2 md:col-span-1">
       <span class="mono-tag leading-[2.6] text-niebla">{t.footer.contact}</span>
-      <a class="text-salvia hover:text-niebla" href={`mailto:${site.email}`}>{site.email}</a>
-      <a class="text-salvia hover:text-niebla" href={whatsappUrl(t.whatsapp)} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
+      <a class="self-start whitespace-nowrap text-salvia hover:text-niebla" href={`mailto:${site.email}`}>{site.email}</a>
+      <a class="self-start whitespace-nowrap text-salvia hover:text-niebla" href={whatsappUrl(t.whatsapp)} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
       <a
         class="mt-3 inline-flex size-10 items-center justify-center rounded-full border border-salvia/25 text-salvia transition-colors hover:border-aqua hover:text-aqua"
         href={site.instagram}
@@ -37,7 +36,14 @@ const year = new Date().getFullYear();
         <svg viewBox="0 0 24 24" class="size-[1.125rem] fill-current" aria-hidden="true"><path d={siInstagram.path} /></svg>
       </a>
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col md:order-1">
+      <span class="mono-tag leading-[2.6] text-niebla">{t.footer.site}</span>
+      <a class="text-salvia hover:text-niebla" href={href('services')}>{t.nav.services}</a>
+      <a class="text-salvia hover:text-niebla" href={href('projects')}>{t.nav.projects}</a>
+      <a class="text-salvia hover:text-niebla" href={href('process')}>{t.nav.process}</a>
+      <a class="text-salvia hover:text-niebla" href={href('contact')}>{t.nav.contact}</a>
+    </div>
+    <div class="flex min-w-0 flex-col md:order-3">
       <span class="mono-tag leading-[2.6] text-niebla">{t.footer.legal}</span>
       <a class="text-salvia hover:text-niebla" href={href('terms')}>{t.footer.terms}</a>
       <a class="text-salvia hover:text-niebla" href={href('privacy')}>{t.footer.privacy}</a>
@@ -45,7 +51,7 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div
-    class="wordmark -mb-[0.22em] mt-10 select-none text-center font-bold leading-none tracking-[-0.065em]"
+    class="wordmark -mb-[0.22em] mt-8 select-none md:mt-10 text-center font-bold leading-none tracking-[-0.065em]"
     aria-hidden="true"
     data-reveal
     data-reveal-edge

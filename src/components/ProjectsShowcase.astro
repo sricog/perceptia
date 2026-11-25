@@ -1,9 +1,10 @@
 ---
 /**
- * Proyectos del home: carril horizontal con la captura real de cada sitio dentro de un marco
- * de navegador. Es scroll nativo con `scroll-snap` (deslizar, trackpad o teclado); los botones
- * y la barra de avance los maneja `rails()` en scripts/projects.ts. El carril va de borde a
- * borde de la ventana; las tarjetas se alinean con el margen del resto del sitio.
+ * Proyectos del home: franja infinita con la captura real de cada sitio dentro de un marco de
+ * navegador. Se desplaza sola, sin pausas, y se puede arrastrar con el mouse o el dedo; el
+ * movimiento lo maneja `marquees()` en scripts/marquee.ts. La lista va dos veces seguidas para
+ * que el final de una copia empalme con el inicio de la otra. La segunda copia es decorativa
+ * (oculta a lectores de pantalla y fuera del tabulado).
  */
 import { Image } from 'astro:assets';
 import { projects, domainOf } from '../data/site';
@@ -12,95 +13,108 @@ import BrowserFrame from './BrowserFrame.astro';
 interface Props { id: string }
 const { id } = Astro.props;
 const { t } = useI18n(Astro.url);
-const pad = (n: number) => String(n).padStart(2, '0');
+const copies = [false, true]; // ¿es la copia decorativa?
 ---
 
-<div id={id} data-rail>
-  <ol class="rail -my-8 flex snap-x snap-mandatory gap-5 overflow-x-auto py-8 md:gap-7" aria-label={t.projects.index} data-rail-track>
+<div id={id} class="marquee" style={`--n:${projects.length}`} data-marquee data-reveal>
+  <div class="marquee-track">
     {
-      projects.map((p, i) => {
-        const m = t.projects.meta[p.id];
-        return (
-          <li class="w-[min(80vw,46rem)] flex-none snap-start" data-reveal style={`--d:${Math.min(i, 2) * 0.1}s`}>
-            <a href={p.url} target="_blank" rel="noopener" class="group block text-niebla hover:text-niebla">
-              <BrowserFrame
-                domain={domainOf(p.url)}
-                class="rounded-[1.25rem] transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_3.75rem_-0.75rem_rgba(20,224,165,.55)]"
-              >
-                <Image
-                  src={p.shot}
-                  alt={fill(t.projects.shotAlt, { name: p.name })}
-                  widths={[480, 760, 1100, 1440]}
-                  sizes="(min-width:920px) 46rem, 80vw"
-                  class="aspect-[16/10] w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
-                  loading={i < 2 ? 'eager' : 'lazy'}
-                />
-              </BrowserFrame>
-              <div class="mt-5 grid grid-cols-[auto_1fr_auto] items-baseline gap-x-4 gap-y-2">
-                <span class="font-mono text-[0.75rem] tracking-[0.08em] text-aqua">{pad(i + 1)}</span>
-                <span class="text-[clamp(1.5rem,2.3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
-                <span class="mono-tag">{t.projects.kinds[p.kind]}</span>
-                <span class="col-start-2 col-end-4 text-[0.9375rem] text-salvia">{m.sector} · {m.place}</span>
-              </div>
-            </a>
-          </li>
-        );
-      })
+      copies.map((dup) => (
+        <ol class="marquee-list" aria-label={dup ? undefined : t.projects.index} aria-hidden={dup ? 'true' : undefined}>
+          {projects.map((p, i) => {
+            const m = t.projects.meta[p.id];
+            return (
+              <li class="marquee-item">
+                <a href={p.url} target="_blank" rel="noopener" tabindex={dup ? -1 : undefined} draggable="false" class="group block text-niebla hover:text-niebla">
+                  <BrowserFrame
+                    domain={domainOf(p.url)}
+                    class="rounded-[1.25rem] transition-[border-color,box-shadow] duration-500 group-hover:border-aqua/70 group-hover:shadow-[0_0_3.75rem_-0.75rem_rgba(20,224,165,.55)]"
+                  >
+                    <Image
+                      src={p.shot}
+                      alt={dup ? '' : fill(t.projects.shotAlt, { name: p.name })}
+                      widths={[480, 760, 1100, 1440]}
+                      sizes="(min-width:920px) 46rem, 80vw"
+                      class="aspect-[16/10] w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+                      loading={!dup && i < 2 ? 'eager' : 'lazy'}
+                      draggable="false"
+                    />
+                  </BrowserFrame>
+                  <div class="mt-4 flex flex-col gap-1.5 md:mt-5 md:gap-2">
+                    <span class="mono-tag">{t.projects.kinds[p.kind]}</span>
+                    <span class="text-[clamp(1.375rem,2.3vw,2rem)] font-semibold leading-tight tracking-[-0.03em]">{p.name}</span>
+                    <span class="text-[0.875rem] text-salvia md:text-[0.9375rem]">{m.sector} · {m.place}</span>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      ))
     }
-  </ol>
-
-  <div class="wrap mt-8 flex items-center gap-6 md:mt-10">
-    <div class="h-px flex-1 overflow-hidden bg-salvia/20" aria-hidden="true"><div class="rail-thumb h-full origin-left bg-aqua"></div></div>
-    <span class="font-mono text-[0.75rem] tracking-[0.1em] text-salvia"><span data-rail-n>01</span> / {pad(projects.length)}</span>
-    <div class="flex gap-2">
-      <button type="button" class="rail-btn" aria-label={t.projects.prev} data-rail-prev disabled>←</button>
-      <button type="button" class="rail-btn" aria-label={t.projects.next} data-rail-next>→</button>
-    </div>
   </div>
 </div>
 
 <style>
-  .rail {
-    --gutter: clamp(1.25rem, 6.6vw, 6rem); /* igual a .wrap */
-    padding-inline: var(--gutter);
-    scroll-padding-inline: var(--gutter);
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-    /* Solo se desplaza en horizontal: si el carril pudiera moverse en vertical (aunque sea unos
-       píxeles) se «tragaría» la rueda del mouse y la página no bajaría. */
-    overflow-y: hidden;
+  .marquee {
+    --card: min(80vw, 46rem); /* ancho de cada tarjeta */
+    --gap: 1.25rem;
+    /* Vuelta de la animación de respaldo sin JS (con JS la velocidad está en marquee.ts). */
+    --dur: calc(var(--n) * 6s);
+    overflow: hidden;
+    /* Aire para la sombra de hover sin que la recorte el overflow. */
+    padding-block: 2rem;
+    margin-block: -2rem;
   }
-  /* Las tarjetas entran solo con opacidad: el desplazamiento vertical del revelado normal
-     crearía justo ese desborde vertical dentro del carril. */
-  .rail > [data-reveal] {
+  @media (min-width: 48rem) {
+    .marquee {
+      --gap: 1.75rem;
+      --dur: calc(var(--n) * 9s);
+    }
+  }
+  /* La revelación normal sube la sección; aquí basta la opacidad. */
+  .marquee[data-reveal] {
     transform: none;
   }
-  .rail::-webkit-scrollbar {
-    display: none;
+  .marquee[data-ready] {
+    cursor: grab;
+    /* El gesto horizontal es de la franja; el vertical sigue bajando la página. */
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
   }
-  /* `--p` (0…1) la pone el script; sin script la barra queda llena. */
-  .rail-thumb {
-    transform: scaleX(var(--p, 1));
+  /* Las tarjetas son enlaces (cursor de mano por defecto): se muestra el de agarrar para que se
+     note que la franja se arrastra. El brillo de hover sigue indicando que se pueden abrir. */
+  .marquee[data-ready] a {
+    cursor: grab;
   }
-  .rail-btn {
-    display: grid;
-    place-items: center;
-    width: 2.875rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    border: 1px solid rgb(143 176 165 / 0.3);
-    font: 500 1rem/1 var(--font-mono);
-    color: var(--color-niebla);
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
+  .marquee[data-dragging],
+  .marquee[data-dragging] a {
+    cursor: grabbing;
   }
-  .rail-btn:hover:not(:disabled) {
-    background: var(--color-niebla);
-    border-color: var(--color-niebla);
-    color: var(--color-noche);
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
   }
-  .rail-btn:disabled {
-    opacity: 0.35;
-    cursor: default;
+  /* Respaldo sin JS: la misma franja con animación CSS. Con JS la mueve marquee.ts. */
+  .marquee:not([data-ready]) .marquee-track {
+    animation: pcMarq var(--dur) linear infinite;
+  }
+  .marquee-list {
+    display: flex;
+  }
+  /* Separación con margen (no `gap`) para que las dos copias midan exactamente lo mismo y el
+     bucle empalme sin salto. */
+  .marquee-item {
+    flex: none;
+    width: var(--card);
+    margin-right: var(--gap);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee:not([data-ready]) .marquee-track {
+      animation: none;
+    }
   }
 </style>
