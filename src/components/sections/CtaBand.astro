@@ -17,7 +17,7 @@ const { t, href } = useI18n(Astro.url);
       {t.cta.line1}<br /><Accent parts={t.cta.title} />
     </h2>
     <p class="mt-6.5 text-[1.1875rem] leading-normal text-bruma">{t.cta.body}</p>
-    <div class="mt-9.5 flex flex-wrap justify-center gap-3">
+    <div class="mt-9.5 flex w-full flex-wrap justify-center gap-3 sm:w-auto">
       <a href={href('contact')} class="btn btn-primary h-14 px-7">{t.cta.primary}</a>
       <a href={whatsappUrl(t.whatsapp)} target="_blank" rel="noopener" class="btn btn-ghost h-14 bg-noche/70 px-7">WhatsApp</a>
     </div>
