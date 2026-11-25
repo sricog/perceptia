@@ -88,8 +88,6 @@ export const es = {
     kinds: { web: 'Website', app: 'App web', shop: 'Tienda virtual' },
     filters: { web: 'Websites', app: 'Apps web', shop: 'Tiendas virtuales' },
     shotAlt: 'Captura del sitio de {name}',
-    prev: 'Proyecto anterior',
-    next: 'Proyecto siguiente',
     visit: 'Ver sitio ↗',
     meta: {
       miquarto: { sector: 'Proptech · arriendos amoblados', place: 'Colombia' },

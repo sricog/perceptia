@@ -80,8 +80,6 @@ export const en: Dict = {
     kinds: { web: 'Website', app: 'Web app', shop: 'Online store' },
     filters: { web: 'Websites', app: 'Web apps', shop: 'Online stores' },
     shotAlt: 'Screenshot of the {name} website',
-    prev: 'Previous project',
-    next: 'Next project',
     visit: 'Visit site ↗',
     meta: {
       miquarto: { sector: 'Proptech · furnished rentals', place: 'Colombia' },
