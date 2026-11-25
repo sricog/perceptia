@@ -86,8 +86,8 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
         aria-controls="nav-panel"
         aria-label={t.a11y.openMenu}
       >
-        <span class="nav-bar absolute h-px w-5 -translate-y-1 bg-niebla transition-transform duration-300"></span>
-        <span class="nav-bar absolute h-px w-5 translate-y-1 bg-niebla transition-transform duration-300"></span>
+        <span class="nav-bar" aria-hidden="true"></span>
+        <span class="nav-bar" aria-hidden="true"></span>
       </button>
     </div>
   </div>
@@ -132,12 +132,32 @@ const switcher = langs.map((l) => ({ l, short: dict(l).short, name: dict(l).name
     opacity: 1;
     pointer-events: auto;
   }
+  /* Ícono hamburguesa → X. Cada raya se centra a mano en el botón (no por la posición estática
+     del flex, que Safari calcula distinto) y todo su movimiento va en un solo `transform`:
+     mezclar el `translate` de Tailwind con un `transform: rotate()` animaba dos propiedades por
+     separado y en móvil la X quedaba descentrada. Con 1px, la raya girada se veía finita y
+     borrosa; con 1.5px y puntas redondeadas queda nítida. */
+  .nav-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.25rem;
+    height: 1.5px;
+    margin: -0.75px 0 0 -0.625rem;
+    border-radius: 999px;
+    background: var(--color-niebla);
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .nav-bar:first-child {
+    transform: translateY(-4px);
+  }
+  .nav-bar:last-child {
+    transform: translateY(4px);
+  }
   #site-nav.is-open .nav-bar:first-child {
-    translate: 0 0;
     transform: rotate(45deg);
   }
   #site-nav.is-open .nav-bar:last-child {
-    translate: 0 0;
     transform: rotate(-45deg);
   }
   [data-nav-link][aria-current='page'] {
