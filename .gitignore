@@ -30,3 +30,6 @@ pnpm-debug.log*
 .cloudflare/
 .wrangler/
 .dev.vars*
+
+# Supabase CLI (estado local)
+supabase/.temp/
