@@ -42,6 +42,35 @@ La solicitud de llamada de `/proceso` y el formulario de `/contacto` guardan cad
 
 Para seguimiento, cambiar `status` (`contacted`, `scheduled`, `won`, `lost`, `spam`) y usar `notes` desde el panel.
 
+### Aviso por correo (Resend)
+
+Cada solicitud nueva llega por correo a perceptiastudio@gmail.com. Después de cada insert en `leads`, el trigger
+`leads_notify` llama a la Edge Function `notify-lead` (`supabase/functions/notify-lead`), que envía el correo con
+Resend desde `formulario@perceptiastudio.com`. El botón «Responder» le contesta directo al cliente cuando dejó un correo.
+Los formularios del sitio no cambian, y si el correo falla la solicitud igual queda guardada.
+
+Puesta en marcha (una vez, con la [CLI de Supabase](https://supabase.com/docs/guides/cli)):
+
+1. Generar un secreto compartido: `openssl rand -hex 32`.
+2. Crear una API key en Resend (permiso *Sending access*, dominio perceptiastudio.com) y guardar los secretos de la función:
+   ```bash
+   supabase secrets set --remote=<ref> RESEND_API_KEY=re_... NOTIFY_LEAD_SECRET=<secreto>
+   # Opcionales: LEADS_TO="a@x.com,b@y.com"  LEADS_FROM="Perceptia <formulario@perceptiastudio.com>"
+   ```
+3. Desplegar la función (sin verificación de JWT: la protege el secreto):
+   ```bash
+   supabase functions deploy notify-lead --remote=<ref> --no-verify-jwt
+   ```
+4. En el SQL Editor, guardar la URL y el mismo secreto en Vault, y ejecutar
+   `supabase/migrations/20261126000000_notify_lead.sql`:
+   ```sql
+   select vault.create_secret('https://<ref>.supabase.co/functions/v1/notify-lead', 'notify_lead_url');
+   select vault.create_secret('<secreto>', 'notify_lead_secret');
+   ```
+
+Si no llega un correo: revisar los logs de la función (Edge Functions → notify-lead → Logs), las respuestas de
+pg_net (`select * from net._http_response order by created desc limit 10;`) y la sección Emails de Resend.
+
 ## Despliegue en Cloudflare Workers
 
 El sitio se sirve como un Worker de solo assets (`cloudflare.config.ts`, Worker `perceptia`, dominios `perceptiastudio.com` y `www.perceptiastudio.com`).
