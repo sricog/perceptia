@@ -117,10 +117,9 @@
     background: rgb(238 245 242 / 0.12);
     color: var(--color-niebla);
   }
-  /* En móvil (< sm) los botones ocupan todo el ancho de su contenedor. `.btn-inline` conserva el
-     ancho natural donde se quieren lado a lado (los del hero del home). */
+  /* En móvil (< sm) los botones ocupan todo el ancho de su contenedor. */
   @media (width < 40rem) {
-    .btn:not(.btn-inline) {
+    .btn {
       width: 100%;
     }
   }
