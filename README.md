@@ -68,6 +68,9 @@ Puesta en marcha (una vez, con la [CLI de Supabase](https://supabase.com/docs/gu
    select vault.create_secret('<secreto>', 'notify_lead_secret');
    ```
 
+Después, ejecutar `supabase/migrations/20261126010000_harden_pg_net.sql` (deja pg_net en el esquema `extensions`).
+Seguridad: en Settings → API → Exposed schemas deben quedar solo `public` y `graphql_public`; nunca exponer `net` ni `vault`.
+
 Si no llega un correo: revisar los logs de la función (Edge Functions → notify-lead → Logs), las respuestas de
 pg_net (`select * from net._http_response order by created desc limit 10;`) y la sección Emails de Resend.
 
