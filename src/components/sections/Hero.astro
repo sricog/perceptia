@@ -85,21 +85,25 @@ const seal = left[0] + right.map((r) => r[0]).join('').toLowerCase();
       <h1 class="pc-rise text-[clamp(2.875rem,6.55vw,5.875rem)] font-bold leading-none tracking-[-0.055em] [text-wrap:balance]" style="--d:.5s">
         <Accent parts={t.hero.title} />
       </h1>
+      {/*
+        Rota la frase completa («Hacemos» incluido): todas ocupan la misma celda, cada una centrada,
+        así que nada se desplaza al cambiar. En móvil cada frase va en dos líneas («Hacemos» arriba)
+        y desde sm en una; la altura fija evita que el contenido de abajo se mueva.
+      */}
       <div
-        class="pc-rise mt-5.5 grid h-[2.125rem] text-[clamp(1.1875rem,1.8vw,1.625rem)] leading-[1.3] tracking-[-0.02em] text-bruma"
+        data-rotator
+        data-interval="2600"
+        class="pc-rise mt-5.5 grid h-[2.6em] w-full place-items-center text-[clamp(1.1875rem,1.8vw,1.625rem)] leading-[1.3] tracking-[-0.02em] text-bruma sm:h-[1.3em]"
         style="--d:.75s"
       >
-        <span>
-          {t.hero.lead}{' '}<span data-rotator data-interval="2600" class="inline-grid text-left [&>*]:[grid-area:1/1]">
-            {
-              words.map(([s, i], k) => (
-                <span data-word hidden={k > 0} class="whitespace-nowrap">
-                  {s} <em class="accent">{i}</em>
-                </span>
-              ))
-            }
-          </span>
-        </span>
+        {
+          words.map(([s, i], k) => (
+            <p data-word hidden={k > 0} class="[grid-area:1/1]">
+              <span class="block sm:inline">{t.hero.lead}</span>{' '}
+              <span class="whitespace-nowrap">{s} <em class="accent">{i}</em></span>
+            </p>
+          ))
+        }
       </div>
       <div class="pc-rise mt-9 flex w-full flex-wrap justify-center gap-3 sm:w-auto" style="--d:.95s">
         <a href={href('contact')} class="btn btn-primary">{t.hero.primary}</a>
